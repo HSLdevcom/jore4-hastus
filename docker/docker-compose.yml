@@ -1,0 +1,15 @@
+---
+version: "1.0"
+services:
+  jore4-hastus:
+    build:
+      context: ".."
+    container_name: hastus
+    restart: "unless-stopped"
+    networks:
+      - jore4
+    ports:
+      - "127.0.0.1:3008:8080"
+
+networks:
+  jore4:
