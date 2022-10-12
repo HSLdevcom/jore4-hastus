@@ -1,0 +1,13 @@
+# User specific settings
+profiles/dev/config.*.properties
+!profiles/dev/config.properties
+
+# IDE specific settings
+.idea/**
+
+# Docker
+!docker/docker-compose.custom.yml
+docker/**
+
+# Build target
+target/**
