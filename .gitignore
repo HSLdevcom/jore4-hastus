@@ -1,0 +1,9 @@
+# User specific settings
+profiles/dev/config.*.properties
+!profiles/dev/config.properties
+
+# IDE specific settings
+.idea/**
+
+# Build target
+target/**
