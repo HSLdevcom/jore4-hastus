@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class ExportController {
-
-    @GetMapping("/")
-    fun helloWorld(): Map<String, String> {
-        return mapOf<String, String>("content" to "Hello World")
+    @GetMapping
+    fun testing(): Map<String, String> {
+        return mapOf<String, String>("content" to "hello world")
     }
 }
