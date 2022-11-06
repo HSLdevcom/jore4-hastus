@@ -9,8 +9,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 
-
-fun main(args : Array<String>) {
+fun main(args: Array<String>) {
     runApplication<HastusApplication>(*args)
 }
 
@@ -34,7 +33,6 @@ class HastusApplication {
                     .configure(KotlinFeature.SingletonSupport, false)
                     .configure(KotlinFeature.StrictNullChecks, true)
                     .build()
-            );
+            )
     }
-
 }

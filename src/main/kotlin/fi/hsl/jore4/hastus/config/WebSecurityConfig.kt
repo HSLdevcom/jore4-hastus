@@ -13,7 +13,8 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(httpSecurity: HttpSecurity) {
         httpSecurity
             .authorizeRequests()
-            .antMatchers(HttpMethod.GET,
+            .antMatchers(
+                HttpMethod.GET,
                 "/actuator/health",
                 "/"
             ).permitAll()
