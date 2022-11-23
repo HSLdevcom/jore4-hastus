@@ -10,6 +10,19 @@ services:
       - jore4
     ports:
       - "127.0.0.1:3008:8080"
+  jore4-hasura:
+    # locking hasura image so that we can develop against a static graphql API
+    # Link to available jore4-hasura images in Docker Hub:
+    # https://hub.docker.com/r/hsldevcom/jore4-hasura/tags?page=1&ordering=last_updated
+    # The :seed-data tag contains the latest main-build image with seed data.
+    image: 'hsldevcom/jore4-hasura:seed-main--20221108-0c6329f8767ac5697e7ea83135570d66da0b7bbd'
+    # Waiting for database to be ready to avoid startup delay due to hasura crashing at startup if db is offline
+    # Note: this should only be done in development setups as Kubernetes does not allow waiting for services to be ready
+    depends_on:
+      jore4-testdb:
+        condition: service_healthy
+    environment:
+      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
 
 networks:
   jore4:
