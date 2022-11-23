@@ -1,0 +1,51 @@
+query RoutesWithHastusData(
+  $route_labels: [String!]
+  $route_priority: Int!
+  $observation_date: date!
+) {
+  route_route(
+    where: {
+      _and: [
+        { label: { _in: $route_labels } }
+        { priority: { _eq: $route_priority } }
+        {
+          _or: [
+            { validity_start: { _is_null: true } }
+            { validity_start: { _lte: $observation_date } }
+          ]
+        }
+        {
+          _or: [
+            { validity_end: { _is_null: true } }
+            { validity_end: { _gte: $observation_date } }
+          ]
+        }
+      ]
+    }
+  ) {
+    route_line {
+      label
+      name_i18n
+      vehicle_mode {
+        vehicle_mode
+      }
+    }
+    label
+    name_i18n
+    direction
+    route_journey_patterns {
+      scheduled_stop_point_in_journey_patterns(order_by: {scheduled_stop_point_sequence: asc}) {
+        is_timing_point
+        scheduled_stop_point_label
+        scheduled_stop_points {
+          label
+          measured_location
+          timing_place {
+            label
+            description
+          }
+        }
+      }
+    }
+  }
+}
