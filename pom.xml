@@ -29,6 +29,8 @@
         <kotlin-logging-jvm.version>3.0.2</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
         <spring-boot.version>2.7.4</spring-boot.version>
+        <graphql-kotlin.version>6.2.5</graphql-kotlin.version>
+        <jackson-datatype.version>2.13.4</jackson-datatype.version>
 
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
@@ -65,7 +67,7 @@
                 </filters>
                 <plugins>
                     <!-- Read properties files for build plugins.
-                         ATM, Flyway and jOOQ plugins need access to database properties. -->
+                         GraphQL plugin needs access to connection properties. -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>properties-maven-plugin</artifactId>
@@ -99,6 +101,70 @@
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>
+        </profile>
+
+        <profile>
+            <id>generate-graphql</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>dev</build.profile.id>
+                <build.property.file>profiles/${build.profile.id}/config.properties</build.property.file>
+                <build.property.user-override.file>profiles/${build.profile.id}/config.${user.name}.properties</build.property.user-override.file>
+            </properties>
+            <build>
+                <filters>
+                    <filter>${build.property.file}</filter>
+                    <filter>${build.property.user-override.file}</filter>
+                </filters>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <version>${build-properties-plugin.version}</version>
+
+                        <configuration>
+                            <files>
+                                <file>${build.property.file}</file>
+                                <file>${build.property.user-override.file}</file>
+                            </files>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>read-config-properties</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>read-project-properties</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.expediagroup</groupId>
+                        <artifactId>graphql-kotlin-maven-plugin</artifactId>
+                        <version>${graphql-kotlin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>get-schema</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>introspect-schema</goal>
+                                </goals>
+                                <configuration>
+                                    <endpoint>${hasura.url}</endpoint>
+                                    <schemaFile>${project.resources[0].directory}/schema.graphql</schemaFile>
+                                    <headers>
+                                        <Content-type>application/json; charset=UTF-8</Content-type>
+                                        <x-hasura-admin-secret>${hasura.secret}</x-hasura-admin-secret>
+                                    </headers>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 
@@ -182,7 +248,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/generated-sources/jooq</source>
+                                <source>src/generated-sources/graphql</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -299,9 +365,62 @@
                 <executions>
                     <execution>
                         <id>check</id>
+                        <configuration>
+                            <sourceRoots>${project.build.sourceDirectory}</sourceRoots>
+                        </configuration>
                         <goals>
                             <goal>check</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.expediagroup</groupId>
+                <artifactId>graphql-kotlin-maven-plugin</artifactId>
+                <version>${graphql-kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-queries</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-client</goal>
+                        </goals>
+                        <configuration>
+                            <packageName>fi.hsl.jore4.hastus.generated</packageName>
+                            <schemaFile>${project.resources[0].directory}/schema.graphql</schemaFile>
+                            <allowDeprecatedFields>true</allowDeprecatedFields>
+                            <queryFileDirectory>src/main/resources/graphql</queryFileDirectory>
+                            <customScalars>
+                                <customScalar>
+                                    <scalar>UUID</scalar>
+                                    <type>java.util.UUID</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.UUIDScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
+                                    <scalar>date</scalar>
+                                    <type>java.time.LocalDate</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.DateScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
+                                    <scalar>jsonb</scalar>
+                                    <type>fi.hsl.jore4.hastus.graphql.IJSONB</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.JsonbScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
+                                    <scalar>geography</scalar>
+                                    <type>fi.hsl.jore4.hastus.graphql.Coordinate</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.LocationScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
+                                    <scalar>_Any</scalar>
+                                    <type>kotlin.Any</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.GenericConverter</converter>
+                                </customScalar>
+                            </customScalars>
+                            <serializer>JACKSON</serializer>
+                            <useOptionalInputWrapper>true</useOptionalInputWrapper>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -360,6 +479,24 @@
             <groupId>io.github.microutils</groupId>
             <artifactId>kotlin-logging-jvm</artifactId>
             <version>${kotlin-logging-jvm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-datatype.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.expediagroup</groupId>
+            <artifactId>graphql-kotlin-ktor-client</artifactId>
+            <version>${graphql-kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.expediagroup</groupId>
+            <artifactId>graphql-kotlin-client-jackson</artifactId>
+            <version>${graphql-kotlin.version}</version>
         </dependency>
 
         <dependency>
