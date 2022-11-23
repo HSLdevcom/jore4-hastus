@@ -2,9 +2,12 @@ package fi.hsl.jore4.hastus
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
@@ -17,6 +20,7 @@ fun main(args: Array<String>) {
  * Spring boot application definition.
  */
 @SpringBootApplication
+@EnableConfigurationProperties(HasuraConfiguration::class)
 class HastusApplication {
 
     @Bean
@@ -24,6 +28,7 @@ class HastusApplication {
     fun objectMapper(): ObjectMapper {
         return ObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .registerModule(JavaTimeModule())
             .registerModule(
                 KotlinModule.Builder()
                     .withReflectionCacheSize(512)
