@@ -1,5 +1,5 @@
 ---
-version: "1.0"
+version: "3.8"
 services:
   jore4-hastus:
     build:
@@ -10,6 +10,9 @@ services:
       - jore4
     ports:
       - "127.0.0.1:3008:8080"
+    environment:
+      HASURA_URL: "http://jore4-hasura:8080/v1/graphql"
+
   jore4-hasura:
     # locking hasura image so that we can develop against a static graphql API
     # Link to available jore4-hasura images in Docker Hub:
@@ -21,8 +24,6 @@ services:
     depends_on:
       jore4-testdb:
         condition: service_healthy
-    environment:
-      HASURA_GRAPHQL_ENABLE_CONSOLE: 'true'
 
 networks:
   jore4:
