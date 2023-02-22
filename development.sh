@@ -27,7 +27,7 @@ function check_docker {
 
 function start {
   check_docker
-  $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
+  $DOCKER_COMPOSE_CMD up --build -d jore4-hastus jore4-hasura jore4-testdb
 }
 
 function stop_all {
