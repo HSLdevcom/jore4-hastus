@@ -29,7 +29,7 @@ Export endpoint expects a JSON format:
 
 ```
 {
-    labels: [string...],
+    uniqueLabels: [string...],
     priority: int,
     observationDate: "yyyy-mm-dd"
 }

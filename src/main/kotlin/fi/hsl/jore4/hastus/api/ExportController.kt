@@ -36,12 +36,12 @@ class ExportController(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") val observationDate: LocalDate
     )
 
+    // Headers are not used by this service but passed on to the Hasura API
     @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [CSV_TYPE])
     fun exportForRoutes(
         @RequestBody request: Routes,
         @RequestHeader(HttpHeaders.COOKIE, required = false) cookieHeader: String?,
-        @RequestHeader("x-hasura-role", required = false) hasuraRole: String?,
-        @RequestHeader("x-hasura-admin-secret", required = false) hasuraSecret: String?
+        @RequestHeader("x-hasura-role", required = false) hasuraRole: String?
     ): String {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
@@ -50,8 +50,7 @@ class ExportController(
                 request.priority,
                 request.observationDate,
                 cookieHeader,
-                hasuraRole,
-                hasuraSecret
+                hasuraRole
             )
         }
         LOGGER.info { "Routes request took $elapsed" }
