@@ -2,7 +2,7 @@ package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import fi.hsl.jore4.hastus.graphql.Coordinate
+import fi.hsl.jore4.hastus.data.format.Coordinate
 
 class LocationScalarConverter : ScalarConverter<Coordinate> {
     override fun toJson(value: Coordinate): String {
