@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data
+package fi.hsl.jore4.hastus.data.hastus
 
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 
@@ -53,5 +53,43 @@ class Stop(
             gpsY,
             shortIdentifier
         )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Stop
+
+        if (identifier != other.identifier) return false
+        if (platform != other.platform) return false
+        if (descriptionFinnish != other.descriptionFinnish) return false
+        if (descriptionSwedish != other.descriptionSwedish) return false
+        if (streetFinnish != other.streetFinnish) return false
+        if (streetSwedish != other.streetSwedish) return false
+        if (place != other.place) return false
+        if (shortIdentifier != other.shortIdentifier) return false
+        if (gpsX != other.gpsX) return false
+        if (gpsY != other.gpsY) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = identifier.hashCode()
+        result = 31 * result + platform.hashCode()
+        result = 31 * result + descriptionFinnish.hashCode()
+        result = 31 * result + descriptionSwedish.hashCode()
+        result = 31 * result + streetFinnish.hashCode()
+        result = 31 * result + streetSwedish.hashCode()
+        result = 31 * result + place.hashCode()
+        result = 31 * result + shortIdentifier.hashCode()
+        result = 31 * result + gpsX.hashCode()
+        result = 31 * result + gpsY.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "Stop(identifier='$identifier', platform='$platform', descriptionFinnish='$descriptionFinnish', descriptionSwedish='$descriptionSwedish', streetFinnish='$streetFinnish', streetSwedish='$streetSwedish', place='$place', shortIdentifier='$shortIdentifier', gpsX=$gpsX, gpsY=$gpsY, fieldName='$fieldName')"
     }
 }

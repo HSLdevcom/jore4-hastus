@@ -21,11 +21,23 @@ Uses maven to build the project, use `mvn install` to build the server. You can 
 
 ## API structure
 
-### GET
+### POST
 
-`/` Hello world JSON response
+`export/routes` Send a JSON body containing the route labels, priority and date for which to produce a CSV file for Hastus export
 
-## Technical Documentation
+Export endpoint expects a JSON format:
+
+```
+{
+    labels: [string...],
+    priority: int,
+    observationDate: "yyyy-mm-dd"
+}
+```
+
+The returned CSV file follows the Hastus CSV specification.
+
+## Technical DocumentationEi
 
 jore4-hastus is a Spring Boot application written in Kotlin, which implements a REST API for converting Hastus CSV into Jore4 data and the reverse, Jore4 data into CSV files for Hastus.
 
@@ -33,6 +45,9 @@ jore4-hastus is a Spring Boot application written in Kotlin, which implements a 
 
 - `fi.hsl.jore.hastus.api` package contains the API endpoint definitions
 - `fi.hsl.jore.hastus.config` package contains the server configuration
+- `fi.hsl.jore.hastus.data` package contains the hastus data format and mappers
+- `fi.hsl.jore.hastus.graphql` package contains graphql service and queries
+- `fi.hsl.jore.hastus.util` package contains the utilities, currently CSV writer
 
 Tests are in the `fi.hsl.jore.hastus.test` package.
 
@@ -44,4 +59,5 @@ Code should be written using [standard Kotlin coding conventions](https://kotlin
 
 Also:
 
+- ktlint is run automatically during build and will fail the build if any warnings are found
 - Additionally, minimize the use of mutable variables, using `val` whenever possible.

@@ -7,13 +7,13 @@ import fi.hsl.jore4.hastus.graphql.IJSONB
 class jsonbScalarConverter : ScalarConverter<IJSONB> {
 
     override fun toJson(value: IJSONB): Any {
-        return jacksonObjectMapper().writeValueAsString(value)
+        return jacksonObjectMapper().writeValueAsString(value.content)
     }
 
     override fun toScalar(rawValue: Any): IJSONB {
         if (rawValue !is java.util.LinkedHashMap<*, *>) {
             throw java.lang.IllegalArgumentException("jsonb converter got non-map value: $rawValue")
         }
-        return rawValue.map { it.key.toString() to it.value.toString() }.toMap()
+        return IJSONB(content = rawValue.map { it.key.toString() to it.value.toString() }.toMap())
     }
 }
