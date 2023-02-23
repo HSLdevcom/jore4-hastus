@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data
+package fi.hsl.jore4.hastus.data.hastus
 
 abstract class HastusData : IHastusData {
 

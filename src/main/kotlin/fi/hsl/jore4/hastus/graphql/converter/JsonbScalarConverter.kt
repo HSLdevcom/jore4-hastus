@@ -14,6 +14,6 @@ class JsonbScalarConverter : ScalarConverter<IJSONB> {
         if (rawValue !is java.util.LinkedHashMap<*, *>) {
             throw java.lang.IllegalArgumentException("jsonb converter got non-map value: $rawValue")
         }
-        return rawValue.map { it.key.toString() to it.value.toString() }.toMap()
+        return IJSONB(content = rawValue.map { it.key.toString() to it.value.toString() }.toMap())
     }
 }

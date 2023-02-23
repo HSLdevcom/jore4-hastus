@@ -36,6 +36,145 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
+"Legacy, avoid using. Main use nowadays is to enable support for eg. data exports that still need this. Originally this was used to represent the primary region for routes/lines."
+type hsl_route_legacy_hsl_municipality_code {
+  hsl_municipality: String!
+  jore3_code: smallint!
+  "An array relationship"
+  lines(
+    "distinct select on columns"
+    distinct_on: [route_line_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [route_line_order_by!],
+    "filter the rows returned"
+    where: route_line_bool_exp
+  ): [route_line!]!
+  "An aggregate relationship"
+  lines_aggregate(
+    "distinct select on columns"
+    distinct_on: [route_line_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [route_line_order_by!],
+    "filter the rows returned"
+    where: route_line_bool_exp
+  ): route_line_aggregate!
+  "An array relationship"
+  routes(
+    "distinct select on columns"
+    distinct_on: [route_route_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [route_route_order_by!],
+    "filter the rows returned"
+    where: route_route_bool_exp
+  ): [route_route!]!
+  "An aggregate relationship"
+  routes_aggregate(
+    "distinct select on columns"
+    distinct_on: [route_route_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [route_route_order_by!],
+    "filter the rows returned"
+    where: route_route_bool_exp
+  ): route_route_aggregate!
+}
+
+"aggregated selection of \"hsl_route.legacy_hsl_municipality_code\""
+type hsl_route_legacy_hsl_municipality_code_aggregate {
+  aggregate: hsl_route_legacy_hsl_municipality_code_aggregate_fields
+  nodes: [hsl_route_legacy_hsl_municipality_code!]!
+}
+
+"aggregate fields of \"hsl_route.legacy_hsl_municipality_code\""
+type hsl_route_legacy_hsl_municipality_code_aggregate_fields {
+  avg: hsl_route_legacy_hsl_municipality_code_avg_fields
+  count(columns: [hsl_route_legacy_hsl_municipality_code_select_column!], distinct: Boolean): Int!
+  max: hsl_route_legacy_hsl_municipality_code_max_fields
+  min: hsl_route_legacy_hsl_municipality_code_min_fields
+  stddev: hsl_route_legacy_hsl_municipality_code_stddev_fields
+  stddev_pop: hsl_route_legacy_hsl_municipality_code_stddev_pop_fields
+  stddev_samp: hsl_route_legacy_hsl_municipality_code_stddev_samp_fields
+  sum: hsl_route_legacy_hsl_municipality_code_sum_fields
+  var_pop: hsl_route_legacy_hsl_municipality_code_var_pop_fields
+  var_samp: hsl_route_legacy_hsl_municipality_code_var_samp_fields
+  variance: hsl_route_legacy_hsl_municipality_code_variance_fields
+}
+
+"aggregate avg on columns"
+type hsl_route_legacy_hsl_municipality_code_avg_fields {
+  jore3_code: Float
+}
+
+"aggregate max on columns"
+type hsl_route_legacy_hsl_municipality_code_max_fields {
+  hsl_municipality: String
+  jore3_code: smallint
+}
+
+"aggregate min on columns"
+type hsl_route_legacy_hsl_municipality_code_min_fields {
+  hsl_municipality: String
+  jore3_code: smallint
+}
+
+"response of any mutation on the table \"hsl_route.legacy_hsl_municipality_code\""
+type hsl_route_legacy_hsl_municipality_code_mutation_response {
+  "number of rows affected by the mutation"
+  affected_rows: Int!
+  "data from the rows affected by the mutation"
+  returning: [hsl_route_legacy_hsl_municipality_code!]!
+}
+
+"aggregate stddev on columns"
+type hsl_route_legacy_hsl_municipality_code_stddev_fields {
+  jore3_code: Float
+}
+
+"aggregate stddev_pop on columns"
+type hsl_route_legacy_hsl_municipality_code_stddev_pop_fields {
+  jore3_code: Float
+}
+
+"aggregate stddev_samp on columns"
+type hsl_route_legacy_hsl_municipality_code_stddev_samp_fields {
+  jore3_code: Float
+}
+
+"aggregate sum on columns"
+type hsl_route_legacy_hsl_municipality_code_sum_fields {
+  jore3_code: smallint
+}
+
+"aggregate var_pop on columns"
+type hsl_route_legacy_hsl_municipality_code_var_pop_fields {
+  jore3_code: Float
+}
+
+"aggregate var_samp on columns"
+type hsl_route_legacy_hsl_municipality_code_var_samp_fields {
+  jore3_code: Float
+}
+
+"aggregate variance on columns"
+type hsl_route_legacy_hsl_municipality_code_variance_fields {
+  jore3_code: Float
+}
+
 "Transport target, can be used e.g. for cost sharing."
 type hsl_route_transport_target {
   "An array relationship"
@@ -488,6 +627,30 @@ type infrastructure_network_vehicle_submode_on_infrastructure_link_mutation_resp
 type journey_pattern_journey_pattern {
   "The ID of the journey pattern."
   journey_pattern_id: uuid!
+  journey_pattern_refs(
+    "distinct select on columns"
+    distinct_on: [timetables_journey_pattern_journey_pattern_ref_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_journey_pattern_journey_pattern_ref_order_by!],
+    "filter the rows returned"
+    where: timetables_journey_pattern_journey_pattern_ref_bool_exp
+  ): [timetables_journey_pattern_journey_pattern_ref!]!
+  journey_pattern_refs_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_journey_pattern_journey_pattern_ref_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_journey_pattern_journey_pattern_ref_order_by!],
+    "filter the rows returned"
+    where: timetables_journey_pattern_journey_pattern_ref_bool_exp
+  ): timetables_journey_pattern_journey_pattern_ref_aggregate!
   "An object relationship"
   journey_pattern_route: route_route
   "The ID of the route the journey pattern is on."
@@ -559,8 +722,12 @@ type journey_pattern_journey_pattern_mutation_response {
 
 "The scheduled stop points that form the journey pattern, in order: https://www.transmodel-cen.eu/model/index.htm?goto=2:3:1:813 . For HSL, all timing points are stops, hence journey pattern instead of service pattern."
 type journey_pattern_scheduled_stop_point_in_journey_pattern {
-  "Is this scheduled stop point a timing point?"
-  is_timing_point: Boolean!
+  "Is adding loading time to this scheduled stop point in the journey pattern allowed?"
+  is_loading_time_allowed: Boolean!
+  "Is this stop point passing time regulated so that it cannot be passed before scheduled time?"
+  is_regulated_timing_point: Boolean!
+  "Is this scheduled stop point used as a timing point in the journey pattern?"
+  is_used_as_timing_point: Boolean!
   "Is this scheduled stop point a via point?"
   is_via_point: Boolean!
   "An object relationship"
@@ -703,6 +870,13 @@ type journey_pattern_scheduled_stop_point_in_journey_pattern_variance_fields {
 
 "mutation root"
 type mutation_root {
+  "delete data from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  delete_hsl_route_legacy_hsl_municipality_code(
+    "filter the rows which have to be deleted"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp!
+  ): hsl_route_legacy_hsl_municipality_code_mutation_response
+  "delete single row from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  delete_hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
   "delete data from the table: \"hsl_route.transport_target\""
   delete_hsl_route_transport_target(
     "filter the rows which have to be deleted"
@@ -826,7 +1000,10 @@ type mutation_root {
     where: route_route_bool_exp!
   ): route_route_mutation_response
   "delete single row from the table: \"route.route\""
-  delete_route_route_by_pk(route_id: uuid!): route_route
+  delete_route_route_by_pk(
+    "The ID of the route."
+    route_id: uuid!
+  ): route_route
   "delete data from the table: \"route.type_of_line\""
   delete_route_type_of_line(
     "filter the rows which have to be deleted"
@@ -837,13 +1014,32 @@ type mutation_root {
     "GTFS route type: https://developers.google.com/transit/gtfs/reference/extended-route-types"
     type_of_line: String!
   ): route_type_of_line
+  "delete data from the table: \"service_pattern.distance_between_stops_calculation\""
+  delete_service_pattern_distance_between_stops_calculation(
+    "filter the rows which have to be deleted"
+    where: service_pattern_distance_between_stops_calculation_bool_exp!
+  ): service_pattern_distance_between_stops_calculation_mutation_response
+  "delete single row from the table: \"service_pattern.distance_between_stops_calculation\""
+  delete_service_pattern_distance_between_stops_calculation_by_pk(
+    "The ID of the journey pattern."
+    journey_pattern_id: uuid!,
+    "The observation date for the state of the route related to the journey pattern."
+    observation_date: date!,
+    "The priority of the route related to the journey pattern."
+    route_priority: Int!,
+    "The sequence number of the stop interval within the journey pattern."
+    stop_interval_sequence: Int!
+  ): service_pattern_distance_between_stops_calculation
   "delete data from the table: \"service_pattern.scheduled_stop_point\""
   delete_service_pattern_scheduled_stop_point(
     "filter the rows which have to be deleted"
     where: service_pattern_scheduled_stop_point_bool_exp!
   ): service_pattern_scheduled_stop_point_mutation_response
   "delete single row from the table: \"service_pattern.scheduled_stop_point\""
-  delete_service_pattern_scheduled_stop_point_by_pk(scheduled_stop_point_id: uuid!): service_pattern_scheduled_stop_point
+  delete_service_pattern_scheduled_stop_point_by_pk(
+    "The ID of the scheduled stop point."
+    scheduled_stop_point_id: uuid!
+  ): service_pattern_scheduled_stop_point
   "delete data from the table: \"service_pattern.vehicle_mode_on_scheduled_stop_point\""
   delete_service_pattern_vehicle_mode_on_scheduled_stop_point(
     "filter the rows which have to be deleted"
@@ -863,6 +1059,20 @@ type mutation_root {
   ): timing_pattern_timing_place_mutation_response
   "delete single row from the table: \"timing_pattern.timing_place\""
   delete_timing_pattern_timing_place_by_pk(timing_place_id: uuid!): timing_pattern_timing_place
+  "insert data into the table: \"hsl_route.legacy_hsl_municipality_code\""
+  insert_hsl_route_legacy_hsl_municipality_code(
+    "the rows to be inserted"
+    objects: [hsl_route_legacy_hsl_municipality_code_insert_input!]!,
+    "upsert condition"
+    on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
+  ): hsl_route_legacy_hsl_municipality_code_mutation_response
+  "insert a single row into the table: \"hsl_route.legacy_hsl_municipality_code\""
+  insert_hsl_route_legacy_hsl_municipality_code_one(
+    "the row to be inserted"
+    object: hsl_route_legacy_hsl_municipality_code_insert_input!,
+    "upsert condition"
+    on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
+  ): hsl_route_legacy_hsl_municipality_code
   "insert data into the table: \"hsl_route.transport_target\""
   insert_hsl_route_transport_target(
     "the rows to be inserted"
@@ -1059,6 +1269,20 @@ type mutation_root {
     "upsert condition"
     on_conflict: route_type_of_line_on_conflict
   ): route_type_of_line
+  "insert data into the table: \"service_pattern.distance_between_stops_calculation\""
+  insert_service_pattern_distance_between_stops_calculation(
+    "the rows to be inserted"
+    objects: [service_pattern_distance_between_stops_calculation_insert_input!]!,
+    "upsert condition"
+    on_conflict: service_pattern_distance_between_stops_calculation_on_conflict
+  ): service_pattern_distance_between_stops_calculation_mutation_response
+  "insert a single row into the table: \"service_pattern.distance_between_stops_calculation\""
+  insert_service_pattern_distance_between_stops_calculation_one(
+    "the row to be inserted"
+    object: service_pattern_distance_between_stops_calculation_insert_input!,
+    "upsert condition"
+    on_conflict: service_pattern_distance_between_stops_calculation_on_conflict
+  ): service_pattern_distance_between_stops_calculation
   "insert data into the table: \"service_pattern.scheduled_stop_point\""
   insert_service_pattern_scheduled_stop_point(
     "the rows to be inserted"
@@ -1102,6 +1326,28 @@ type mutation_root {
     on_conflict: timing_pattern_timing_place_on_conflict
   ): timing_pattern_timing_place
   timetables: timetables_timetables_mutation_frontend
+  "update data of the table: \"hsl_route.legacy_hsl_municipality_code\""
+  update_hsl_route_legacy_hsl_municipality_code(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: hsl_route_legacy_hsl_municipality_code_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: hsl_route_legacy_hsl_municipality_code_set_input,
+    "filter the rows which have to be updated"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp!
+  ): hsl_route_legacy_hsl_municipality_code_mutation_response
+  "update single row of the table: \"hsl_route.legacy_hsl_municipality_code\""
+  update_hsl_route_legacy_hsl_municipality_code_by_pk(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: hsl_route_legacy_hsl_municipality_code_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: hsl_route_legacy_hsl_municipality_code_set_input,
+    pk_columns: hsl_route_legacy_hsl_municipality_code_pk_columns_input!
+  ): hsl_route_legacy_hsl_municipality_code
+  "update multiples rows of table: \"hsl_route.legacy_hsl_municipality_code\""
+  update_hsl_route_legacy_hsl_municipality_code_many(
+    "updates to execute, in order"
+    updates: [hsl_route_legacy_hsl_municipality_code_updates!]!
+  ): [hsl_route_legacy_hsl_municipality_code_mutation_response]
   "update data of the table: \"hsl_route.transport_target\""
   update_hsl_route_transport_target(
     "sets the columns of the filtered rows to the given values"
@@ -1434,6 +1680,28 @@ type mutation_root {
     "updates to execute, in order"
     updates: [route_type_of_line_updates!]!
   ): [route_type_of_line_mutation_response]
+  "update data of the table: \"service_pattern.distance_between_stops_calculation\""
+  update_service_pattern_distance_between_stops_calculation(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: service_pattern_distance_between_stops_calculation_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: service_pattern_distance_between_stops_calculation_set_input,
+    "filter the rows which have to be updated"
+    where: service_pattern_distance_between_stops_calculation_bool_exp!
+  ): service_pattern_distance_between_stops_calculation_mutation_response
+  "update single row of the table: \"service_pattern.distance_between_stops_calculation\""
+  update_service_pattern_distance_between_stops_calculation_by_pk(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: service_pattern_distance_between_stops_calculation_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: service_pattern_distance_between_stops_calculation_set_input,
+    pk_columns: service_pattern_distance_between_stops_calculation_pk_columns_input!
+  ): service_pattern_distance_between_stops_calculation
+  "update multiples rows of table: \"service_pattern.distance_between_stops_calculation\""
+  update_service_pattern_distance_between_stops_calculation_many(
+    "updates to execute, in order"
+    updates: [service_pattern_distance_between_stops_calculation_updates!]!
+  ): [service_pattern_distance_between_stops_calculation_mutation_response]
   "update data of the table: \"service_pattern.scheduled_stop_point\""
   update_service_pattern_scheduled_stop_point(
     "increments the numeric columns with given value of the filtered values"
@@ -1515,6 +1783,34 @@ type mutation_root {
 }
 
 type query_root {
+  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  hsl_route_legacy_hsl_municipality_code(
+    "distinct select on columns"
+    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
+    "filter the rows returned"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp
+  ): [hsl_route_legacy_hsl_municipality_code!]!
+  "fetch aggregated fields from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  hsl_route_legacy_hsl_municipality_code_aggregate(
+    "distinct select on columns"
+    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
+    "filter the rows returned"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp
+  ): hsl_route_legacy_hsl_municipality_code_aggregate!
+  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\" using primary key columns"
+  hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
   "fetch data from the table: \"hsl_route.transport_target\""
   hsl_route_transport_target(
     "distinct select on columns"
@@ -2001,7 +2297,10 @@ type query_root {
     where: route_route_bool_exp
   ): route_route_aggregate!
   "fetch data from the table: \"route.route\" using primary key columns"
-  route_route_by_pk(route_id: uuid!): route_route
+  route_route_by_pk(
+    "The ID of the route."
+    route_id: uuid!
+  ): route_route
   "fetch data from the table: \"route.type_of_line\""
   route_type_of_line(
     "distinct select on columns"
@@ -2033,6 +2332,103 @@ type query_root {
     "GTFS route type: https://developers.google.com/transit/gtfs/reference/extended-route-types"
     type_of_line: String!
   ): route_type_of_line
+  "fetch data from the table: \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_distance_between_stops_calculation(
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "fetch aggregated fields from the table: \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_distance_between_stops_calculation_aggregate(
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
+  "fetch data from the table: \"service_pattern.distance_between_stops_calculation\" using primary key columns"
+  service_pattern_distance_between_stops_calculation_by_pk(
+    "The ID of the journey pattern."
+    journey_pattern_id: uuid!,
+    "The observation date for the state of the route related to the journey pattern."
+    observation_date: date!,
+    "The priority of the route related to the journey pattern."
+    route_priority: Int!,
+    "The sequence number of the stop interval within the journey pattern."
+    stop_interval_sequence: Int!
+  ): service_pattern_distance_between_stops_calculation
+  "execute function \"service_pattern.get_distances_between_stop_points_by_routes\" which returns \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_by_routes(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_by_routes\""
+    args: service_pattern_get_distances_between_stop_points_by_routes_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "execute function \"service_pattern.get_distances_between_stop_points_by_routes\" and query aggregates on result of table type \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_by_routes_aggregate(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_by_routes_aggregate\""
+    args: service_pattern_get_distances_between_stop_points_by_routes_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
+  "execute function \"service_pattern.get_distances_between_stop_points_in_journey_patterns\" which returns \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_in_journey_patterns(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_in_journey_patterns\""
+    args: service_pattern_get_distances_between_stop_points_in_journey_patterns_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "execute function \"service_pattern.get_distances_between_stop_points_in_journey_patterns\" and query aggregates on result of table type \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_in_journey_patterns_aggregate(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_in_journey_patterns_aggregate\""
+    args: service_pattern_get_distances_between_stop_points_in_journey_patterns_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point\""
   service_pattern_scheduled_stop_point(
     "distinct select on columns"
@@ -2060,7 +2456,10 @@ type query_root {
     where: service_pattern_scheduled_stop_point_bool_exp
   ): service_pattern_scheduled_stop_point_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point\" using primary key columns"
-  service_pattern_scheduled_stop_point_by_pk(scheduled_stop_point_id: uuid!): service_pattern_scheduled_stop_point
+  service_pattern_scheduled_stop_point_by_pk(
+    "The ID of the scheduled stop point."
+    scheduled_stop_point_id: uuid!
+  ): service_pattern_scheduled_stop_point
   "fetch data from the table: \"service_pattern.vehicle_mode_on_scheduled_stop_point\""
   service_pattern_vehicle_mode_on_scheduled_stop_point(
     "distinct select on columns"
@@ -2443,6 +2842,10 @@ type route_infrastructure_link_along_route_variance_fields {
 type route_line {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String!
+  "An object relationship"
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid!
   "An array relationship"
@@ -2485,6 +2888,8 @@ type route_line {
     "JSON select path"
     path: String
   ): jsonb!
+  "An object relationship"
+  transportTargetByTransportTarget: hsl_route_transport_target!
   transport_target: hsl_route_transport_target_enum!
   "An object relationship"
   typeOfLineByTypeOfLine: route_type_of_line!
@@ -2529,6 +2934,8 @@ type route_line_avg_fields {
 type route_line_max_fields {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
@@ -2543,6 +2950,8 @@ type route_line_max_fields {
 type route_line_min_fields {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
@@ -2603,8 +3012,9 @@ type route_line_variance_fields {
   priority: Float
 }
 
-"columns and relationships of \"route.route\""
+"The routes from Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=2:1:3:483"
 type route_route {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n(
     "JSON select path"
     path: String
@@ -2617,6 +3027,7 @@ type route_route {
     "JSON select path"
     path: String
   ): jsonb
+  "The direction of the route definition."
   direction: route_direction_enum!
   "An array relationship"
   infrastructure_links_along_route(
@@ -2644,11 +3055,17 @@ type route_route {
     "filter the rows returned"
     where: route_infrastructure_link_along_route_bool_exp
   ): route_infrastructure_link_along_route_aggregate!
+  "The label of the route definition."
   label: String!
+  "An object relationship"
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   name_i18n(
     "JSON select path"
     path: String
   ): jsonb!
+  "The line to which this route belongs."
   on_line_id: uuid!
   origin_name_i18n(
     "JSON select path"
@@ -2658,7 +3075,9 @@ type route_route {
     "JSON select path"
     path: String
   ): jsonb
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int!
+  "The ID of the route."
   route_id: uuid!
   "An array relationship"
   route_journey_patterns(
@@ -2690,8 +3109,14 @@ type route_route {
   route_line: route_line
   "A computed field, executes function \"route.route_shape\""
   route_shape: geography
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: String
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "aggregated selection of \"route.route\""
@@ -2717,27 +3142,54 @@ type route_route_aggregate_fields {
 
 "aggregate avg on columns"
 type route_route_avg_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate max on columns"
 type route_route_max_fields {
+  "The label of the route definition."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
+  "The line to which this route belongs."
   on_line_id: uuid
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The ID of the route."
   route_id: uuid
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: String
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "aggregate min on columns"
 type route_route_min_fields {
+  "The label of the route definition."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
+  "The line to which this route belongs."
   on_line_id: uuid
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The ID of the route."
   route_id: uuid
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: String
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "response of any mutation on the table \"route.route\""
@@ -2750,37 +3202,58 @@ type route_route_mutation_response {
 
 "aggregate stddev on columns"
 type route_route_stddev_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate stddev_pop on columns"
 type route_route_stddev_pop_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate stddev_samp on columns"
 type route_route_stddev_samp_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate sum on columns"
 type route_route_sum_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The variant for route definition."
+  variant: smallint
 }
 
 "aggregate var_pop on columns"
 type route_route_var_pop_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate var_samp on columns"
 type route_route_var_samp_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "aggregate variance on columns"
 type route_route_variance_fields {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Float
+  "The variant for route definition."
+  variant: Float
 }
 
 "Type of line. https://www.transmodel-cen.eu/model/EARoot/EA2/EA1/EA3/EA491.htm"
@@ -2851,15 +3324,188 @@ type route_type_of_line_mutation_response {
   returning: [route_type_of_line!]!
 }
 
-"columns and relationships of \"service_pattern.scheduled_stop_point\""
+"A dummy table that models the results of calculating the lengths of stop intervals from the given journey patterns. The table exists due to the limitations of Hasura and there is no intention to insert anything to it."
+type service_pattern_distance_between_stops_calculation {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8!
+  "The label of the end stop of the stop interval."
+  end_stop_label: String!
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid!
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date!
+  "The ID of the route related to the journey pattern."
+  route_id: uuid!
+  "The priority of the route related to the journey pattern."
+  route_priority: Int!
+  "The label of the start stop of the stop interval."
+  start_stop_label: String!
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int!
+}
+
+"aggregated selection of \"service_pattern.distance_between_stops_calculation\""
+type service_pattern_distance_between_stops_calculation_aggregate {
+  aggregate: service_pattern_distance_between_stops_calculation_aggregate_fields
+  nodes: [service_pattern_distance_between_stops_calculation!]!
+}
+
+"aggregate fields of \"service_pattern.distance_between_stops_calculation\""
+type service_pattern_distance_between_stops_calculation_aggregate_fields {
+  avg: service_pattern_distance_between_stops_calculation_avg_fields
+  count(columns: [service_pattern_distance_between_stops_calculation_select_column!], distinct: Boolean): Int!
+  max: service_pattern_distance_between_stops_calculation_max_fields
+  min: service_pattern_distance_between_stops_calculation_min_fields
+  stddev: service_pattern_distance_between_stops_calculation_stddev_fields
+  stddev_pop: service_pattern_distance_between_stops_calculation_stddev_pop_fields
+  stddev_samp: service_pattern_distance_between_stops_calculation_stddev_samp_fields
+  sum: service_pattern_distance_between_stops_calculation_sum_fields
+  var_pop: service_pattern_distance_between_stops_calculation_var_pop_fields
+  var_samp: service_pattern_distance_between_stops_calculation_var_samp_fields
+  variance: service_pattern_distance_between_stops_calculation_variance_fields
+}
+
+"aggregate avg on columns"
+type service_pattern_distance_between_stops_calculation_avg_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate max on columns"
+type service_pattern_distance_between_stops_calculation_max_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The label of the end stop of the stop interval."
+  end_stop_label: String
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date
+  "The ID of the route related to the journey pattern."
+  route_id: uuid
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The label of the start stop of the stop interval."
+  start_stop_label: String
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"aggregate min on columns"
+type service_pattern_distance_between_stops_calculation_min_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The label of the end stop of the stop interval."
+  end_stop_label: String
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date
+  "The ID of the route related to the journey pattern."
+  route_id: uuid
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The label of the start stop of the stop interval."
+  start_stop_label: String
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"response of any mutation on the table \"service_pattern.distance_between_stops_calculation\""
+type service_pattern_distance_between_stops_calculation_mutation_response {
+  "number of rows affected by the mutation"
+  affected_rows: Int!
+  "data from the rows affected by the mutation"
+  returning: [service_pattern_distance_between_stops_calculation!]!
+}
+
+"aggregate stddev on columns"
+type service_pattern_distance_between_stops_calculation_stddev_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate stddev_pop on columns"
+type service_pattern_distance_between_stops_calculation_stddev_pop_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate stddev_samp on columns"
+type service_pattern_distance_between_stops_calculation_stddev_samp_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate sum on columns"
+type service_pattern_distance_between_stops_calculation_sum_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"aggregate var_pop on columns"
+type service_pattern_distance_between_stops_calculation_var_pop_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate var_samp on columns"
+type service_pattern_distance_between_stops_calculation_var_samp_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"aggregate variance on columns"
+type service_pattern_distance_between_stops_calculation_variance_fields {
+  "The length of the stop interval in metres."
+  distance_in_metres: Float
+  "The priority of the route related to the journey pattern."
+  route_priority: Float
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Float
+}
+
+"The scheduled stop points: https://www.transmodel-cen.eu/model/index.htm?goto=2:3:4:845 . Colloquially known as stops from the perspective of timetable planning."
 type service_pattern_scheduled_stop_point {
-  "A computed field, executes function \"service_pattern.scheduled_stop_point_closest_point_on_infrastructure_link\""
+  "The point on the infrastructure link closest to measured_location. A PostGIS PointZ geography in EPSG:4326."
   closest_point_on_infrastructure_link: geography
+  "The direction(s) of traffic with respect to the digitization, i.e. the direction of the specified line string."
   direction: infrastructure_network_direction_enum!
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String!
   "An object relationship"
   located_on_infrastructure_link: infrastructure_network_infrastructure_link!
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid!
+  "The measured location describes the physical location of the stop. For some stops this describes the location of the pole-mounted flag. A PostGIS PointZ geography in EPSG:4326."
   measured_location: geography!
   "An array relationship"
   other_label_instances(
@@ -2888,8 +3534,9 @@ type service_pattern_scheduled_stop_point {
     where: service_pattern_scheduled_stop_point_bool_exp
   ): service_pattern_scheduled_stop_point_aggregate!
   priority: Int!
-  "A computed field, executes function \"service_pattern.scheduled_stop_point_relative_distance_from_infrastructure_link\""
-  relative_distance_from_infrastructure_link: float8
+  "The relative distance of the stop from the start of the linestring along the infrastructure link. Regardless of the specified direction, this value is the distance from the beginning of the linestring. The distance is normalized to the closed interval [0, 1]."
+  relative_distance_from_infrastructure_link_start: float8
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid!
   "An array relationship"
   scheduled_stop_point_in_journey_patterns(
@@ -2981,9 +3628,12 @@ type service_pattern_scheduled_stop_point_avg_fields {
 
 "aggregate max on columns"
 type service_pattern_scheduled_stop_point_max_fields {
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid
   priority: Int
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: uuid
@@ -2995,9 +3645,12 @@ type service_pattern_scheduled_stop_point_max_fields {
 
 "aggregate min on columns"
 type service_pattern_scheduled_stop_point_min_fields {
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid
   priority: Int
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: uuid
@@ -3092,6 +3745,43 @@ type service_pattern_vehicle_mode_on_scheduled_stop_point_mutation_response {
 }
 
 type subscription_root {
+  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  hsl_route_legacy_hsl_municipality_code(
+    "distinct select on columns"
+    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
+    "filter the rows returned"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp
+  ): [hsl_route_legacy_hsl_municipality_code!]!
+  "fetch aggregated fields from the table: \"hsl_route.legacy_hsl_municipality_code\""
+  hsl_route_legacy_hsl_municipality_code_aggregate(
+    "distinct select on columns"
+    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
+    "filter the rows returned"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp
+  ): hsl_route_legacy_hsl_municipality_code_aggregate!
+  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\" using primary key columns"
+  hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
+  "fetch data from the table in a streaming manner: \"hsl_route.legacy_hsl_municipality_code\""
+  hsl_route_legacy_hsl_municipality_code_stream(
+    "maximum number of rows returned in a single batch"
+    batch_size: Int!,
+    "cursor to stream the results returned by the query"
+    cursor: [hsl_route_legacy_hsl_municipality_code_stream_cursor_input]!,
+    "filter the rows returned"
+    where: hsl_route_legacy_hsl_municipality_code_bool_exp
+  ): [hsl_route_legacy_hsl_municipality_code!]!
   "fetch data from the table: \"hsl_route.transport_target\""
   hsl_route_transport_target(
     "distinct select on columns"
@@ -3120,7 +3810,7 @@ type subscription_root {
   ): hsl_route_transport_target_aggregate!
   "fetch data from the table: \"hsl_route.transport_target\" using primary key columns"
   hsl_route_transport_target_by_pk(transport_target: String!): hsl_route_transport_target
-  "fetch data from the table in a streaming manner : \"hsl_route.transport_target\""
+  "fetch data from the table in a streaming manner: \"hsl_route.transport_target\""
   hsl_route_transport_target_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3157,7 +3847,7 @@ type subscription_root {
   ): infrastructure_network_direction_aggregate!
   "fetch data from the table: \"infrastructure_network.direction\" using primary key columns"
   infrastructure_network_direction_by_pk(value: String!): infrastructure_network_direction
-  "fetch data from the table in a streaming manner : \"infrastructure_network.direction\""
+  "fetch data from the table in a streaming manner: \"infrastructure_network.direction\""
   infrastructure_network_direction_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3194,7 +3884,7 @@ type subscription_root {
   ): infrastructure_network_external_source_aggregate!
   "fetch data from the table: \"infrastructure_network.external_source\" using primary key columns"
   infrastructure_network_external_source_by_pk(value: String!): infrastructure_network_external_source
-  "fetch data from the table in a streaming manner : \"infrastructure_network.external_source\""
+  "fetch data from the table in a streaming manner: \"infrastructure_network.external_source\""
   infrastructure_network_external_source_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3264,7 +3954,7 @@ type subscription_root {
     "The ID of the infrastructure link."
     infrastructure_link_id: uuid!
   ): infrastructure_network_infrastructure_link
-  "fetch data from the table in a streaming manner : \"infrastructure_network.infrastructure_link\""
+  "fetch data from the table in a streaming manner: \"infrastructure_network.infrastructure_link\""
   infrastructure_network_infrastructure_link_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3336,7 +4026,7 @@ type subscription_root {
     "The vehicle submode that can safely traverse the infrastructure link."
     vehicle_submode: reusable_components_vehicle_submode_enum!
   ): infrastructure_network_vehicle_submode_on_infrastructure_link
-  "fetch data from the table in a streaming manner : \"infrastructure_network.vehicle_submode_on_infrastructure_link\""
+  "fetch data from the table in a streaming manner: \"infrastructure_network.vehicle_submode_on_infrastructure_link\""
   infrastructure_network_vehicle_submode_on_infrastructure_link_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3406,7 +4096,7 @@ type subscription_root {
     "The ID of the journey pattern."
     journey_pattern_id: uuid!
   ): journey_pattern_journey_pattern
-  "fetch data from the table in a streaming manner : \"journey_pattern.journey_pattern\""
+  "fetch data from the table in a streaming manner: \"journey_pattern.journey_pattern\""
   journey_pattern_journey_pattern_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3448,7 +4138,7 @@ type subscription_root {
     "The order of the scheduled stop point within the journey pattern."
     scheduled_stop_point_sequence: Int!
   ): journey_pattern_scheduled_stop_point_in_journey_pattern
-  "fetch data from the table in a streaming manner : \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
+  "fetch data from the table in a streaming manner: \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
   journey_pattern_scheduled_stop_point_in_journey_pattern_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3488,7 +4178,7 @@ type subscription_root {
     "The vehicle mode from Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=1:6:1:283"
     vehicle_mode: String!
   ): reusable_components_vehicle_mode
-  "fetch data from the table in a streaming manner : \"reusable_components.vehicle_mode\""
+  "fetch data from the table in a streaming manner: \"reusable_components.vehicle_mode\""
   reusable_components_vehicle_mode_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3528,7 +4218,7 @@ type subscription_root {
     "The vehicle submode, which may have implications on which infrastructure links the vehicle can traverse"
     vehicle_submode: String!
   ): reusable_components_vehicle_submode
-  "fetch data from the table in a streaming manner : \"reusable_components.vehicle_submode\""
+  "fetch data from the table in a streaming manner: \"reusable_components.vehicle_submode\""
   reusable_components_vehicle_submode_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3568,7 +4258,7 @@ type subscription_root {
     "The name of the route direction."
     direction: String!
   ): route_direction
-  "fetch data from the table in a streaming manner : \"route.direction\""
+  "fetch data from the table in a streaming manner: \"route.direction\""
   route_direction_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3610,7 +4300,7 @@ type subscription_root {
     "The ID of the route."
     route_id: uuid!
   ): route_infrastructure_link_along_route
-  "fetch data from the table in a streaming manner : \"route.infrastructure_link_along_route\""
+  "fetch data from the table in a streaming manner: \"route.infrastructure_link_along_route\""
   route_infrastructure_link_along_route_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3650,7 +4340,7 @@ type subscription_root {
     "The ID of the line."
     line_id: uuid!
   ): route_line
-  "fetch data from the table in a streaming manner : \"route.line\""
+  "fetch data from the table in a streaming manner: \"route.line\""
   route_line_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3686,8 +4376,11 @@ type subscription_root {
     where: route_route_bool_exp
   ): route_route_aggregate!
   "fetch data from the table: \"route.route\" using primary key columns"
-  route_route_by_pk(route_id: uuid!): route_route
-  "fetch data from the table in a streaming manner : \"route.route\""
+  route_route_by_pk(
+    "The ID of the route."
+    route_id: uuid!
+  ): route_route
+  "fetch data from the table in a streaming manner: \"route.route\""
   route_route_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3727,7 +4420,7 @@ type subscription_root {
     "GTFS route type: https://developers.google.com/transit/gtfs/reference/extended-route-types"
     type_of_line: String!
   ): route_type_of_line
-  "fetch data from the table in a streaming manner : \"route.type_of_line\""
+  "fetch data from the table in a streaming manner: \"route.type_of_line\""
   route_type_of_line_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3736,6 +4429,112 @@ type subscription_root {
     "filter the rows returned"
     where: route_type_of_line_bool_exp
   ): [route_type_of_line!]!
+  "fetch data from the table: \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_distance_between_stops_calculation(
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "fetch aggregated fields from the table: \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_distance_between_stops_calculation_aggregate(
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
+  "fetch data from the table: \"service_pattern.distance_between_stops_calculation\" using primary key columns"
+  service_pattern_distance_between_stops_calculation_by_pk(
+    "The ID of the journey pattern."
+    journey_pattern_id: uuid!,
+    "The observation date for the state of the route related to the journey pattern."
+    observation_date: date!,
+    "The priority of the route related to the journey pattern."
+    route_priority: Int!,
+    "The sequence number of the stop interval within the journey pattern."
+    stop_interval_sequence: Int!
+  ): service_pattern_distance_between_stops_calculation
+  "fetch data from the table in a streaming manner: \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_distance_between_stops_calculation_stream(
+    "maximum number of rows returned in a single batch"
+    batch_size: Int!,
+    "cursor to stream the results returned by the query"
+    cursor: [service_pattern_distance_between_stops_calculation_stream_cursor_input]!,
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "execute function \"service_pattern.get_distances_between_stop_points_by_routes\" which returns \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_by_routes(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_by_routes\""
+    args: service_pattern_get_distances_between_stop_points_by_routes_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "execute function \"service_pattern.get_distances_between_stop_points_by_routes\" and query aggregates on result of table type \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_by_routes_aggregate(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_by_routes_aggregate\""
+    args: service_pattern_get_distances_between_stop_points_by_routes_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
+  "execute function \"service_pattern.get_distances_between_stop_points_in_journey_patterns\" which returns \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_in_journey_patterns(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_in_journey_patterns\""
+    args: service_pattern_get_distances_between_stop_points_in_journey_patterns_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): [service_pattern_distance_between_stops_calculation!]!
+  "execute function \"service_pattern.get_distances_between_stop_points_in_journey_patterns\" and query aggregates on result of table type \"service_pattern.distance_between_stops_calculation\""
+  service_pattern_get_distances_between_stop_points_in_journey_patterns_aggregate(
+    "input parameters for function \"service_pattern_get_distances_between_stop_points_in_journey_patterns_aggregate\""
+    args: service_pattern_get_distances_between_stop_points_in_journey_patterns_args!,
+    "distinct select on columns"
+    distinct_on: [service_pattern_distance_between_stops_calculation_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [service_pattern_distance_between_stops_calculation_order_by!],
+    "filter the rows returned"
+    where: service_pattern_distance_between_stops_calculation_bool_exp
+  ): service_pattern_distance_between_stops_calculation_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point\""
   service_pattern_scheduled_stop_point(
     "distinct select on columns"
@@ -3763,8 +4562,11 @@ type subscription_root {
     where: service_pattern_scheduled_stop_point_bool_exp
   ): service_pattern_scheduled_stop_point_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point\" using primary key columns"
-  service_pattern_scheduled_stop_point_by_pk(scheduled_stop_point_id: uuid!): service_pattern_scheduled_stop_point
-  "fetch data from the table in a streaming manner : \"service_pattern.scheduled_stop_point\""
+  service_pattern_scheduled_stop_point_by_pk(
+    "The ID of the scheduled stop point."
+    scheduled_stop_point_id: uuid!
+  ): service_pattern_scheduled_stop_point
+  "fetch data from the table in a streaming manner: \"service_pattern.scheduled_stop_point\""
   service_pattern_scheduled_stop_point_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3806,7 +4608,7 @@ type subscription_root {
     "The vehicle mode servicing the scheduled stop point."
     vehicle_mode: reusable_components_vehicle_mode_enum!
   ): service_pattern_vehicle_mode_on_scheduled_stop_point
-  "fetch data from the table in a streaming manner : \"service_pattern.vehicle_mode_on_scheduled_stop_point\""
+  "fetch data from the table in a streaming manner: \"service_pattern.vehicle_mode_on_scheduled_stop_point\""
   service_pattern_vehicle_mode_on_scheduled_stop_point_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -3844,7 +4646,7 @@ type subscription_root {
   ): timing_pattern_timing_place_aggregate!
   "fetch data from the table: \"timing_pattern.timing_place\" using primary key columns"
   timing_pattern_timing_place_by_pk(timing_place_id: uuid!): timing_pattern_timing_place
-  "fetch data from the table in a streaming manner : \"timing_pattern.timing_place\""
+  "fetch data from the table in a streaming manner: \"timing_pattern.timing_place\""
   timing_pattern_timing_place_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -4889,6 +5691,36 @@ type timetables_timetables_query {
   ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_calendar.day_type\" using primary key columns"
   timetables_service_calendar_day_type_by_pk(day_type_id: uuid!): timetables_service_calendar_day_type
+  "execute function \"service_calendar.get_active_day_types_for_date\" which returns \"service_calendar.day_type\""
+  timetables_service_calendar_get_active_day_types_for_date(
+    "input parameters for function \"service_calendar_get_active_day_types_for_date\""
+    args: timetables_service_calendar_get_active_day_types_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_day_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_day_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_day_type_bool_exp
+  ): [timetables_service_calendar_day_type!]!
+  "execute function \"service_calendar.get_active_day_types_for_date\" and query aggregates on result of table type \"service_calendar.day_type\""
+  timetables_service_calendar_get_active_day_types_for_date_aggregate(
+    "input parameters for function \"service_calendar_get_active_day_types_for_date_aggregate\""
+    args: timetables_service_calendar_get_active_day_types_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_day_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_day_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_day_type_bool_exp
+  ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -5001,6 +5833,36 @@ type timetables_timetables_query {
   ): timetables_vehicle_service_block_aggregate!
   "fetch data from the table: \"vehicle_service.block\" using primary key columns"
   timetables_vehicle_service_block_by_pk(block_id: uuid!): timetables_vehicle_service_block
+  "execute function \"vehicle_service.get_vehicle_services_for_date\" which returns \"vehicle_service.vehicle_service\""
+  timetables_vehicle_service_get_vehicle_services_for_date(
+    "input parameters for function \"vehicle_service_get_vehicle_services_for_date\""
+    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_vehicle_service!]!
+  "execute function \"vehicle_service.get_vehicle_services_for_date\" and query aggregates on result of table type \"vehicle_service.vehicle_service\""
+  timetables_vehicle_service_get_vehicle_services_for_date_aggregate(
+    "input parameters for function \"vehicle_service_get_vehicle_services_for_date_aggregate\""
+    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_vehicle_service_bool_exp
+  ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -5060,7 +5922,7 @@ type timetables_timetables_subscription {
   ): timetables_journey_pattern_journey_pattern_ref_aggregate!
   "fetch data from the table: \"journey_pattern.journey_pattern_ref\" using primary key columns"
   timetables_journey_pattern_journey_pattern_ref_by_pk(journey_pattern_ref_id: uuid!): timetables_journey_pattern_journey_pattern_ref
-  "fetch data from the table in a streaming manner : \"journey_pattern.journey_pattern_ref\""
+  "fetch data from the table in a streaming manner: \"journey_pattern.journey_pattern_ref\""
   timetables_journey_pattern_journey_pattern_ref_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5097,7 +5959,7 @@ type timetables_timetables_subscription {
   ): timetables_passing_times_timetabled_passing_time_aggregate!
   "fetch data from the table: \"passing_times.timetabled_passing_time\" using primary key columns"
   timetables_passing_times_timetabled_passing_time_by_pk(timetabled_passing_time_id: uuid!): timetables_passing_times_timetabled_passing_time
-  "fetch data from the table in a streaming manner : \"passing_times.timetabled_passing_time\""
+  "fetch data from the table in a streaming manner: \"passing_times.timetabled_passing_time\""
   timetables_passing_times_timetabled_passing_time_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5152,7 +6014,7 @@ type timetables_timetables_subscription {
     "The DAY TYPE for which we define the activeness"
     day_type_id: uuid!
   ): timetables_service_calendar_day_type_active_on_day_of_week
-  "fetch data from the table in a streaming manner : \"service_calendar.day_type_active_on_day_of_week\""
+  "fetch data from the table in a streaming manner: \"service_calendar.day_type_active_on_day_of_week\""
   timetables_service_calendar_day_type_active_on_day_of_week_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5176,7 +6038,7 @@ type timetables_timetables_subscription {
   ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_calendar.day_type\" using primary key columns"
   timetables_service_calendar_day_type_by_pk(day_type_id: uuid!): timetables_service_calendar_day_type
-  "fetch data from the table in a streaming manner : \"service_calendar.day_type\""
+  "fetch data from the table in a streaming manner: \"service_calendar.day_type\""
   timetables_service_calendar_day_type_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5185,6 +6047,36 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_service_calendar_day_type_bool_exp
   ): [timetables_service_calendar_day_type!]!
+  "execute function \"service_calendar.get_active_day_types_for_date\" which returns \"service_calendar.day_type\""
+  timetables_service_calendar_get_active_day_types_for_date(
+    "input parameters for function \"service_calendar_get_active_day_types_for_date\""
+    args: timetables_service_calendar_get_active_day_types_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_day_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_day_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_day_type_bool_exp
+  ): [timetables_service_calendar_day_type!]!
+  "execute function \"service_calendar.get_active_day_types_for_date\" and query aggregates on result of table type \"service_calendar.day_type\""
+  timetables_service_calendar_get_active_day_types_for_date_aggregate(
+    "input parameters for function \"service_calendar_get_active_day_types_for_date_aggregate\""
+    args: timetables_service_calendar_get_active_day_types_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_day_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_day_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_day_type_bool_exp
+  ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -5213,7 +6105,7 @@ type timetables_timetables_subscription {
   ): timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\" using primary key columns"
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_by_pk(scheduled_stop_point_in_journey_pattern_ref_id: uuid!): timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref
-  "fetch data from the table in a streaming manner : \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
+  "fetch data from the table in a streaming manner: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5250,7 +6142,7 @@ type timetables_timetables_subscription {
   ): timetables_vehicle_journey_vehicle_journey_aggregate!
   "fetch data from the table: \"vehicle_journey.vehicle_journey\" using primary key columns"
   timetables_vehicle_journey_vehicle_journey_by_pk(vehicle_journey_id: uuid!): timetables_vehicle_journey_vehicle_journey
-  "fetch data from the table in a streaming manner : \"vehicle_journey.vehicle_journey\""
+  "fetch data from the table in a streaming manner: \"vehicle_journey.vehicle_journey\""
   timetables_vehicle_journey_vehicle_journey_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5287,7 +6179,7 @@ type timetables_timetables_subscription {
   ): timetables_vehicle_schedule_vehicle_schedule_frame_aggregate!
   "fetch data from the table: \"vehicle_schedule.vehicle_schedule_frame\" using primary key columns"
   timetables_vehicle_schedule_vehicle_schedule_frame_by_pk(vehicle_schedule_frame_id: uuid!): timetables_vehicle_schedule_vehicle_schedule_frame
-  "fetch data from the table in a streaming manner : \"vehicle_schedule.vehicle_schedule_frame\""
+  "fetch data from the table in a streaming manner: \"vehicle_schedule.vehicle_schedule_frame\""
   timetables_vehicle_schedule_vehicle_schedule_frame_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5324,7 +6216,7 @@ type timetables_timetables_subscription {
   ): timetables_vehicle_service_block_aggregate!
   "fetch data from the table: \"vehicle_service.block\" using primary key columns"
   timetables_vehicle_service_block_by_pk(block_id: uuid!): timetables_vehicle_service_block
-  "fetch data from the table in a streaming manner : \"vehicle_service.block\""
+  "fetch data from the table in a streaming manner: \"vehicle_service.block\""
   timetables_vehicle_service_block_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5333,6 +6225,36 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_vehicle_service_block_bool_exp
   ): [timetables_vehicle_service_block!]!
+  "execute function \"vehicle_service.get_vehicle_services_for_date\" which returns \"vehicle_service.vehicle_service\""
+  timetables_vehicle_service_get_vehicle_services_for_date(
+    "input parameters for function \"vehicle_service_get_vehicle_services_for_date\""
+    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_vehicle_service!]!
+  "execute function \"vehicle_service.get_vehicle_services_for_date\" and query aggregates on result of table type \"vehicle_service.vehicle_service\""
+  timetables_vehicle_service_get_vehicle_services_for_date_aggregate(
+    "input parameters for function \"vehicle_service_get_vehicle_services_for_date_aggregate\""
+    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_vehicle_service_bool_exp
+  ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -5361,7 +6283,7 @@ type timetables_timetables_subscription {
   ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\" using primary key columns"
   timetables_vehicle_service_vehicle_service_by_pk(vehicle_service_id: uuid!): timetables_vehicle_service_vehicle_service
-  "fetch data from the table in a streaming manner : \"vehicle_service.vehicle_service\""
+  "fetch data from the table in a streaming manner: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service_stream(
     "maximum number of rows returned in a single batch"
     batch_size: Int!,
@@ -5820,6 +6742,28 @@ enum cursor_ordering {
   DESC
 }
 
+"unique or primary key constraints on table \"hsl_route.legacy_hsl_municipality_code\""
+enum hsl_route_legacy_hsl_municipality_code_constraint {
+  "unique or primary key constraint on columns \"hsl_municipality\""
+  legacy_hsl_municipality_code_pkey
+}
+
+"select columns of table \"hsl_route.legacy_hsl_municipality_code\""
+enum hsl_route_legacy_hsl_municipality_code_select_column {
+  "column name"
+  hsl_municipality
+  "column name"
+  jore3_code
+}
+
+"update columns of table \"hsl_route.legacy_hsl_municipality_code\""
+enum hsl_route_legacy_hsl_municipality_code_update_column {
+  "column name"
+  hsl_municipality
+  "column name"
+  jore3_code
+}
+
 "unique or primary key constraints on table \"hsl_route.transport_target\""
 enum hsl_route_transport_target_constraint {
   "unique or primary key constraint on columns \"transport_target\""
@@ -5927,6 +6871,54 @@ enum infrastructure_network_infrastructure_link_select_column {
   shape
 }
 
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_avg_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_avg_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_max_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_max_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_min_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_min_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_stddev_samp_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_stddev_samp_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_sum_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_sum_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
+"select \"infrastructure_network_infrastructure_link_aggregate_bool_exp_var_samp_arguments_columns\" columns of table \"infrastructure_network.infrastructure_link\""
+enum infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_var_samp_arguments_columns {
+  "column name"
+  estimated_length_in_metres
+}
+
 "update columns of table \"infrastructure_network.infrastructure_link\""
 enum infrastructure_network_infrastructure_link_update_column {
   "column name"
@@ -5998,7 +6990,11 @@ enum journey_pattern_scheduled_stop_point_in_journey_pattern_constraint {
 "select columns of table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
 enum journey_pattern_scheduled_stop_point_in_journey_pattern_select_column {
   "column name"
-  is_timing_point
+  is_loading_time_allowed
+  "column name"
+  is_regulated_timing_point
+  "column name"
+  is_used_as_timing_point
   "column name"
   is_via_point
   "column name"
@@ -6013,10 +7009,38 @@ enum journey_pattern_scheduled_stop_point_in_journey_pattern_select_column {
   via_point_short_name_i18n
 }
 
+"select \"journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
+enum journey_pattern_scheduled_stop_point_in_journey_pattern_select_column_journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_and_arguments_columns {
+  "column name"
+  is_loading_time_allowed
+  "column name"
+  is_regulated_timing_point
+  "column name"
+  is_used_as_timing_point
+  "column name"
+  is_via_point
+}
+
+"select \"journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
+enum journey_pattern_scheduled_stop_point_in_journey_pattern_select_column_journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_or_arguments_columns {
+  "column name"
+  is_loading_time_allowed
+  "column name"
+  is_regulated_timing_point
+  "column name"
+  is_used_as_timing_point
+  "column name"
+  is_via_point
+}
+
 "update columns of table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
 enum journey_pattern_scheduled_stop_point_in_journey_pattern_update_column {
   "column name"
-  is_timing_point
+  is_loading_time_allowed
+  "column name"
+  is_regulated_timing_point
+  "column name"
+  is_used_as_timing_point
   "column name"
   is_via_point
   "column name"
@@ -6169,6 +7193,18 @@ enum route_infrastructure_link_along_route_select_column {
   route_id
 }
 
+"select \"route_infrastructure_link_along_route_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"route.infrastructure_link_along_route\""
+enum route_infrastructure_link_along_route_select_column_route_infrastructure_link_along_route_aggregate_bool_exp_bool_and_arguments_columns {
+  "column name"
+  is_traversal_forwards
+}
+
+"select \"route_infrastructure_link_along_route_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"route.infrastructure_link_along_route\""
+enum route_infrastructure_link_along_route_select_column_route_infrastructure_link_along_route_aggregate_bool_exp_bool_or_arguments_columns {
+  "column name"
+  is_traversal_forwards
+}
+
 "update columns of table \"route.infrastructure_link_along_route\""
 enum route_infrastructure_link_along_route_update_column {
   "column name"
@@ -6191,6 +7227,8 @@ enum route_line_constraint {
 enum route_line_select_column {
   "column name"
   label
+  "column name"
+  legacy_hsl_municipality_code
   "column name"
   line_id
   "column name"
@@ -6215,6 +7253,8 @@ enum route_line_select_column {
 enum route_line_update_column {
   "column name"
   label
+  "column name"
+  legacy_hsl_municipality_code
   "column name"
   line_id
   "column name"
@@ -6254,6 +7294,8 @@ enum route_route_select_column {
   "column name"
   label
   "column name"
+  legacy_hsl_municipality_code
+  "column name"
   name_i18n
   "column name"
   on_line_id
@@ -6266,9 +7308,13 @@ enum route_route_select_column {
   "column name"
   route_id
   "column name"
+  unique_label
+  "column name"
   validity_end
   "column name"
   validity_start
+  "column name"
+  variant
 }
 
 "update columns of table \"route.route\""
@@ -6284,6 +7330,8 @@ enum route_route_update_column {
   "column name"
   label
   "column name"
+  legacy_hsl_municipality_code
+  "column name"
   name_i18n
   "column name"
   on_line_id
@@ -6299,6 +7347,8 @@ enum route_route_update_column {
   validity_end
   "column name"
   validity_start
+  "column name"
+  variant
 }
 
 "unique or primary key constraints on table \"route.type_of_line\""
@@ -6346,6 +7396,52 @@ enum route_type_of_line_update_column {
   belonging_to_vehicle_mode
   "column name"
   type_of_line
+}
+
+"unique or primary key constraints on table \"service_pattern.distance_between_stops_calculation\""
+enum service_pattern_distance_between_stops_calculation_constraint {
+  "unique or primary key constraint on columns \"route_priority\", \"stop_interval_sequence\", \"observation_date\", \"journey_pattern_id\""
+  distance_between_stops_calculation_pkey
+}
+
+"select columns of table \"service_pattern.distance_between_stops_calculation\""
+enum service_pattern_distance_between_stops_calculation_select_column {
+  "column name"
+  distance_in_metres
+  "column name"
+  end_stop_label
+  "column name"
+  journey_pattern_id
+  "column name"
+  observation_date
+  "column name"
+  route_id
+  "column name"
+  route_priority
+  "column name"
+  start_stop_label
+  "column name"
+  stop_interval_sequence
+}
+
+"update columns of table \"service_pattern.distance_between_stops_calculation\""
+enum service_pattern_distance_between_stops_calculation_update_column {
+  "column name"
+  distance_in_metres
+  "column name"
+  end_stop_label
+  "column name"
+  journey_pattern_id
+  "column name"
+  observation_date
+  "column name"
+  route_id
+  "column name"
+  route_priority
+  "column name"
+  start_stop_label
+  "column name"
+  stop_interval_sequence
 }
 
 "unique or primary key constraints on table \"service_pattern.scheduled_stop_point\""
@@ -6518,10 +7614,10 @@ enum timetables_service_calendar_day_type_active_on_day_of_week_update_column {
 
 "unique or primary key constraints on table \"service_calendar.day_type\""
 enum timetables_service_calendar_day_type_constraint {
-  "unique or primary key constraint on columns \"label\""
-  day_type_label_key
   "unique or primary key constraint on columns \"day_type_id\""
   day_type_pkey
+  "unique or primary key constraint on columns \"label\""
+  service_calendar_day_type_label_idx
 }
 
 "select columns of table \"service_calendar.day_type\""
@@ -6546,10 +7642,10 @@ enum timetables_service_calendar_day_type_update_column {
 
 "unique or primary key constraints on table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
 enum timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_constraint {
-  "unique or primary key constraint on columns \"scheduled_stop_point_sequence\", \"journey_pattern_ref_id\""
-  scheduled_stop_point_in_journ_journey_pattern_ref_id_schedu_key
   "unique or primary key constraint on columns \"scheduled_stop_point_in_journey_pattern_ref_id\""
   scheduled_stop_point_in_journey_pattern_ref_pkey
+  "unique or primary key constraint on columns \"scheduled_stop_point_sequence\", \"journey_pattern_ref_id\""
+  service_pattern_scheduled_stop_point_in_journey_pattern_ref_idx
 }
 
 "select columns of table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
@@ -6687,7 +7783,7 @@ enum timetables_vehicle_service_vehicle_service_update_column {
 "unique or primary key constraints on table \"timing_pattern.timing_place\""
 enum timing_pattern_timing_place_constraint {
   "unique or primary key constraint on columns \"label\""
-  timing_place_label_key
+  timing_place_label_idx
   "unique or primary key constraint on columns \"timing_place_id\""
   timing_place_pkey
 }
@@ -6712,6 +7808,8 @@ enum timing_pattern_timing_place_update_column {
   timing_place_id
 }
 
+scalar _uuid
+
 scalar date
 
 scalar float8
@@ -6723,6 +7821,8 @@ scalar geometry
 scalar interval
 
 scalar jsonb
+
+scalar smallint
 
 scalar timestamptz
 
@@ -6873,12 +7973,94 @@ input geometry_comparison_exp {
   _st_within: geometry
 }
 
+"Boolean expression to filter rows from the table \"hsl_route.legacy_hsl_municipality_code\". All fields are combined with a logical 'AND'."
+input hsl_route_legacy_hsl_municipality_code_bool_exp {
+  _and: [hsl_route_legacy_hsl_municipality_code_bool_exp!]
+  _not: hsl_route_legacy_hsl_municipality_code_bool_exp
+  _or: [hsl_route_legacy_hsl_municipality_code_bool_exp!]
+  hsl_municipality: String_comparison_exp
+  jore3_code: smallint_comparison_exp
+  lines: route_line_bool_exp
+  lines_aggregate: route_line_aggregate_bool_exp
+  routes: route_route_bool_exp
+  routes_aggregate: route_route_aggregate_bool_exp
+}
+
+"input type for incrementing numeric columns in table \"hsl_route.legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_inc_input {
+  jore3_code: smallint
+}
+
+"input type for inserting data into table \"hsl_route.legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_insert_input {
+  hsl_municipality: String
+  jore3_code: smallint
+  lines: route_line_arr_rel_insert_input
+  routes: route_route_arr_rel_insert_input
+}
+
+"input type for inserting object relation for remote table \"hsl_route.legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input {
+  data: hsl_route_legacy_hsl_municipality_code_insert_input!
+  "upsert condition"
+  on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
+}
+
+"on_conflict condition type for table \"hsl_route.legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_on_conflict {
+  constraint: hsl_route_legacy_hsl_municipality_code_constraint!
+  update_columns: [hsl_route_legacy_hsl_municipality_code_update_column!]! = []
+  where: hsl_route_legacy_hsl_municipality_code_bool_exp
+}
+
+"Ordering options when selecting data from \"hsl_route.legacy_hsl_municipality_code\"."
+input hsl_route_legacy_hsl_municipality_code_order_by {
+  hsl_municipality: order_by
+  jore3_code: order_by
+  lines_aggregate: route_line_aggregate_order_by
+  routes_aggregate: route_route_aggregate_order_by
+}
+
+"primary key columns input for table: hsl_route.legacy_hsl_municipality_code"
+input hsl_route_legacy_hsl_municipality_code_pk_columns_input {
+  hsl_municipality: String!
+}
+
+"input type for updating data in table \"hsl_route.legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_set_input {
+  hsl_municipality: String
+  jore3_code: smallint
+}
+
+"Streaming cursor of the table \"hsl_route_legacy_hsl_municipality_code\""
+input hsl_route_legacy_hsl_municipality_code_stream_cursor_input {
+  "Stream column input with initial value"
+  initial_value: hsl_route_legacy_hsl_municipality_code_stream_cursor_value_input!
+  "cursor ordering"
+  ordering: cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input hsl_route_legacy_hsl_municipality_code_stream_cursor_value_input {
+  hsl_municipality: String
+  jore3_code: smallint
+}
+
+input hsl_route_legacy_hsl_municipality_code_updates {
+  "increments the numeric columns with given value of the filtered values"
+  _inc: hsl_route_legacy_hsl_municipality_code_inc_input
+  "sets the columns of the filtered rows to the given values"
+  _set: hsl_route_legacy_hsl_municipality_code_set_input
+  where: hsl_route_legacy_hsl_municipality_code_bool_exp!
+}
+
 "Boolean expression to filter rows from the table \"hsl_route.transport_target\". All fields are combined with a logical 'AND'."
 input hsl_route_transport_target_bool_exp {
   _and: [hsl_route_transport_target_bool_exp!]
   _not: hsl_route_transport_target_bool_exp
   _or: [hsl_route_transport_target_bool_exp!]
   lines: route_line_bool_exp
+  lines_aggregate: route_line_aggregate_bool_exp
   transport_target: String_comparison_exp
 }
 
@@ -6895,6 +8077,13 @@ input hsl_route_transport_target_enum_comparison_exp {
 input hsl_route_transport_target_insert_input {
   lines: route_line_arr_rel_insert_input
   transport_target: String
+}
+
+"input type for inserting object relation for remote table \"hsl_route.transport_target\""
+input hsl_route_transport_target_obj_rel_insert_input {
+  data: hsl_route_transport_target_insert_input!
+  "upsert condition"
+  on_conflict: hsl_route_transport_target_on_conflict
 }
 
 "on_conflict condition type for table \"hsl_route.transport_target\""
@@ -6945,6 +8134,7 @@ input infrastructure_network_direction_bool_exp {
   _not: infrastructure_network_direction_bool_exp
   _or: [infrastructure_network_direction_bool_exp!]
   infrastructure_links: infrastructure_network_infrastructure_link_bool_exp
+  infrastructure_links_aggregate: infrastructure_network_infrastructure_link_aggregate_bool_exp
   value: String_comparison_exp
 }
 
@@ -7018,6 +8208,7 @@ input infrastructure_network_external_source_bool_exp {
   _not: infrastructure_network_external_source_bool_exp
   _or: [infrastructure_network_external_source_bool_exp!]
   infrastructure_links: infrastructure_network_infrastructure_link_bool_exp
+  infrastructure_links_aggregate: infrastructure_network_infrastructure_link_aggregate_bool_exp
   value: String_comparison_exp
 }
 
@@ -7091,6 +8282,91 @@ input infrastructure_network_find_point_direction_on_link_args {
   point_of_interest: geography
 }
 
+input infrastructure_network_infrastructure_link_aggregate_bool_exp {
+  avg: infrastructure_network_infrastructure_link_aggregate_bool_exp_avg
+  corr: infrastructure_network_infrastructure_link_aggregate_bool_exp_corr
+  count: infrastructure_network_infrastructure_link_aggregate_bool_exp_count
+  covar_samp: infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp
+  max: infrastructure_network_infrastructure_link_aggregate_bool_exp_max
+  min: infrastructure_network_infrastructure_link_aggregate_bool_exp_min
+  stddev_samp: infrastructure_network_infrastructure_link_aggregate_bool_exp_stddev_samp
+  sum: infrastructure_network_infrastructure_link_aggregate_bool_exp_sum
+  var_samp: infrastructure_network_infrastructure_link_aggregate_bool_exp_var_samp
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_avg {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_avg_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_corr {
+  arguments: infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments {
+  X: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments_columns!
+  Y: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_corr_arguments_columns!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_count {
+  arguments: [infrastructure_network_infrastructure_link_select_column!]
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp {
+  arguments: infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments {
+  X: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments_columns!
+  Y: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_covar_samp_arguments_columns!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_max {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_max_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_min {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_min_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_stddev_samp {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_stddev_samp_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_sum {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_sum_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
+input infrastructure_network_infrastructure_link_aggregate_bool_exp_var_samp {
+  arguments: infrastructure_network_infrastructure_link_select_column_infrastructure_network_infrastructure_link_aggregate_bool_exp_var_samp_arguments_columns!
+  distinct: Boolean
+  filter: infrastructure_network_infrastructure_link_bool_exp
+  predicate: float8_comparison_exp!
+}
+
 "order by aggregate values of table \"infrastructure_network.infrastructure_link\""
 input infrastructure_network_infrastructure_link_aggregate_order_by {
   avg: infrastructure_network_infrastructure_link_avg_order_by
@@ -7131,11 +8407,15 @@ input infrastructure_network_infrastructure_link_bool_exp {
   external_link_source: infrastructure_network_external_source_enum_comparison_exp
   external_source: infrastructure_network_external_source_bool_exp
   infrastructure_link_along_routes: route_infrastructure_link_along_route_bool_exp
+  infrastructure_link_along_routes_aggregate: route_infrastructure_link_along_route_aggregate_bool_exp
   infrastructure_link_id: uuid_comparison_exp
   scheduled_stop_points_located_on_infrastructure_link: service_pattern_scheduled_stop_point_bool_exp
+  scheduled_stop_points_located_on_infrastructure_link_aggregate: service_pattern_scheduled_stop_point_aggregate_bool_exp
   shape: geography_comparison_exp
   vehicle_submode_on_infrastructure_link: infrastructure_network_vehicle_submode_on_infrastructure_link_bool_exp
+  vehicle_submode_on_infrastructure_link_aggregate: infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp
   vehicle_submode_on_infrastructure_links: infrastructure_network_vehicle_submode_on_infrastructure_link_bool_exp
+  vehicle_submode_on_infrastructure_links_aggregate: infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp
 }
 
 "input type for incrementing numeric columns in table \"infrastructure_network.infrastructure_link\""
@@ -7308,6 +8588,17 @@ input infrastructure_network_resolve_point_to_closest_link_args {
   geog: geography
 }
 
+input infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp {
+  count: infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp_count
+}
+
+input infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp_count {
+  arguments: [infrastructure_network_vehicle_submode_on_infrastructure_link_select_column!]
+  distinct: Boolean
+  filter: infrastructure_network_vehicle_submode_on_infrastructure_link_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"infrastructure_network.vehicle_submode_on_infrastructure_link\""
 input infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_order_by {
   count: order_by
@@ -7432,6 +8723,17 @@ input journey_pattern_check_infra_link_stop_refs_with_new_scheduled_stop_point_a
   replace_scheduled_stop_point_id: uuid
 }
 
+input journey_pattern_journey_pattern_aggregate_bool_exp {
+  count: journey_pattern_journey_pattern_aggregate_bool_exp_count
+}
+
+input journey_pattern_journey_pattern_aggregate_bool_exp_count {
+  arguments: [journey_pattern_journey_pattern_select_column!]
+  distinct: Boolean
+  filter: journey_pattern_journey_pattern_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"journey_pattern.journey_pattern\""
 input journey_pattern_journey_pattern_aggregate_order_by {
   count: order_by
@@ -7455,6 +8757,7 @@ input journey_pattern_journey_pattern_bool_exp {
   journey_pattern_route: route_route_bool_exp
   on_route_id: uuid_comparison_exp
   scheduled_stop_point_in_journey_patterns: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
+  scheduled_stop_point_in_journey_patterns_aggregate: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp
 }
 
 "input type for inserting data into table \"journey_pattern.journey_pattern\""
@@ -7541,6 +8844,33 @@ input journey_pattern_journey_pattern_updates {
   where: journey_pattern_journey_pattern_bool_exp!
 }
 
+input journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp {
+  bool_and: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_and
+  bool_or: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_or
+  count: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_count
+}
+
+input journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_and {
+  arguments: journey_pattern_scheduled_stop_point_in_journey_pattern_select_column_journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_or {
+  arguments: journey_pattern_scheduled_stop_point_in_journey_pattern_select_column_journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp_count {
+  arguments: [journey_pattern_scheduled_stop_point_in_journey_pattern_select_column!]
+  distinct: Boolean
+  filter: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
 input journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_order_by {
   avg: journey_pattern_scheduled_stop_point_in_journey_pattern_avg_order_by
@@ -7580,13 +8910,16 @@ input journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp {
   _and: [journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp!]
   _not: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
   _or: [journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp!]
-  is_timing_point: Boolean_comparison_exp
+  is_loading_time_allowed: Boolean_comparison_exp
+  is_regulated_timing_point: Boolean_comparison_exp
+  is_used_as_timing_point: Boolean_comparison_exp
   is_via_point: Boolean_comparison_exp
   journey_pattern: journey_pattern_journey_pattern_bool_exp
   journey_pattern_id: uuid_comparison_exp
   scheduled_stop_point_label: String_comparison_exp
   scheduled_stop_point_sequence: Int_comparison_exp
   scheduled_stop_points: service_pattern_scheduled_stop_point_bool_exp
+  scheduled_stop_points_aggregate: service_pattern_scheduled_stop_point_aggregate_bool_exp
   via_point_name_i18n: jsonb_comparison_exp
   via_point_short_name_i18n: jsonb_comparison_exp
 }
@@ -7617,8 +8950,12 @@ input journey_pattern_scheduled_stop_point_in_journey_pattern_inc_input {
 
 "input type for inserting data into table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
 input journey_pattern_scheduled_stop_point_in_journey_pattern_insert_input {
-  "Is this scheduled stop point a timing point?"
-  is_timing_point: Boolean
+  "Is adding loading time to this scheduled stop point in the journey pattern allowed?"
+  is_loading_time_allowed: Boolean
+  "Is this stop point passing time regulated so that it cannot be passed before scheduled time?"
+  is_regulated_timing_point: Boolean
+  "Is this scheduled stop point used as a timing point in the journey pattern?"
+  is_used_as_timing_point: Boolean
   "Is this scheduled stop point a via point?"
   is_via_point: Boolean
   journey_pattern: journey_pattern_journey_pattern_obj_rel_insert_input
@@ -7659,7 +8996,9 @@ input journey_pattern_scheduled_stop_point_in_journey_pattern_on_conflict {
 
 "Ordering options when selecting data from \"journey_pattern.scheduled_stop_point_in_journey_pattern\"."
 input journey_pattern_scheduled_stop_point_in_journey_pattern_order_by {
-  is_timing_point: order_by
+  is_loading_time_allowed: order_by
+  is_regulated_timing_point: order_by
+  is_used_as_timing_point: order_by
   is_via_point: order_by
   journey_pattern: journey_pattern_journey_pattern_order_by
   journey_pattern_id: order_by
@@ -7686,8 +9025,12 @@ input journey_pattern_scheduled_stop_point_in_journey_pattern_prepend_input {
 
 "input type for updating data in table \"journey_pattern.scheduled_stop_point_in_journey_pattern\""
 input journey_pattern_scheduled_stop_point_in_journey_pattern_set_input {
-  "Is this scheduled stop point a timing point?"
-  is_timing_point: Boolean
+  "Is adding loading time to this scheduled stop point in the journey pattern allowed?"
+  is_loading_time_allowed: Boolean
+  "Is this stop point passing time regulated so that it cannot be passed before scheduled time?"
+  is_regulated_timing_point: Boolean
+  "Is this scheduled stop point used as a timing point in the journey pattern?"
+  is_used_as_timing_point: Boolean
   "Is this scheduled stop point a via point?"
   is_via_point: Boolean
   "The ID of the journey pattern."
@@ -7727,8 +9070,12 @@ input journey_pattern_scheduled_stop_point_in_journey_pattern_stream_cursor_inpu
 
 "Initial value of the column from where the streaming should start"
 input journey_pattern_scheduled_stop_point_in_journey_pattern_stream_cursor_value_input {
-  "Is this scheduled stop point a timing point?"
-  is_timing_point: Boolean
+  "Is adding loading time to this scheduled stop point in the journey pattern allowed?"
+  is_loading_time_allowed: Boolean
+  "Is this stop point passing time regulated so that it cannot be passed before scheduled time?"
+  is_regulated_timing_point: Boolean
+  "Is this scheduled stop point used as a timing point in the journey pattern?"
+  is_used_as_timing_point: Boolean
   "Is this scheduled stop point a via point?"
   is_via_point: Boolean
   "The ID of the journey pattern."
@@ -7810,6 +9157,17 @@ input jsonb_comparison_exp {
   _nin: [jsonb!]
 }
 
+input passing_times_timetabled_passing_time_aggregate_bool_exp {
+  count: passing_times_timetabled_passing_time_aggregate_bool_exp_count
+}
+
+input passing_times_timetabled_passing_time_aggregate_bool_exp_count {
+  arguments: [timetables_passing_times_timetabled_passing_time_select_column!]
+  distinct: Boolean
+  filter: timetables_passing_times_timetabled_passing_time_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "Boolean expression to filter rows from the table \"reusable_components.vehicle_mode\". All fields are combined with a logical 'AND'."
 input reusable_components_vehicle_mode_bool_exp {
   _and: [reusable_components_vehicle_mode_bool_exp!]
@@ -7817,6 +9175,7 @@ input reusable_components_vehicle_mode_bool_exp {
   _or: [reusable_components_vehicle_mode_bool_exp!]
   vehicle_mode: String_comparison_exp
   vehicle_submodes: reusable_components_vehicle_submode_bool_exp
+  vehicle_submodes_aggregate: reusable_components_vehicle_submode_aggregate_bool_exp
 }
 
 "Boolean expression to compare columns of type \"reusable_components_vehicle_mode_enum\". All fields are combined with logical 'AND'."
@@ -7887,6 +9246,17 @@ input reusable_components_vehicle_mode_updates {
   where: reusable_components_vehicle_mode_bool_exp!
 }
 
+input reusable_components_vehicle_submode_aggregate_bool_exp {
+  count: reusable_components_vehicle_submode_aggregate_bool_exp_count
+}
+
+input reusable_components_vehicle_submode_aggregate_bool_exp_count {
+  arguments: [reusable_components_vehicle_submode_select_column!]
+  distinct: Boolean
+  filter: reusable_components_vehicle_submode_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"reusable_components.vehicle_submode\""
 input reusable_components_vehicle_submode_aggregate_order_by {
   count: order_by
@@ -7910,6 +9280,7 @@ input reusable_components_vehicle_submode_bool_exp {
   vehicle_mode: reusable_components_vehicle_mode_bool_exp
   vehicle_submode: String_comparison_exp
   vehicle_submode_on_infrastructure_links: infrastructure_network_vehicle_submode_on_infrastructure_link_bool_exp
+  vehicle_submode_on_infrastructure_links_aggregate: infrastructure_network_vehicle_submode_on_infrastructure_link_aggregate_bool_exp
 }
 
 "Boolean expression to compare columns of type \"reusable_components_vehicle_submode_enum\". All fields are combined with logical 'AND'."
@@ -8001,6 +9372,17 @@ input reusable_components_vehicle_submode_updates {
   where: reusable_components_vehicle_submode_bool_exp!
 }
 
+input route_direction_aggregate_bool_exp {
+  count: route_direction_aggregate_bool_exp_count
+}
+
+input route_direction_aggregate_bool_exp_count {
+  arguments: [route_direction_select_column!]
+  distinct: Boolean
+  filter: route_direction_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"route.direction\""
 input route_direction_aggregate_order_by {
   count: order_by
@@ -8023,6 +9405,7 @@ input route_direction_bool_exp {
   direction: String_comparison_exp
   directionByTheOppositeOfDirection: route_direction_bool_exp
   directions: route_direction_bool_exp
+  directions_aggregate: route_direction_aggregate_bool_exp
   the_opposite_of_direction: route_direction_enum_comparison_exp
 }
 
@@ -8113,6 +9496,33 @@ input route_direction_updates {
   "sets the columns of the filtered rows to the given values"
   _set: route_direction_set_input
   where: route_direction_bool_exp!
+}
+
+input route_infrastructure_link_along_route_aggregate_bool_exp {
+  bool_and: route_infrastructure_link_along_route_aggregate_bool_exp_bool_and
+  bool_or: route_infrastructure_link_along_route_aggregate_bool_exp_bool_or
+  count: route_infrastructure_link_along_route_aggregate_bool_exp_count
+}
+
+input route_infrastructure_link_along_route_aggregate_bool_exp_bool_and {
+  arguments: route_infrastructure_link_along_route_select_column_route_infrastructure_link_along_route_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: route_infrastructure_link_along_route_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input route_infrastructure_link_along_route_aggregate_bool_exp_bool_or {
+  arguments: route_infrastructure_link_along_route_select_column_route_infrastructure_link_along_route_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: route_infrastructure_link_along_route_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input route_infrastructure_link_along_route_aggregate_bool_exp_count {
+  arguments: [route_infrastructure_link_along_route_select_column!]
+  distinct: Boolean
+  filter: route_infrastructure_link_along_route_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 "order by aggregate values of table \"route.infrastructure_link_along_route\""
@@ -8300,6 +9710,17 @@ input route_infrastructure_link_along_route_variance_order_by {
   infrastructure_link_sequence: order_by
 }
 
+input route_line_aggregate_bool_exp {
+  count: route_line_aggregate_bool_exp_count
+}
+
+input route_line_aggregate_bool_exp_count {
+  arguments: [route_line_select_column!]
+  distinct: Boolean
+  filter: route_line_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"route.line\""
 input route_line_aggregate_order_by {
   avg: route_line_avg_order_by
@@ -8342,12 +9763,16 @@ input route_line_bool_exp {
   _not: route_line_bool_exp
   _or: [route_line_bool_exp!]
   label: String_comparison_exp
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_bool_exp
+  legacy_hsl_municipality_code: String_comparison_exp
   line_id: uuid_comparison_exp
   line_routes: route_route_bool_exp
+  line_routes_aggregate: route_route_aggregate_bool_exp
   name_i18n: jsonb_comparison_exp
   primary_vehicle_mode: reusable_components_vehicle_mode_enum_comparison_exp
   priority: Int_comparison_exp
   short_name_i18n: jsonb_comparison_exp
+  transportTargetByTransportTarget: hsl_route_transport_target_bool_exp
   transport_target: hsl_route_transport_target_enum_comparison_exp
   typeOfLineByTypeOfLine: route_type_of_line_bool_exp
   type_of_line: route_type_of_line_enum_comparison_exp
@@ -8390,6 +9815,9 @@ input route_line_inc_input {
 input route_line_insert_input {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid
   line_routes: route_route_arr_rel_insert_input
@@ -8401,6 +9829,7 @@ input route_line_insert_input {
   priority: Int
   "The shorted name of the line. Placeholder for multilingual strings."
   short_name_i18n: jsonb
+  transportTargetByTransportTarget: hsl_route_transport_target_obj_rel_insert_input
   transport_target: hsl_route_transport_target_enum
   typeOfLineByTypeOfLine: route_type_of_line_obj_rel_insert_input
   "The type of the line."
@@ -8416,6 +9845,8 @@ input route_line_insert_input {
 input route_line_max_order_by {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: order_by
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: order_by
   "The ID of the line."
   line_id: order_by
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
@@ -8430,6 +9861,8 @@ input route_line_max_order_by {
 input route_line_min_order_by {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: order_by
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: order_by
   "The ID of the line."
   line_id: order_by
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
@@ -8457,12 +9890,15 @@ input route_line_on_conflict {
 "Ordering options when selecting data from \"route.line\"."
 input route_line_order_by {
   label: order_by
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_order_by
+  legacy_hsl_municipality_code: order_by
   line_id: order_by
   line_routes_aggregate: route_route_aggregate_order_by
   name_i18n: order_by
   primary_vehicle_mode: order_by
   priority: order_by
   short_name_i18n: order_by
+  transportTargetByTransportTarget: hsl_route_transport_target_order_by
   transport_target: order_by
   typeOfLineByTypeOfLine: route_type_of_line_order_by
   type_of_line: order_by
@@ -8489,6 +9925,8 @@ input route_line_prepend_input {
 input route_line_set_input {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid
   "The name of the line. Placeholder for multilingual strings."
@@ -8538,6 +9976,8 @@ input route_line_stream_cursor_input {
 input route_line_stream_cursor_value_input {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   "The ID of the line."
   line_id: uuid
   "The name of the line. Placeholder for multilingual strings."
@@ -8599,6 +10039,17 @@ input route_line_variance_order_by {
   priority: order_by
 }
 
+input route_route_aggregate_bool_exp {
+  count: route_route_aggregate_bool_exp_count
+}
+
+input route_route_aggregate_bool_exp_count {
+  arguments: [route_route_select_column!]
+  distinct: Boolean
+  filter: route_route_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"route.route\""
 input route_route_aggregate_order_by {
   avg: route_route_avg_order_by
@@ -8616,6 +10067,7 @@ input route_route_aggregate_order_by {
 
 "append existing jsonb value of filtered columns with new jsonb value"
 input route_route_append_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: jsonb
   destination_name_i18n: jsonb
   destination_short_name_i18n: jsonb
@@ -8633,7 +10085,10 @@ input route_route_arr_rel_insert_input {
 
 "order by avg() on columns of table \"route.route\""
 input route_route_avg_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "Boolean expression to filter rows from the table \"route.route\". All fields are combined with a logical 'AND'."
@@ -8646,7 +10101,10 @@ input route_route_bool_exp {
   destination_short_name_i18n: jsonb_comparison_exp
   direction: route_direction_enum_comparison_exp
   infrastructure_links_along_route: route_infrastructure_link_along_route_bool_exp
+  infrastructure_links_along_route_aggregate: route_infrastructure_link_along_route_aggregate_bool_exp
   label: String_comparison_exp
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_bool_exp
+  legacy_hsl_municipality_code: String_comparison_exp
   name_i18n: jsonb_comparison_exp
   on_line_id: uuid_comparison_exp
   origin_name_i18n: jsonb_comparison_exp
@@ -8654,14 +10112,18 @@ input route_route_bool_exp {
   priority: Int_comparison_exp
   route_id: uuid_comparison_exp
   route_journey_patterns: journey_pattern_journey_pattern_bool_exp
+  route_journey_patterns_aggregate: journey_pattern_journey_pattern_aggregate_bool_exp
   route_line: route_line_bool_exp
   route_shape: geography_comparison_exp
+  unique_label: String_comparison_exp
   validity_end: date_comparison_exp
   validity_start: date_comparison_exp
+  variant: smallint_comparison_exp
 }
 
 "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
 input route_route_delete_at_path_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: [String!]
   destination_name_i18n: [String!]
   destination_short_name_i18n: [String!]
@@ -8672,6 +10134,7 @@ input route_route_delete_at_path_input {
 
 "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
 input route_route_delete_elem_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: Int
   destination_name_i18n: Int
   destination_short_name_i18n: Int
@@ -8682,6 +10145,7 @@ input route_route_delete_elem_input {
 
 "delete key/value pair or string element. key/value pairs are matched based on their key value"
 input route_route_delete_key_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: String
   destination_name_i18n: String
   destination_short_name_i18n: String
@@ -8692,47 +10156,87 @@ input route_route_delete_key_input {
 
 "input type for incrementing numeric columns in table \"route.route\""
 input route_route_inc_input {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The variant for route definition."
+  variant: smallint
 }
 
 "input type for inserting data into table \"route.route\""
 input route_route_insert_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: jsonb
   destination_name_i18n: jsonb
   destination_short_name_i18n: jsonb
+  "The direction of the route definition."
   direction: route_direction_enum
   infrastructure_links_along_route: route_infrastructure_link_along_route_arr_rel_insert_input
+  "The label of the route definition."
   label: String
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   name_i18n: jsonb
+  "The line to which this route belongs."
   on_line_id: uuid
   origin_name_i18n: jsonb
   origin_short_name_i18n: jsonb
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The ID of the route."
   route_id: uuid
   route_journey_patterns: journey_pattern_journey_pattern_arr_rel_insert_input
   route_line: route_line_obj_rel_insert_input
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "order by max() on columns of table \"route.route\""
 input route_route_max_order_by {
+  "The label of the route definition."
   label: order_by
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: order_by
+  "The line to which this route belongs."
   on_line_id: order_by
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The ID of the route."
   route_id: order_by
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: order_by
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: order_by
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "order by min() on columns of table \"route.route\""
 input route_route_min_order_by {
+  "The label of the route definition."
   label: order_by
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: order_by
+  "The line to which this route belongs."
   on_line_id: order_by
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The ID of the route."
   route_id: order_by
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: order_by
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: order_by
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "input type for inserting object relation for remote table \"route.route\""
@@ -8757,6 +10261,8 @@ input route_route_order_by {
   direction: order_by
   infrastructure_links_along_route_aggregate: route_infrastructure_link_along_route_aggregate_order_by
   label: order_by
+  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_order_by
+  legacy_hsl_municipality_code: order_by
   name_i18n: order_by
   on_line_id: order_by
   origin_name_i18n: order_by
@@ -8766,17 +10272,21 @@ input route_route_order_by {
   route_journey_patterns_aggregate: journey_pattern_journey_pattern_aggregate_order_by
   route_line: route_line_order_by
   route_shape: order_by
+  unique_label: order_by
   validity_end: order_by
   validity_start: order_by
+  variant: order_by
 }
 
 "primary key columns input for table: route.route"
 input route_route_pk_columns_input {
+  "The ID of the route."
   route_id: uuid!
 }
 
 "prepend existing jsonb value of filtered columns with new jsonb value"
 input route_route_prepend_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: jsonb
   destination_name_i18n: jsonb
   destination_short_name_i18n: jsonb
@@ -8787,34 +10297,55 @@ input route_route_prepend_input {
 
 "input type for updating data in table \"route.route\""
 input route_route_set_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: jsonb
   destination_name_i18n: jsonb
   destination_short_name_i18n: jsonb
+  "The direction of the route definition."
   direction: route_direction_enum
+  "The label of the route definition."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   name_i18n: jsonb
+  "The line to which this route belongs."
   on_line_id: uuid
   origin_name_i18n: jsonb
   origin_short_name_i18n: jsonb
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The ID of the route."
   route_id: uuid
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "order by stddev() on columns of table \"route.route\""
 input route_route_stddev_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "order by stddev_pop() on columns of table \"route.route\""
 input route_route_stddev_pop_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "order by stddev_samp() on columns of table \"route.route\""
 input route_route_stddev_samp_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "Streaming cursor of the table \"route_route\""
@@ -8827,24 +10358,41 @@ input route_route_stream_cursor_input {
 
 "Initial value of the column from where the streaming should start"
 input route_route_stream_cursor_value_input {
+  "The description of the route in the form of starting location - destination. Placeholder for multilingual strings."
   description_i18n: jsonb
   destination_name_i18n: jsonb
   destination_short_name_i18n: jsonb
+  "The direction of the route definition."
   direction: route_direction_enum
+  "The label of the route definition."
   label: String
+  "Defines the legacy municipality that is mainly used for data exports."
+  legacy_hsl_municipality_code: String
   name_i18n: jsonb
+  "The line to which this route belongs."
   on_line_id: uuid
   origin_name_i18n: jsonb
   origin_short_name_i18n: jsonb
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  "The ID of the route."
   route_id: uuid
+  "Derived from label and variant. Routes are unique for each unique label for a certain direction, priority and validity period"
+  unique_label: String
+  "The point in time from which onwards the route is no longer valid. If NULL, the route is valid indefinitely after the start time of the validity period."
   validity_end: date
+  "The point in time when the route becomes valid. If NULL, the route has been always valid before end time of validity period."
   validity_start: date
+  "The variant for route definition."
+  variant: smallint
 }
 
 "order by sum() on columns of table \"route.route\""
 input route_route_sum_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 input route_route_updates {
@@ -8867,17 +10415,26 @@ input route_route_updates {
 
 "order by var_pop() on columns of table \"route.route\""
 input route_route_var_pop_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "order by var_samp() on columns of table \"route.route\""
 input route_route_var_samp_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "order by variance() on columns of table \"route.route\""
 input route_route_variance_order_by {
+  "The priority of the route definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  "The variant for route definition."
+  variant: order_by
 }
 
 "Boolean expression to filter rows from the table \"route.type_of_line\". All fields are combined with a logical 'AND'."
@@ -8887,6 +10444,7 @@ input route_type_of_line_bool_exp {
   _or: [route_type_of_line_bool_exp!]
   belonging_to_vehicle_mode: reusable_components_vehicle_mode_enum_comparison_exp
   lines: route_line_bool_exp
+  lines_aggregate: route_line_aggregate_bool_exp
   type_of_line: String_comparison_exp
   vehicle_mode: reusable_components_vehicle_mode_bool_exp
 }
@@ -8965,6 +10523,171 @@ input route_type_of_line_updates {
   where: route_type_of_line_bool_exp!
 }
 
+input service_calendar_day_type_active_on_day_of_week_aggregate_bool_exp {
+  count: service_calendar_day_type_active_on_day_of_week_aggregate_bool_exp_count
+}
+
+input service_calendar_day_type_active_on_day_of_week_aggregate_bool_exp_count {
+  arguments: [timetables_service_calendar_day_type_active_on_day_of_week_select_column!]
+  distinct: Boolean
+  filter: timetables_service_calendar_day_type_active_on_day_of_week_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+"Boolean expression to filter rows from the table \"service_pattern.distance_between_stops_calculation\". All fields are combined with a logical 'AND'."
+input service_pattern_distance_between_stops_calculation_bool_exp {
+  _and: [service_pattern_distance_between_stops_calculation_bool_exp!]
+  _not: service_pattern_distance_between_stops_calculation_bool_exp
+  _or: [service_pattern_distance_between_stops_calculation_bool_exp!]
+  distance_in_metres: float8_comparison_exp
+  end_stop_label: String_comparison_exp
+  journey_pattern_id: uuid_comparison_exp
+  observation_date: date_comparison_exp
+  route_id: uuid_comparison_exp
+  route_priority: Int_comparison_exp
+  start_stop_label: String_comparison_exp
+  stop_interval_sequence: Int_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"service_pattern.distance_between_stops_calculation\""
+input service_pattern_distance_between_stops_calculation_inc_input {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"input type for inserting data into table \"service_pattern.distance_between_stops_calculation\""
+input service_pattern_distance_between_stops_calculation_insert_input {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The label of the end stop of the stop interval."
+  end_stop_label: String
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date
+  "The ID of the route related to the journey pattern."
+  route_id: uuid
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The label of the start stop of the stop interval."
+  start_stop_label: String
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"on_conflict condition type for table \"service_pattern.distance_between_stops_calculation\""
+input service_pattern_distance_between_stops_calculation_on_conflict {
+  constraint: service_pattern_distance_between_stops_calculation_constraint!
+  update_columns: [service_pattern_distance_between_stops_calculation_update_column!]! = []
+  where: service_pattern_distance_between_stops_calculation_bool_exp
+}
+
+"Ordering options when selecting data from \"service_pattern.distance_between_stops_calculation\"."
+input service_pattern_distance_between_stops_calculation_order_by {
+  distance_in_metres: order_by
+  end_stop_label: order_by
+  journey_pattern_id: order_by
+  observation_date: order_by
+  route_id: order_by
+  route_priority: order_by
+  start_stop_label: order_by
+  stop_interval_sequence: order_by
+}
+
+"primary key columns input for table: service_pattern.distance_between_stops_calculation"
+input service_pattern_distance_between_stops_calculation_pk_columns_input {
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid!
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date!
+  "The priority of the route related to the journey pattern."
+  route_priority: Int!
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int!
+}
+
+"input type for updating data in table \"service_pattern.distance_between_stops_calculation\""
+input service_pattern_distance_between_stops_calculation_set_input {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The label of the end stop of the stop interval."
+  end_stop_label: String
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date
+  "The ID of the route related to the journey pattern."
+  route_id: uuid
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The label of the start stop of the stop interval."
+  start_stop_label: String
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+"Streaming cursor of the table \"service_pattern_distance_between_stops_calculation\""
+input service_pattern_distance_between_stops_calculation_stream_cursor_input {
+  "Stream column input with initial value"
+  initial_value: service_pattern_distance_between_stops_calculation_stream_cursor_value_input!
+  "cursor ordering"
+  ordering: cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input service_pattern_distance_between_stops_calculation_stream_cursor_value_input {
+  "The length of the stop interval in metres."
+  distance_in_metres: float8
+  "The label of the end stop of the stop interval."
+  end_stop_label: String
+  "The ID of the journey pattern."
+  journey_pattern_id: uuid
+  "The observation date for the state of the route related to the journey pattern."
+  observation_date: date
+  "The ID of the route related to the journey pattern."
+  route_id: uuid
+  "The priority of the route related to the journey pattern."
+  route_priority: Int
+  "The label of the start stop of the stop interval."
+  start_stop_label: String
+  "The sequence number of the stop interval within the journey pattern."
+  stop_interval_sequence: Int
+}
+
+input service_pattern_distance_between_stops_calculation_updates {
+  "increments the numeric columns with given value of the filtered values"
+  _inc: service_pattern_distance_between_stops_calculation_inc_input
+  "sets the columns of the filtered rows to the given values"
+  _set: service_pattern_distance_between_stops_calculation_set_input
+  where: service_pattern_distance_between_stops_calculation_bool_exp!
+}
+
+input service_pattern_get_distances_between_stop_points_by_routes_args {
+  observation_date: date
+  route_ids: _uuid
+}
+
+input service_pattern_get_distances_between_stop_points_in_journey_patterns_args {
+  include_draft_stops: Boolean
+  journey_pattern_ids: _uuid
+  observation_date: date
+}
+
+input service_pattern_scheduled_stop_point_aggregate_bool_exp {
+  count: service_pattern_scheduled_stop_point_aggregate_bool_exp_count
+}
+
+input service_pattern_scheduled_stop_point_aggregate_bool_exp_count {
+  arguments: [service_pattern_scheduled_stop_point_select_column!]
+  distinct: Boolean
+  filter: service_pattern_scheduled_stop_point_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 "order by aggregate values of table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_aggregate_order_by {
   avg: service_pattern_scheduled_stop_point_avg_order_by
@@ -9004,15 +10727,29 @@ input service_pattern_scheduled_stop_point_bool_exp {
   located_on_infrastructure_link_id: uuid_comparison_exp
   measured_location: geography_comparison_exp
   other_label_instances: service_pattern_scheduled_stop_point_bool_exp
+  other_label_instances_aggregate: service_pattern_scheduled_stop_point_aggregate_bool_exp
   priority: Int_comparison_exp
-  relative_distance_from_infrastructure_link: float8_comparison_exp
+  relative_distance_from_infrastructure_link_start: float8_comparison_exp
   scheduled_stop_point_id: uuid_comparison_exp
   scheduled_stop_point_in_journey_patterns: journey_pattern_scheduled_stop_point_in_journey_pattern_bool_exp
+  scheduled_stop_point_in_journey_patterns_aggregate: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_bool_exp
   timing_place: timing_pattern_timing_place_bool_exp
   timing_place_id: uuid_comparison_exp
   validity_end: date_comparison_exp
   validity_start: date_comparison_exp
   vehicle_mode_on_scheduled_stop_point: service_pattern_vehicle_mode_on_scheduled_stop_point_bool_exp
+  vehicle_mode_on_scheduled_stop_point_aggregate: service_pattern_vehicle_mode_on_scheduled_stop_point_aggregate_bool_exp
+}
+
+input service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_bool_exp {
+  count: service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_bool_exp_count
+}
+
+input service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_bool_exp_count {
+  arguments: [timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_select_column!]
+  distinct: Boolean
+  filter: timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 "input type for incrementing numeric columns in table \"service_pattern.scheduled_stop_point\""
@@ -9022,13 +10759,18 @@ input service_pattern_scheduled_stop_point_inc_input {
 
 "input type for inserting data into table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_insert_input {
+  "The direction(s) of traffic with respect to the digitization, i.e. the direction of the specified line string."
   direction: infrastructure_network_direction_enum
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String
   located_on_infrastructure_link: infrastructure_network_infrastructure_link_obj_rel_insert_input
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid
+  "The measured location describes the physical location of the stop. For some stops this describes the location of the pole-mounted flag. A PostGIS PointZ geography in EPSG:4326."
   measured_location: geography
   other_label_instances: service_pattern_scheduled_stop_point_arr_rel_insert_input
   priority: Int
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid
   scheduled_stop_point_in_journey_patterns: journey_pattern_scheduled_stop_point_in_journey_pattern_arr_rel_insert_input
   timing_place: timing_pattern_timing_place_obj_rel_insert_input
@@ -9043,9 +10785,12 @@ input service_pattern_scheduled_stop_point_insert_input {
 
 "order by max() on columns of table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_max_order_by {
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: order_by
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: order_by
   priority: order_by
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: order_by
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: order_by
@@ -9057,9 +10802,12 @@ input service_pattern_scheduled_stop_point_max_order_by {
 
 "order by min() on columns of table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_min_order_by {
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: order_by
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: order_by
   priority: order_by
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: order_by
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: order_by
@@ -9086,7 +10834,7 @@ input service_pattern_scheduled_stop_point_order_by {
   measured_location: order_by
   other_label_instances_aggregate: service_pattern_scheduled_stop_point_aggregate_order_by
   priority: order_by
-  relative_distance_from_infrastructure_link: order_by
+  relative_distance_from_infrastructure_link_start: order_by
   scheduled_stop_point_id: order_by
   scheduled_stop_point_in_journey_patterns_aggregate: journey_pattern_scheduled_stop_point_in_journey_pattern_aggregate_order_by
   timing_place: timing_pattern_timing_place_order_by
@@ -9098,16 +10846,22 @@ input service_pattern_scheduled_stop_point_order_by {
 
 "primary key columns input for table: service_pattern.scheduled_stop_point"
 input service_pattern_scheduled_stop_point_pk_columns_input {
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid!
 }
 
 "input type for updating data in table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_set_input {
+  "The direction(s) of traffic with respect to the digitization, i.e. the direction of the specified line string."
   direction: infrastructure_network_direction_enum
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid
+  "The measured location describes the physical location of the stop. For some stops this describes the location of the pole-mounted flag. A PostGIS PointZ geography in EPSG:4326."
   measured_location: geography
   priority: Int
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: uuid
@@ -9142,11 +10896,16 @@ input service_pattern_scheduled_stop_point_stream_cursor_input {
 
 "Initial value of the column from where the streaming should start"
 input service_pattern_scheduled_stop_point_stream_cursor_value_input {
+  "The direction(s) of traffic with respect to the digitization, i.e. the direction of the specified line string."
   direction: infrastructure_network_direction_enum
+  "The label is the short code that identifies the stop to the passengers. There can be at most one stop with the same label at a time. The label matches the GTFS stop_code."
   label: String
+  "The infrastructure link on which the stop is located."
   located_on_infrastructure_link_id: uuid
+  "The measured location describes the physical location of the stop. For some stops this describes the location of the pole-mounted flag. A PostGIS PointZ geography in EPSG:4326."
   measured_location: geography
   priority: Int
+  "The ID of the scheduled stop point."
   scheduled_stop_point_id: uuid
   "Optional reference to a TIMING PLACE. If NULL, the SCHEDULED STOP POINT is not used for timing."
   timing_place_id: uuid
@@ -9182,6 +10941,17 @@ input service_pattern_scheduled_stop_point_var_samp_order_by {
 "order by variance() on columns of table \"service_pattern.scheduled_stop_point\""
 input service_pattern_scheduled_stop_point_variance_order_by {
   priority: order_by
+}
+
+input service_pattern_vehicle_mode_on_scheduled_stop_point_aggregate_bool_exp {
+  count: service_pattern_vehicle_mode_on_scheduled_stop_point_aggregate_bool_exp_count
+}
+
+input service_pattern_vehicle_mode_on_scheduled_stop_point_aggregate_bool_exp_count {
+  arguments: [service_pattern_vehicle_mode_on_scheduled_stop_point_select_column!]
+  distinct: Boolean
+  filter: service_pattern_vehicle_mode_on_scheduled_stop_point_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 "order by aggregate values of table \"service_pattern.vehicle_mode_on_scheduled_stop_point\""
@@ -9278,6 +11048,19 @@ input service_pattern_vehicle_mode_on_scheduled_stop_point_updates {
   where: service_pattern_vehicle_mode_on_scheduled_stop_point_bool_exp!
 }
 
+"Boolean expression to compare columns of type \"smallint\". All fields are combined with logical 'AND'."
+input smallint_comparison_exp {
+  _eq: smallint
+  _gt: smallint
+  _gte: smallint
+  _in: [smallint!]
+  _is_null: Boolean
+  _lt: smallint
+  _lte: smallint
+  _neq: smallint
+  _nin: [smallint!]
+}
+
 input st_d_within_geography_input {
   distance: Float!
   from: geography!
@@ -9311,8 +11094,10 @@ input timetables_journey_pattern_journey_pattern_ref_bool_exp {
   journey_pattern_ref_id: uuid_comparison_exp
   observation_timestamp: timestamptz_comparison_exp
   scheduled_stop_point_in_journey_pattern_refs: timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_bool_exp
+  scheduled_stop_point_in_journey_pattern_refs_aggregate: service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_bool_exp
   snapshot_timestamp: timestamptz_comparison_exp
   vehicle_journeys: timetables_vehicle_journey_vehicle_journey_bool_exp
+  vehicle_journeys_aggregate: vehicle_journey_vehicle_journey_aggregate_bool_exp
 }
 
 "input type for inserting data into table \"journey_pattern.journey_pattern_ref\""
@@ -9698,10 +11483,12 @@ input timetables_service_calendar_day_type_bool_exp {
   _not: timetables_service_calendar_day_type_bool_exp
   _or: [timetables_service_calendar_day_type_bool_exp!]
   active_on_days_of_week: timetables_service_calendar_day_type_active_on_day_of_week_bool_exp
+  active_on_days_of_week_aggregate: service_calendar_day_type_active_on_day_of_week_aggregate_bool_exp
   day_type_id: uuid_comparison_exp
   label: String_comparison_exp
   name_i18n: jsonb_comparison_exp
   vehicle_services: timetables_vehicle_service_vehicle_service_bool_exp
+  vehicle_services_aggregate: vehicle_service_vehicle_service_aggregate_bool_exp
 }
 
 "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
@@ -9809,6 +11596,10 @@ input timetables_service_calendar_day_type_updates {
   where: timetables_service_calendar_day_type_bool_exp!
 }
 
+input timetables_service_calendar_get_active_day_types_for_date_args {
+  observation_date: date
+}
+
 "order by aggregate values of table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
 input timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_order_by {
   avg: timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_avg_order_by
@@ -9848,6 +11639,7 @@ input timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_boo
   scheduled_stop_point_label: String_comparison_exp
   scheduled_stop_point_sequence: Int_comparison_exp
   timetabled_passing_times: timetables_passing_times_timetabled_passing_time_bool_exp
+  timetabled_passing_times_aggregate: passing_times_timetabled_passing_time_aggregate_bool_exp
 }
 
 "input type for incrementing numeric columns in table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
@@ -10026,6 +11818,7 @@ input timetables_vehicle_journey_vehicle_journey_bool_exp {
   journey_pattern_ref_id: uuid_comparison_exp
   start_time: String_comparison_exp
   timetabled_passing_times: timetables_passing_times_timetabled_passing_time_bool_exp
+  timetabled_passing_times_aggregate: passing_times_timetabled_passing_time_aggregate_bool_exp
   vehicle_journey_id: uuid_comparison_exp
 }
 
@@ -10139,6 +11932,7 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp {
   validity_start: date_comparison_exp
   vehicle_schedule_frame_id: uuid_comparison_exp
   vehicle_services: timetables_vehicle_service_vehicle_service_bool_exp
+  vehicle_services_aggregate: vehicle_service_vehicle_service_aggregate_bool_exp
 }
 
 "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
@@ -10287,6 +12081,7 @@ input timetables_vehicle_service_block_bool_exp {
   _or: [timetables_vehicle_service_block_bool_exp!]
   block_id: uuid_comparison_exp
   vehicle_journeys: timetables_vehicle_journey_vehicle_journey_bool_exp
+  vehicle_journeys_aggregate: vehicle_journey_vehicle_journey_aggregate_bool_exp
   vehicle_service: timetables_vehicle_service_vehicle_service_bool_exp
   vehicle_service_id: uuid_comparison_exp
 }
@@ -10369,6 +12164,10 @@ input timetables_vehicle_service_block_updates {
   where: timetables_vehicle_service_block_bool_exp!
 }
 
+input timetables_vehicle_service_get_vehicle_services_for_date_args {
+  observation_date: date
+}
+
 "order by aggregate values of table \"vehicle_service.vehicle_service\""
 input timetables_vehicle_service_vehicle_service_aggregate_order_by {
   count: order_by
@@ -10389,6 +12188,7 @@ input timetables_vehicle_service_vehicle_service_bool_exp {
   _not: timetables_vehicle_service_vehicle_service_bool_exp
   _or: [timetables_vehicle_service_vehicle_service_bool_exp!]
   blocks: timetables_vehicle_service_block_bool_exp
+  blocks_aggregate: vehicle_service_block_aggregate_bool_exp
   day_type: timetables_service_calendar_day_type_bool_exp
   day_type_id: uuid_comparison_exp
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp
@@ -10500,6 +12300,7 @@ input timing_pattern_timing_place_bool_exp {
   description: jsonb_comparison_exp
   label: String_comparison_exp
   scheduled_stop_points: service_pattern_scheduled_stop_point_bool_exp
+  scheduled_stop_points_aggregate: service_pattern_scheduled_stop_point_aggregate_bool_exp
   timing_place_id: uuid_comparison_exp
 }
 
@@ -10607,4 +12408,37 @@ input uuid_comparison_exp {
   _lte: uuid
   _neq: uuid
   _nin: [uuid!]
+}
+
+input vehicle_journey_vehicle_journey_aggregate_bool_exp {
+  count: vehicle_journey_vehicle_journey_aggregate_bool_exp_count
+}
+
+input vehicle_journey_vehicle_journey_aggregate_bool_exp_count {
+  arguments: [timetables_vehicle_journey_vehicle_journey_select_column!]
+  distinct: Boolean
+  filter: timetables_vehicle_journey_vehicle_journey_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+input vehicle_service_block_aggregate_bool_exp {
+  count: vehicle_service_block_aggregate_bool_exp_count
+}
+
+input vehicle_service_block_aggregate_bool_exp_count {
+  arguments: [timetables_vehicle_service_block_select_column!]
+  distinct: Boolean
+  filter: timetables_vehicle_service_block_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+input vehicle_service_vehicle_service_aggregate_bool_exp {
+  count: vehicle_service_vehicle_service_aggregate_bool_exp_count
+}
+
+input vehicle_service_vehicle_service_aggregate_bool_exp_count {
+  arguments: [timetables_vehicle_service_vehicle_service_select_column!]
+  distinct: Boolean
+  filter: timetables_vehicle_service_vehicle_service_bool_exp
+  predicate: Int_comparison_exp!
 }
