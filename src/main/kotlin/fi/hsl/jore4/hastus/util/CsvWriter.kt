@@ -38,14 +38,7 @@ class CsvWriter(
     }
 
     private fun formattedNumberTransform(number: NumberWithAccuracy): String {
-        val format: String = if (number.leading > 0 && number.digits > 0) {
-            "0".repeat(number.leading) + "." + "0".repeat(number.digits)
-        } else if (number.leading > 0) {
-            "0".repeat(number.leading)
-        } else {
-            "." + "0".repeat(number.digits)
-        }
-        decimalFormat.applyLocalizedPattern(format)
+        decimalFormat.applyLocalizedPattern(number.getPattern())
         return decimalFormat.format(number.value)
     }
 
