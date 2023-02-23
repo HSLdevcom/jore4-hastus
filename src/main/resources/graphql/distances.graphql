@@ -1,0 +1,15 @@
+query DistanceBetweenStopPoints(
+  $routes: _uuid,
+  $observation_date: date!
+) {
+  service_pattern_get_distances_between_stop_points_by_routes(args: {route_ids: $routes, observation_date: $observation_date}) {
+    distance_in_metres
+    journey_pattern_id
+    observation_date
+    route_id
+    start_stop_label
+    end_stop_label
+    stop_interval_sequence
+    route_priority
+  }
+}

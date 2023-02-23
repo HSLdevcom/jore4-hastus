@@ -31,11 +31,16 @@ query RoutesWithHastusData(
       }
     }
     label
+    route_id
+    variant
+    unique_label
     name_i18n
     direction
     route_journey_patterns {
       scheduled_stop_point_in_journey_patterns(order_by: {scheduled_stop_point_sequence: asc}) {
-        is_timing_point
+        is_used_as_timing_point
+        is_loading_time_allowed
+        is_regulated_timing_point
         scheduled_stop_point_label
         scheduled_stop_points {
           label

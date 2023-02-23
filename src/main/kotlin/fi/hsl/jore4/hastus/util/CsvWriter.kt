@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.util
 
-import fi.hsl.jore4.hastus.data.IHastusData
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
+import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 
@@ -38,14 +38,7 @@ class CsvWriter(
     }
 
     private fun formattedNumberTransform(number: NumberWithAccuracy): String {
-        val format: String = if (number.leading > 0 && number.digits > 0) {
-            "0".repeat(number.leading) + "." + "0".repeat(number.digits)
-        } else if (number.leading > 0) {
-            "0".repeat(number.leading)
-        } else {
-            "." + "0".repeat(number.digits)
-        }
-        decimalFormat.applyLocalizedPattern(format)
+        decimalFormat.applyLocalizedPattern(number.getPattern())
         return decimalFormat.format(number.value)
     }
 
