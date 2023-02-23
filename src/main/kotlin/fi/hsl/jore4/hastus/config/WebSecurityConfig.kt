@@ -26,8 +26,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers(
                 HttpMethod.POST,
                 "/import",
-                "/export/routes",
-                "/export/lines"
+                "/export/routes"
             )
             .permitAll()
             .anyRequest().denyAll()
