@@ -107,7 +107,6 @@ class GraphQLService(private val config: HasuraConfiguration) {
             val queryResponse = client.execute(query) {
                 if (cookieToken != null) header("Cookie", cookieToken)
                 if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
             }
             LOGGER.debug { "distance between stops graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -128,8 +127,7 @@ class GraphQLService(private val config: HasuraConfiguration) {
         priority: Int,
         observationDate: LocalDate,
         cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        hasuraRole: String?
     ): String {
         val query = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
@@ -142,7 +140,6 @@ class GraphQLService(private val config: HasuraConfiguration) {
             val queryResponse = client.execute(query) {
                 if (cookieToken != null) header("Cookie", cookieToken)
                 if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
             }
             LOGGER.debug { "routes for routes graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -156,8 +153,7 @@ class GraphQLService(private val config: HasuraConfiguration) {
             routeIds,
             observationDate,
             cookieToken,
-            hasuraRole,
-            hasuraSecret
+            hasuraRole
         )
 
         val distanceMap = distances.associate { Pair(it.startLabel, it.endLabel) to it.distance }
