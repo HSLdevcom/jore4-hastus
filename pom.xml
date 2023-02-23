@@ -398,6 +398,11 @@
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.UUIDScalarConverter</converter>
                                 </customScalar>
                                 <customScalar>
+                                    <scalar>_uuid</scalar>
+                                    <type>fi.hsl.jore4.hastus.graphql.UUIDList</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.UUIDListScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
                                     <scalar>date</scalar>
                                     <type>java.time.LocalDate</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.DateScalarConverter</converter>
@@ -409,7 +414,7 @@
                                 </customScalar>
                                 <customScalar>
                                     <scalar>geography</scalar>
-                                    <type>fi.hsl.jore4.hastus.graphql.Coordinate</type>
+                                    <type>fi.hsl.jore4.hastus.data.format.Coordinate</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.LocationScalarConverter</converter>
                                 </customScalar>
                                 <customScalar>

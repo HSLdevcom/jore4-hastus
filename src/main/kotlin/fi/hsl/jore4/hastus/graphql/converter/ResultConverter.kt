@@ -1,0 +1,118 @@
+package fi.hsl.jore4.hastus.graphql.converter
+
+import fi.hsl.jore4.hastus.data.jore.JoreDistance
+import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
+import fi.hsl.jore4.hastus.data.jore.JoreLine
+import fi.hsl.jore4.hastus.data.jore.JoreRoute
+import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.generated.enums.route_direction_enum
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
+import kotlin.math.roundToInt
+
+class ResultConverter {
+    companion object {
+
+        private const val LANG_FINNISH = "fi_FI"
+        private const val LANG_SWEDISH = "se_SE"
+
+        private fun convertVehicleMode(vehicleMode: String): Int {
+            return if (vehicleMode == "train") 2 else 0
+        }
+
+        // 1 = outbound, 2 = inbound
+        private fun convertRouteDirection(direction: route_direction_enum): Int {
+            return when (direction) {
+                route_direction_enum.OUTBOUND -> 1
+                route_direction_enum.INBOUND -> 2
+                else -> 0
+            }
+        }
+
+        fun mapJoreHastusPlace(hastusPlace: fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place): JoreHastusPlace {
+            return JoreHastusPlace(
+                hastusPlace.label,
+                hastusPlace.description?.content?.get(LANG_FINNISH)
+                    ?: hastusPlace.label // Use label as description if one is not provided
+            )
+        }
+
+        fun mapJoreLine(
+            routeLine: fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line,
+            routes: List<fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route>,
+            distances: Map<Pair<String, String>, Int>
+        ): JoreLine {
+            return JoreLine(
+                routeLine.label,
+                routeLine.name_i18n.content[LANG_FINNISH].orEmpty(),
+                convertVehicleMode(routeLine.vehicle_mode.vehicle_mode),
+                routes.map { mapJoreRoute(it, distances) }
+            )
+        }
+
+        fun mapJoreStop(stop: fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point): JoreScheduledStop {
+            return JoreScheduledStop(
+                stop.label,
+                "00", // TODO
+                "kuvaus", // TODO
+                "beskrivning", // TODO
+                "katu", // TODO
+                "gata", // TODO
+                stop.timing_place?.label.orEmpty(),
+                stop.measured_location
+            )
+        }
+
+        private fun mapJoreRouteScheduledStop(
+            routeStop: journey_pattern_scheduled_stop_point_in_journey_pattern?,
+            distance: Int
+        ): JoreRouteScheduledStop {
+            if (routeStop == null) {
+                throw IllegalStateException("Should not be possible to get a null route stop when mapping")
+            }
+            return JoreRouteScheduledStop(
+                routeStop.scheduled_stop_points.first().timing_place?.label.orEmpty(),
+                distance.toDouble(),
+                routeStop.is_regulated_timing_point,
+                routeStop.is_loading_time_allowed,
+                routeStop.is_used_as_timing_point,
+                routeStop.scheduled_stop_point_label
+            )
+        }
+
+        private fun mapJoreRoute(
+            routeRoute: fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route,
+            distances: Map<Pair<String, String>, Int>
+        ): JoreRoute {
+            val stops = routeRoute.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
+
+            // Add a null value to end so zipWithNext includes the last element as the last .first() element
+            val stopsWithNextLabel = (stops + null).zipWithNext().map {
+                Pair(it.first, it.second?.scheduled_stop_point_label.orEmpty())
+            }
+
+            return JoreRoute(
+                label = routeRoute.label,
+                variant = routeRoute.variant.orEmpty(),
+                uniqueLabel = routeRoute.unique_label.orEmpty(),
+                name = routeRoute.name_i18n.content.getOrDefault(LANG_FINNISH, routeRoute.label),
+                direction = convertRouteDirection(routeRoute.direction),
+                reversible = false,
+                stopsOnRoute = stopsWithNextLabel.map {
+                    mapJoreRouteScheduledStop(
+                        it.first,
+                        distances.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0)
+                    )
+                }
+            )
+        }
+
+        fun mapJoreDistance(distance: fi.hsl.jore4.hastus.generated.distancebetweenstoppoints.service_pattern_distance_between_stops_calculation): JoreDistance {
+            return JoreDistance(
+                distance.start_stop_label,
+                distance.end_stop_label,
+                distance.distance_in_metres.toDouble().roundToInt() // String number in double format -> int
+            )
+        }
+    }
+}

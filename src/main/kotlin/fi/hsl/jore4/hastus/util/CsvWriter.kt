@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.util
 
-import fi.hsl.jore4.hastus.data.IHastusData
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
+import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 
