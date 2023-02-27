@@ -14,14 +14,10 @@ COPY ./profiles/prod /build/profiles/prod
 RUN mvn -Pprod clean package spring-boot:repackage
 
 
-# slim image for distribution
-FROM eclipse-temurin:11-jre-alpine
+FROM amazoncorretto:11-al2-full
 
 # expose server port
 EXPOSE 8080
-
-# install curl
-RUN apk --no-cache add curl
 
 # download script for reading Docker secrets
 RUN curl -o /tmp/read-secrets.sh "https://raw.githubusercontent.com/HSLdevcom/jore4-tools/main/docker/read-secrets.sh"
