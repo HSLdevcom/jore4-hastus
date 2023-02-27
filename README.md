@@ -45,3 +45,21 @@ Code should be written using [standard Kotlin coding conventions](https://kotlin
 Also:
 
 - Additionally, minimize the use of mutable variables, using `val` whenever possible.
+
+## Docker reference
+
+The application uses spring boot which allows overwriting configuration properties as described
+[here](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.typesafe-configuration-properties.relaxed-binding.environment-variables).
+The docker container is also able to
+[read secrets](https://github.com/HSLdevcom/jore4-tools#read-secretssh) and expose
+them as environment variables.
+
+The following configuration properties are to be defined for each environment:
+
+| Config property | Environment variable   | Secret name | Example                             | Description                                                                                         |
+| --------------- | ---------------------- | ----------- | ----------------------------------- | --------------------------------------------------------------------------------------------------- |
+| -               | SECRET_STORE_BASE_PATH | -           | /mnt/secrets-store                  | Directory containing the docker secrets                                                             |
+| hasura.url      | HASURA_URL             | hasura-url  | http://jore4-hasura:8080/v1/graphql | Hasura microservice base url                                                                        |
+| hasura.secret   | _don't use_            | _don't use_ | hasura                              | Hasura admin secret used only for generating graphql schema. _Don't use it for the running service_ |
+
+More properties can be found from `/profiles/prod/config.properties`
