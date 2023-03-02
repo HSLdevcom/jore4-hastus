@@ -59,3 +59,8 @@ jobs:
             --cache-from type=registry,ref=$IMAGE_NAME:builder \
             --tag $IMAGE_NAME:latest \
             .
+
+  run_cypress_tests:
+    needs:
+      - push_to_registry
+    uses: ./.github/workflows/run-cypress-tests.yml
