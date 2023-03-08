@@ -16,4 +16,21 @@ abstract class HastusData : IHastusData {
     protected fun listWithFieldName(vararg strings: Any): List<Any> {
         return listOf(fieldName, *strings)
     }
+
+    companion object {
+        @JvmStatic
+        protected fun parseToDouble(string: String): Double {
+            return string.trim().toDoubleOrNull() ?: 0.0
+        }
+
+        @JvmStatic
+        protected fun parseToInt(string: String): Int {
+            return string.trim().toIntOrNull() ?: 0
+        }
+
+        @JvmStatic
+        protected fun parseToBoolean(string: String): Boolean {
+            return parseToInt(string) > 0
+        }
+    }
 }
