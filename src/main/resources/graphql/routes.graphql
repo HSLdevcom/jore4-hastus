@@ -6,7 +6,7 @@ query RoutesWithHastusData(
   route_route(
     where: {
       _and: [
-        { label: { _in: $route_labels } }
+        { unique_label: { _in: $route_labels } }
         { priority: { _eq: $route_priority } }
         {
           _or: [
