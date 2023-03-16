@@ -14,7 +14,7 @@ class CsvReader(
 ) {
 
     fun parseCsv(file: String): List<IHastusData> {
-        return file.split("\n").map { parseLine(it) }
+        return file.split("\n").mapNotNull { parseLine(it) }
     }
 
     private fun parseLine(line: String): IHastusData {
