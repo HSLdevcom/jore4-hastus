@@ -25,6 +25,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             ).permitAll()
             .antMatchers(
                 HttpMethod.POST,
+                "/import",
                 "/export/routes",
                 "/export/lines"
             )
