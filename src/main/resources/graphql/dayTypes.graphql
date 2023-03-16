@@ -1,0 +1,8 @@
+query ListDayTypes {
+  timetables {
+    timetables_service_calendar_day_type {
+      day_type_id
+      label
+    }
+  }
+}

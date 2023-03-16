@@ -1,0 +1,13 @@
+  mutation InsertTimetabledPassingTimes(
+    $objects: [timetables_passing_times_timetabled_passing_time_insert_input!]!
+  ) {
+    timetables {
+      timetables_insert_passing_times_timetabled_passing_time(
+        objects: $objects
+      ) {
+        returning {
+          timetabled_passing_time_id
+        }
+      }
+    }
+  }
