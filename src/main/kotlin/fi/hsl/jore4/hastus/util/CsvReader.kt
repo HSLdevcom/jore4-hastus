@@ -17,7 +17,7 @@ class CsvReader(
         return file.split("\n").mapNotNull { parseLine(it) }
     }
 
-    private fun parseLine(line: String): IHastusData {
+    private fun parseLine(line: String): IHastusData? {
         val values = line.trim().split(separator)
         return when (values[0]) {
             "1" -> ApplicationRecord(values)
