@@ -27,7 +27,8 @@ class CsvReader(
             "5" -> TripRecord(values)
             "6" -> TripStopRecord(values)
             else -> {
-                throw IllegalArgumentException("Unexpected value parsing CSV: $line")
+                LOGGER.info("CSV parser ignored line $line")
+                null
             }
         }
     }
