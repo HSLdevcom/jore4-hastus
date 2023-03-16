@@ -1,0 +1,19 @@
+query JourneyPatternsForRoutes($route_labels: [String!]) {
+  route_route(where: {unique_label: {_in: $route_labels}}) {
+    unique_label
+    route_journey_patterns {
+      journey_pattern_id
+      scheduled_stop_point_in_journey_patterns(order_by: {scheduled_stop_point_sequence: asc}) {
+        scheduled_stop_point_label
+        scheduled_stop_point_sequence
+        scheduled_stop_points {
+          scheduled_stop_point_id
+          timing_place {
+            label
+            timing_place_id
+          }
+        }
+      }
+    }
+  }
+}

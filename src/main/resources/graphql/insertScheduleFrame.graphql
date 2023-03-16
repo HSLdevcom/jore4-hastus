@@ -1,0 +1,11 @@
+mutation InsertVehicleScheduleFrame(
+  $vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_insert_input!
+) {
+  timetables {
+    timetables_insert_vehicle_schedule_vehicle_schedule_frame_one(
+      object: $vehicle_schedule_frame
+    ) {
+      vehicle_schedule_frame_id
+    }
+  }
+}
