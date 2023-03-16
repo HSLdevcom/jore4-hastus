@@ -2,7 +2,7 @@ package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
 import fi.hsl.jore4.hastus.graphql.UUIDList
-import java.util.*
+import java.util.UUID
 
 class UUIDListScalarConverter : ScalarConverter<UUIDList> {
 

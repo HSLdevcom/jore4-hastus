@@ -393,7 +393,7 @@
                             <queryFileDirectory>src/main/resources/graphql</queryFileDirectory>
                             <customScalars>
                                 <customScalar>
-                                    <scalar>UUID</scalar>
+                                    <scalar>uuid</scalar>
                                     <type>java.util.UUID</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.UUIDScalarConverter</converter>
                                 </customScalar>
@@ -408,6 +408,11 @@
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.DateScalarConverter</converter>
                                 </customScalar>
                                 <customScalar>
+                                    <scalar>timestamptz</scalar>
+                                    <type>java.time.OffsetDateTime</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.DateTimeScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
                                     <scalar>jsonb</scalar>
                                     <type>fi.hsl.jore4.hastus.graphql.IJSONB</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.jsonbScalarConverter</converter>
@@ -416,6 +421,11 @@
                                     <scalar>geography</scalar>
                                     <type>fi.hsl.jore4.hastus.data.format.Coordinate</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.LocationScalarConverter</converter>
+                                </customScalar>
+                                <customScalar>
+                                    <scalar>interval</scalar>
+                                    <type>kotlin.time.Duration</type>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.DurationConverter</converter>
                                 </customScalar>
                                 <customScalar>
                                     <scalar>_Any</scalar>

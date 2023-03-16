@@ -1,0 +1,19 @@
+mutation InsertJourneyPatternRefs(
+    $journey_pattern_refs: [timetables_journey_pattern_journey_pattern_ref_insert_input!]!
+) {
+  timetables {
+    timetables_insert_journey_pattern_journey_pattern_ref(
+      objects: $journey_pattern_refs
+    ) {
+      returning {
+        journey_pattern_id
+        journey_pattern_ref_id
+        scheduled_stop_point_in_journey_pattern_refs {
+          scheduled_stop_point_in_journey_pattern_ref_id
+          scheduled_stop_point_label
+          scheduled_stop_point_sequence
+        }
+      }
+    }
+  }
+}
