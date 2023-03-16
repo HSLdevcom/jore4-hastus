@@ -36,207 +36,6 @@ directive @specifiedBy(
     url: String!
   ) on SCALAR
 
-"Legacy, avoid using. Main use nowadays is to enable support for eg. data exports that still need this. Originally this was used to represent the primary region for routes/lines."
-type hsl_route_legacy_hsl_municipality_code {
-  hsl_municipality: String!
-  jore3_code: smallint!
-  "An array relationship"
-  lines(
-    "distinct select on columns"
-    distinct_on: [route_line_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_line_order_by!],
-    "filter the rows returned"
-    where: route_line_bool_exp
-  ): [route_line!]!
-  "An aggregate relationship"
-  lines_aggregate(
-    "distinct select on columns"
-    distinct_on: [route_line_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_line_order_by!],
-    "filter the rows returned"
-    where: route_line_bool_exp
-  ): route_line_aggregate!
-  "An array relationship"
-  routes(
-    "distinct select on columns"
-    distinct_on: [route_route_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_route_order_by!],
-    "filter the rows returned"
-    where: route_route_bool_exp
-  ): [route_route!]!
-  "An aggregate relationship"
-  routes_aggregate(
-    "distinct select on columns"
-    distinct_on: [route_route_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_route_order_by!],
-    "filter the rows returned"
-    where: route_route_bool_exp
-  ): route_route_aggregate!
-}
-
-"aggregated selection of \"hsl_route.legacy_hsl_municipality_code\""
-type hsl_route_legacy_hsl_municipality_code_aggregate {
-  aggregate: hsl_route_legacy_hsl_municipality_code_aggregate_fields
-  nodes: [hsl_route_legacy_hsl_municipality_code!]!
-}
-
-"aggregate fields of \"hsl_route.legacy_hsl_municipality_code\""
-type hsl_route_legacy_hsl_municipality_code_aggregate_fields {
-  avg: hsl_route_legacy_hsl_municipality_code_avg_fields
-  count(columns: [hsl_route_legacy_hsl_municipality_code_select_column!], distinct: Boolean): Int!
-  max: hsl_route_legacy_hsl_municipality_code_max_fields
-  min: hsl_route_legacy_hsl_municipality_code_min_fields
-  stddev: hsl_route_legacy_hsl_municipality_code_stddev_fields
-  stddev_pop: hsl_route_legacy_hsl_municipality_code_stddev_pop_fields
-  stddev_samp: hsl_route_legacy_hsl_municipality_code_stddev_samp_fields
-  sum: hsl_route_legacy_hsl_municipality_code_sum_fields
-  var_pop: hsl_route_legacy_hsl_municipality_code_var_pop_fields
-  var_samp: hsl_route_legacy_hsl_municipality_code_var_samp_fields
-  variance: hsl_route_legacy_hsl_municipality_code_variance_fields
-}
-
-"aggregate avg on columns"
-type hsl_route_legacy_hsl_municipality_code_avg_fields {
-  jore3_code: Float
-}
-
-"aggregate max on columns"
-type hsl_route_legacy_hsl_municipality_code_max_fields {
-  hsl_municipality: String
-  jore3_code: smallint
-}
-
-"aggregate min on columns"
-type hsl_route_legacy_hsl_municipality_code_min_fields {
-  hsl_municipality: String
-  jore3_code: smallint
-}
-
-"response of any mutation on the table \"hsl_route.legacy_hsl_municipality_code\""
-type hsl_route_legacy_hsl_municipality_code_mutation_response {
-  "number of rows affected by the mutation"
-  affected_rows: Int!
-  "data from the rows affected by the mutation"
-  returning: [hsl_route_legacy_hsl_municipality_code!]!
-}
-
-"aggregate stddev on columns"
-type hsl_route_legacy_hsl_municipality_code_stddev_fields {
-  jore3_code: Float
-}
-
-"aggregate stddev_pop on columns"
-type hsl_route_legacy_hsl_municipality_code_stddev_pop_fields {
-  jore3_code: Float
-}
-
-"aggregate stddev_samp on columns"
-type hsl_route_legacy_hsl_municipality_code_stddev_samp_fields {
-  jore3_code: Float
-}
-
-"aggregate sum on columns"
-type hsl_route_legacy_hsl_municipality_code_sum_fields {
-  jore3_code: smallint
-}
-
-"aggregate var_pop on columns"
-type hsl_route_legacy_hsl_municipality_code_var_pop_fields {
-  jore3_code: Float
-}
-
-"aggregate var_samp on columns"
-type hsl_route_legacy_hsl_municipality_code_var_samp_fields {
-  jore3_code: Float
-}
-
-"aggregate variance on columns"
-type hsl_route_legacy_hsl_municipality_code_variance_fields {
-  jore3_code: Float
-}
-
-"Transport target, can be used e.g. for cost sharing."
-type hsl_route_transport_target {
-  "An array relationship"
-  lines(
-    "distinct select on columns"
-    distinct_on: [route_line_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_line_order_by!],
-    "filter the rows returned"
-    where: route_line_bool_exp
-  ): [route_line!]!
-  "An aggregate relationship"
-  lines_aggregate(
-    "distinct select on columns"
-    distinct_on: [route_line_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [route_line_order_by!],
-    "filter the rows returned"
-    where: route_line_bool_exp
-  ): route_line_aggregate!
-  transport_target: String!
-}
-
-"aggregated selection of \"hsl_route.transport_target\""
-type hsl_route_transport_target_aggregate {
-  aggregate: hsl_route_transport_target_aggregate_fields
-  nodes: [hsl_route_transport_target!]!
-}
-
-"aggregate fields of \"hsl_route.transport_target\""
-type hsl_route_transport_target_aggregate_fields {
-  count(columns: [hsl_route_transport_target_select_column!], distinct: Boolean): Int!
-  max: hsl_route_transport_target_max_fields
-  min: hsl_route_transport_target_min_fields
-}
-
-"aggregate max on columns"
-type hsl_route_transport_target_max_fields {
-  transport_target: String
-}
-
-"aggregate min on columns"
-type hsl_route_transport_target_min_fields {
-  transport_target: String
-}
-
-"response of any mutation on the table \"hsl_route.transport_target\""
-type hsl_route_transport_target_mutation_response {
-  "number of rows affected by the mutation"
-  affected_rows: Int!
-  "data from the rows affected by the mutation"
-  returning: [hsl_route_transport_target!]!
-}
-
 "The direction in which an e.g. infrastructure link can be traversed"
 type infrastructure_network_direction {
   "An array relationship"
@@ -870,20 +669,6 @@ type journey_pattern_scheduled_stop_point_in_journey_pattern_variance_fields {
 
 "mutation root"
 type mutation_root {
-  "delete data from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  delete_hsl_route_legacy_hsl_municipality_code(
-    "filter the rows which have to be deleted"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp!
-  ): hsl_route_legacy_hsl_municipality_code_mutation_response
-  "delete single row from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  delete_hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
-  "delete data from the table: \"hsl_route.transport_target\""
-  delete_hsl_route_transport_target(
-    "filter the rows which have to be deleted"
-    where: hsl_route_transport_target_bool_exp!
-  ): hsl_route_transport_target_mutation_response
-  "delete single row from the table: \"hsl_route.transport_target\""
-  delete_hsl_route_transport_target_by_pk(transport_target: String!): hsl_route_transport_target
   "delete data from the table: \"infrastructure_network.direction\""
   delete_infrastructure_network_direction(
     "filter the rows which have to be deleted"
@@ -1059,34 +844,6 @@ type mutation_root {
   ): timing_pattern_timing_place_mutation_response
   "delete single row from the table: \"timing_pattern.timing_place\""
   delete_timing_pattern_timing_place_by_pk(timing_place_id: uuid!): timing_pattern_timing_place
-  "insert data into the table: \"hsl_route.legacy_hsl_municipality_code\""
-  insert_hsl_route_legacy_hsl_municipality_code(
-    "the rows to be inserted"
-    objects: [hsl_route_legacy_hsl_municipality_code_insert_input!]!,
-    "upsert condition"
-    on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
-  ): hsl_route_legacy_hsl_municipality_code_mutation_response
-  "insert a single row into the table: \"hsl_route.legacy_hsl_municipality_code\""
-  insert_hsl_route_legacy_hsl_municipality_code_one(
-    "the row to be inserted"
-    object: hsl_route_legacy_hsl_municipality_code_insert_input!,
-    "upsert condition"
-    on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
-  ): hsl_route_legacy_hsl_municipality_code
-  "insert data into the table: \"hsl_route.transport_target\""
-  insert_hsl_route_transport_target(
-    "the rows to be inserted"
-    objects: [hsl_route_transport_target_insert_input!]!,
-    "upsert condition"
-    on_conflict: hsl_route_transport_target_on_conflict
-  ): hsl_route_transport_target_mutation_response
-  "insert a single row into the table: \"hsl_route.transport_target\""
-  insert_hsl_route_transport_target_one(
-    "the row to be inserted"
-    object: hsl_route_transport_target_insert_input!,
-    "upsert condition"
-    on_conflict: hsl_route_transport_target_on_conflict
-  ): hsl_route_transport_target
   "insert data into the table: \"infrastructure_network.direction\""
   insert_infrastructure_network_direction(
     "the rows to be inserted"
@@ -1326,46 +1083,6 @@ type mutation_root {
     on_conflict: timing_pattern_timing_place_on_conflict
   ): timing_pattern_timing_place
   timetables: timetables_timetables_mutation_frontend
-  "update data of the table: \"hsl_route.legacy_hsl_municipality_code\""
-  update_hsl_route_legacy_hsl_municipality_code(
-    "increments the numeric columns with given value of the filtered values"
-    _inc: hsl_route_legacy_hsl_municipality_code_inc_input,
-    "sets the columns of the filtered rows to the given values"
-    _set: hsl_route_legacy_hsl_municipality_code_set_input,
-    "filter the rows which have to be updated"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp!
-  ): hsl_route_legacy_hsl_municipality_code_mutation_response
-  "update single row of the table: \"hsl_route.legacy_hsl_municipality_code\""
-  update_hsl_route_legacy_hsl_municipality_code_by_pk(
-    "increments the numeric columns with given value of the filtered values"
-    _inc: hsl_route_legacy_hsl_municipality_code_inc_input,
-    "sets the columns of the filtered rows to the given values"
-    _set: hsl_route_legacy_hsl_municipality_code_set_input,
-    pk_columns: hsl_route_legacy_hsl_municipality_code_pk_columns_input!
-  ): hsl_route_legacy_hsl_municipality_code
-  "update multiples rows of table: \"hsl_route.legacy_hsl_municipality_code\""
-  update_hsl_route_legacy_hsl_municipality_code_many(
-    "updates to execute, in order"
-    updates: [hsl_route_legacy_hsl_municipality_code_updates!]!
-  ): [hsl_route_legacy_hsl_municipality_code_mutation_response]
-  "update data of the table: \"hsl_route.transport_target\""
-  update_hsl_route_transport_target(
-    "sets the columns of the filtered rows to the given values"
-    _set: hsl_route_transport_target_set_input,
-    "filter the rows which have to be updated"
-    where: hsl_route_transport_target_bool_exp!
-  ): hsl_route_transport_target_mutation_response
-  "update single row of the table: \"hsl_route.transport_target\""
-  update_hsl_route_transport_target_by_pk(
-    "sets the columns of the filtered rows to the given values"
-    _set: hsl_route_transport_target_set_input,
-    pk_columns: hsl_route_transport_target_pk_columns_input!
-  ): hsl_route_transport_target
-  "update multiples rows of table: \"hsl_route.transport_target\""
-  update_hsl_route_transport_target_many(
-    "updates to execute, in order"
-    updates: [hsl_route_transport_target_updates!]!
-  ): [hsl_route_transport_target_mutation_response]
   "update data of the table: \"infrastructure_network.direction\""
   update_infrastructure_network_direction(
     "sets the columns of the filtered rows to the given values"
@@ -1783,62 +1500,6 @@ type mutation_root {
 }
 
 type query_root {
-  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  hsl_route_legacy_hsl_municipality_code(
-    "distinct select on columns"
-    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
-    "filter the rows returned"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp
-  ): [hsl_route_legacy_hsl_municipality_code!]!
-  "fetch aggregated fields from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  hsl_route_legacy_hsl_municipality_code_aggregate(
-    "distinct select on columns"
-    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
-    "filter the rows returned"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp
-  ): hsl_route_legacy_hsl_municipality_code_aggregate!
-  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\" using primary key columns"
-  hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
-  "fetch data from the table: \"hsl_route.transport_target\""
-  hsl_route_transport_target(
-    "distinct select on columns"
-    distinct_on: [hsl_route_transport_target_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_transport_target_order_by!],
-    "filter the rows returned"
-    where: hsl_route_transport_target_bool_exp
-  ): [hsl_route_transport_target!]!
-  "fetch aggregated fields from the table: \"hsl_route.transport_target\""
-  hsl_route_transport_target_aggregate(
-    "distinct select on columns"
-    distinct_on: [hsl_route_transport_target_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_transport_target_order_by!],
-    "filter the rows returned"
-    where: hsl_route_transport_target_bool_exp
-  ): hsl_route_transport_target_aggregate!
-  "fetch data from the table: \"hsl_route.transport_target\" using primary key columns"
-  hsl_route_transport_target_by_pk(transport_target: String!): hsl_route_transport_target
   "fetch data from the table: \"infrastructure_network.direction\""
   infrastructure_network_direction(
     "distinct select on columns"
@@ -2842,8 +2503,6 @@ type route_infrastructure_link_along_route_variance_fields {
 type route_line {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String!
-  "An object relationship"
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code
   "Defines the legacy municipality that is mainly used for data exports."
   legacy_hsl_municipality_code: String
   "The ID of the line."
@@ -2888,9 +2547,7 @@ type route_line {
     "JSON select path"
     path: String
   ): jsonb!
-  "An object relationship"
-  transportTargetByTransportTarget: hsl_route_transport_target!
-  transport_target: hsl_route_transport_target_enum!
+  transport_target: String!
   "An object relationship"
   typeOfLineByTypeOfLine: route_type_of_line!
   "The type of the line."
@@ -2940,6 +2597,7 @@ type route_line_max_fields {
   line_id: uuid
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  transport_target: String
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
   validity_end: date
   "The point in time when the line becomes valid. If NULL, the line has been always valid."
@@ -2956,6 +2614,7 @@ type route_line_min_fields {
   line_id: uuid
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
   priority: Int
+  transport_target: String
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
   validity_end: date
   "The point in time when the line becomes valid. If NULL, the line has been always valid."
@@ -3057,8 +2716,6 @@ type route_route {
   ): route_infrastructure_link_along_route_aggregate!
   "The label of the route definition."
   label: String!
-  "An object relationship"
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code
   "Defines the legacy municipality that is mainly used for data exports."
   legacy_hsl_municipality_code: String
   name_i18n(
@@ -3745,80 +3402,6 @@ type service_pattern_vehicle_mode_on_scheduled_stop_point_mutation_response {
 }
 
 type subscription_root {
-  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  hsl_route_legacy_hsl_municipality_code(
-    "distinct select on columns"
-    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
-    "filter the rows returned"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp
-  ): [hsl_route_legacy_hsl_municipality_code!]!
-  "fetch aggregated fields from the table: \"hsl_route.legacy_hsl_municipality_code\""
-  hsl_route_legacy_hsl_municipality_code_aggregate(
-    "distinct select on columns"
-    distinct_on: [hsl_route_legacy_hsl_municipality_code_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_legacy_hsl_municipality_code_order_by!],
-    "filter the rows returned"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp
-  ): hsl_route_legacy_hsl_municipality_code_aggregate!
-  "fetch data from the table: \"hsl_route.legacy_hsl_municipality_code\" using primary key columns"
-  hsl_route_legacy_hsl_municipality_code_by_pk(hsl_municipality: String!): hsl_route_legacy_hsl_municipality_code
-  "fetch data from the table in a streaming manner: \"hsl_route.legacy_hsl_municipality_code\""
-  hsl_route_legacy_hsl_municipality_code_stream(
-    "maximum number of rows returned in a single batch"
-    batch_size: Int!,
-    "cursor to stream the results returned by the query"
-    cursor: [hsl_route_legacy_hsl_municipality_code_stream_cursor_input]!,
-    "filter the rows returned"
-    where: hsl_route_legacy_hsl_municipality_code_bool_exp
-  ): [hsl_route_legacy_hsl_municipality_code!]!
-  "fetch data from the table: \"hsl_route.transport_target\""
-  hsl_route_transport_target(
-    "distinct select on columns"
-    distinct_on: [hsl_route_transport_target_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_transport_target_order_by!],
-    "filter the rows returned"
-    where: hsl_route_transport_target_bool_exp
-  ): [hsl_route_transport_target!]!
-  "fetch aggregated fields from the table: \"hsl_route.transport_target\""
-  hsl_route_transport_target_aggregate(
-    "distinct select on columns"
-    distinct_on: [hsl_route_transport_target_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [hsl_route_transport_target_order_by!],
-    "filter the rows returned"
-    where: hsl_route_transport_target_bool_exp
-  ): hsl_route_transport_target_aggregate!
-  "fetch data from the table: \"hsl_route.transport_target\" using primary key columns"
-  hsl_route_transport_target_by_pk(transport_target: String!): hsl_route_transport_target
-  "fetch data from the table in a streaming manner: \"hsl_route.transport_target\""
-  hsl_route_transport_target_stream(
-    "maximum number of rows returned in a single batch"
-    batch_size: Int!,
-    "cursor to stream the results returned by the query"
-    cursor: [hsl_route_transport_target_stream_cursor_input]!,
-    "filter the rows returned"
-    where: hsl_route_transport_target_bool_exp
-  ): [hsl_route_transport_target!]!
   "fetch data from the table: \"infrastructure_network.direction\""
   infrastructure_network_direction(
     "distinct select on columns"
@@ -5231,6 +4814,13 @@ type timetables_timetables_mutation_frontend {
   ): timetables_vehicle_service_vehicle_service_mutation_response
   "delete single row from the table: \"vehicle_service.vehicle_service\""
   timetables_delete_vehicle_service_vehicle_service_by_pk(vehicle_service_id: uuid!): timetables_vehicle_service_vehicle_service
+  "delete data from the table: \"vehicle_type.vehicle_type\""
+  timetables_delete_vehicle_type_vehicle_type(
+    "filter the rows which have to be deleted"
+    where: timetables_vehicle_type_vehicle_type_bool_exp!
+  ): timetables_vehicle_type_vehicle_type_mutation_response
+  "delete single row from the table: \"vehicle_type.vehicle_type\""
+  timetables_delete_vehicle_type_vehicle_type_by_pk(vehicle_type_id: uuid!): timetables_vehicle_type_vehicle_type
   "insert data into the table: \"journey_pattern.journey_pattern_ref\""
   timetables_insert_journey_pattern_journey_pattern_ref(
     "the rows to be inserted"
@@ -5357,6 +4947,20 @@ type timetables_timetables_mutation_frontend {
     "upsert condition"
     on_conflict: timetables_vehicle_service_vehicle_service_on_conflict
   ): timetables_vehicle_service_vehicle_service
+  "insert data into the table: \"vehicle_type.vehicle_type\""
+  timetables_insert_vehicle_type_vehicle_type(
+    "the rows to be inserted"
+    objects: [timetables_vehicle_type_vehicle_type_insert_input!]!,
+    "upsert condition"
+    on_conflict: timetables_vehicle_type_vehicle_type_on_conflict
+  ): timetables_vehicle_type_vehicle_type_mutation_response
+  "insert a single row into the table: \"vehicle_type.vehicle_type\""
+  timetables_insert_vehicle_type_vehicle_type_one(
+    "the row to be inserted"
+    object: timetables_vehicle_type_vehicle_type_insert_input!,
+    "upsert condition"
+    on_conflict: timetables_vehicle_type_vehicle_type_on_conflict
+  ): timetables_vehicle_type_vehicle_type
   "update data of the table: \"journey_pattern.journey_pattern_ref\""
   timetables_update_journey_pattern_journey_pattern_ref(
     "sets the columns of the filtered rows to the given values"
@@ -5477,6 +5081,16 @@ type timetables_timetables_mutation_frontend {
   ): [timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_mutation_response]
   "update data of the table: \"vehicle_journey.vehicle_journey\""
   timetables_update_vehicle_journey_vehicle_journey(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_journey_vehicle_journey_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_journey_vehicle_journey_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_journey_vehicle_journey_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_journey_vehicle_journey_delete_key_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_journey_vehicle_journey_prepend_input,
     "sets the columns of the filtered rows to the given values"
     _set: timetables_vehicle_journey_vehicle_journey_set_input,
     "filter the rows which have to be updated"
@@ -5484,6 +5098,16 @@ type timetables_timetables_mutation_frontend {
   ): timetables_vehicle_journey_vehicle_journey_mutation_response
   "update single row of the table: \"vehicle_journey.vehicle_journey\""
   timetables_update_vehicle_journey_vehicle_journey_by_pk(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_journey_vehicle_journey_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_journey_vehicle_journey_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_journey_vehicle_journey_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_journey_vehicle_journey_delete_key_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_journey_vehicle_journey_prepend_input,
     "sets the columns of the filtered rows to the given values"
     _set: timetables_vehicle_journey_vehicle_journey_set_input,
     pk_columns: timetables_vehicle_journey_vehicle_journey_pk_columns_input!
@@ -5555,6 +5179,16 @@ type timetables_timetables_mutation_frontend {
   ): [timetables_vehicle_service_block_mutation_response]
   "update data of the table: \"vehicle_service.vehicle_service\""
   timetables_update_vehicle_service_vehicle_service(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_service_vehicle_service_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_service_vehicle_service_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_service_vehicle_service_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_service_vehicle_service_delete_key_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_service_vehicle_service_prepend_input,
     "sets the columns of the filtered rows to the given values"
     _set: timetables_vehicle_service_vehicle_service_set_input,
     "filter the rows which have to be updated"
@@ -5562,6 +5196,16 @@ type timetables_timetables_mutation_frontend {
   ): timetables_vehicle_service_vehicle_service_mutation_response
   "update single row of the table: \"vehicle_service.vehicle_service\""
   timetables_update_vehicle_service_vehicle_service_by_pk(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_service_vehicle_service_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_service_vehicle_service_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_service_vehicle_service_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_service_vehicle_service_delete_key_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_service_vehicle_service_prepend_input,
     "sets the columns of the filtered rows to the given values"
     _set: timetables_vehicle_service_vehicle_service_set_input,
     pk_columns: timetables_vehicle_service_vehicle_service_pk_columns_input!
@@ -5571,6 +5215,48 @@ type timetables_timetables_mutation_frontend {
     "updates to execute, in order"
     updates: [timetables_vehicle_service_vehicle_service_updates!]!
   ): [timetables_vehicle_service_vehicle_service_mutation_response]
+  "update data of the table: \"vehicle_type.vehicle_type\""
+  timetables_update_vehicle_type_vehicle_type(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_type_vehicle_type_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_type_vehicle_type_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_type_vehicle_type_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_type_vehicle_type_delete_key_input,
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_vehicle_type_vehicle_type_inc_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_type_vehicle_type_prepend_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_vehicle_type_vehicle_type_set_input,
+    "filter the rows which have to be updated"
+    where: timetables_vehicle_type_vehicle_type_bool_exp!
+  ): timetables_vehicle_type_vehicle_type_mutation_response
+  "update single row of the table: \"vehicle_type.vehicle_type\""
+  timetables_update_vehicle_type_vehicle_type_by_pk(
+    "append existing jsonb value of filtered columns with new jsonb value"
+    _append: timetables_vehicle_type_vehicle_type_append_input,
+    "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+    _delete_at_path: timetables_vehicle_type_vehicle_type_delete_at_path_input,
+    "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+    _delete_elem: timetables_vehicle_type_vehicle_type_delete_elem_input,
+    "delete key/value pair or string element. key/value pairs are matched based on their key value"
+    _delete_key: timetables_vehicle_type_vehicle_type_delete_key_input,
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_vehicle_type_vehicle_type_inc_input,
+    "prepend existing jsonb value of filtered columns with new jsonb value"
+    _prepend: timetables_vehicle_type_vehicle_type_prepend_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_vehicle_type_vehicle_type_set_input,
+    pk_columns: timetables_vehicle_type_vehicle_type_pk_columns_input!
+  ): timetables_vehicle_type_vehicle_type
+  "update multiples rows of table: \"vehicle_type.vehicle_type\""
+  timetables_update_vehicle_type_vehicle_type_many(
+    "updates to execute, in order"
+    updates: [timetables_vehicle_type_vehicle_type_updates!]!
+  ): [timetables_vehicle_type_vehicle_type_mutation_response]
 }
 
 type timetables_timetables_query {
@@ -5691,36 +5377,6 @@ type timetables_timetables_query {
   ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_calendar.day_type\" using primary key columns"
   timetables_service_calendar_day_type_by_pk(day_type_id: uuid!): timetables_service_calendar_day_type
-  "execute function \"service_calendar.get_active_day_types_for_date\" which returns \"service_calendar.day_type\""
-  timetables_service_calendar_get_active_day_types_for_date(
-    "input parameters for function \"service_calendar_get_active_day_types_for_date\""
-    args: timetables_service_calendar_get_active_day_types_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_service_calendar_day_type_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_service_calendar_day_type_order_by!],
-    "filter the rows returned"
-    where: timetables_service_calendar_day_type_bool_exp
-  ): [timetables_service_calendar_day_type!]!
-  "execute function \"service_calendar.get_active_day_types_for_date\" and query aggregates on result of table type \"service_calendar.day_type\""
-  timetables_service_calendar_get_active_day_types_for_date_aggregate(
-    "input parameters for function \"service_calendar_get_active_day_types_for_date_aggregate\""
-    args: timetables_service_calendar_get_active_day_types_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_service_calendar_day_type_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_service_calendar_day_type_order_by!],
-    "filter the rows returned"
-    where: timetables_service_calendar_day_type_bool_exp
-  ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -5833,36 +5489,6 @@ type timetables_timetables_query {
   ): timetables_vehicle_service_block_aggregate!
   "fetch data from the table: \"vehicle_service.block\" using primary key columns"
   timetables_vehicle_service_block_by_pk(block_id: uuid!): timetables_vehicle_service_block
-  "execute function \"vehicle_service.get_vehicle_services_for_date\" which returns \"vehicle_service.vehicle_service\""
-  timetables_vehicle_service_get_vehicle_services_for_date(
-    "input parameters for function \"vehicle_service_get_vehicle_services_for_date\""
-    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
-    "filter the rows returned"
-    where: timetables_vehicle_service_vehicle_service_bool_exp
-  ): [timetables_vehicle_service_vehicle_service!]!
-  "execute function \"vehicle_service.get_vehicle_services_for_date\" and query aggregates on result of table type \"vehicle_service.vehicle_service\""
-  timetables_vehicle_service_get_vehicle_services_for_date_aggregate(
-    "input parameters for function \"vehicle_service_get_vehicle_services_for_date_aggregate\""
-    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
-    "filter the rows returned"
-    where: timetables_vehicle_service_vehicle_service_bool_exp
-  ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -5891,6 +5517,34 @@ type timetables_timetables_query {
   ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\" using primary key columns"
   timetables_vehicle_service_vehicle_service_by_pk(vehicle_service_id: uuid!): timetables_vehicle_service_vehicle_service
+  "fetch data from the table: \"vehicle_type.vehicle_type\""
+  timetables_vehicle_type_vehicle_type(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_type_vehicle_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_type_vehicle_type_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_type_vehicle_type_bool_exp
+  ): [timetables_vehicle_type_vehicle_type!]!
+  "fetch aggregated fields from the table: \"vehicle_type.vehicle_type\""
+  timetables_vehicle_type_vehicle_type_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_type_vehicle_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_type_vehicle_type_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_type_vehicle_type_bool_exp
+  ): timetables_vehicle_type_vehicle_type_aggregate!
+  "fetch data from the table: \"vehicle_type.vehicle_type\" using primary key columns"
+  timetables_vehicle_type_vehicle_type_by_pk(vehicle_type_id: uuid!): timetables_vehicle_type_vehicle_type
 }
 
 type timetables_timetables_subscription {
@@ -6047,36 +5701,6 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_service_calendar_day_type_bool_exp
   ): [timetables_service_calendar_day_type!]!
-  "execute function \"service_calendar.get_active_day_types_for_date\" which returns \"service_calendar.day_type\""
-  timetables_service_calendar_get_active_day_types_for_date(
-    "input parameters for function \"service_calendar_get_active_day_types_for_date\""
-    args: timetables_service_calendar_get_active_day_types_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_service_calendar_day_type_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_service_calendar_day_type_order_by!],
-    "filter the rows returned"
-    where: timetables_service_calendar_day_type_bool_exp
-  ): [timetables_service_calendar_day_type!]!
-  "execute function \"service_calendar.get_active_day_types_for_date\" and query aggregates on result of table type \"service_calendar.day_type\""
-  timetables_service_calendar_get_active_day_types_for_date_aggregate(
-    "input parameters for function \"service_calendar_get_active_day_types_for_date_aggregate\""
-    args: timetables_service_calendar_get_active_day_types_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_service_calendar_day_type_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_service_calendar_day_type_order_by!],
-    "filter the rows returned"
-    where: timetables_service_calendar_day_type_bool_exp
-  ): timetables_service_calendar_day_type_aggregate!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -6225,36 +5849,6 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_vehicle_service_block_bool_exp
   ): [timetables_vehicle_service_block!]!
-  "execute function \"vehicle_service.get_vehicle_services_for_date\" which returns \"vehicle_service.vehicle_service\""
-  timetables_vehicle_service_get_vehicle_services_for_date(
-    "input parameters for function \"vehicle_service_get_vehicle_services_for_date\""
-    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
-    "filter the rows returned"
-    where: timetables_vehicle_service_vehicle_service_bool_exp
-  ): [timetables_vehicle_service_vehicle_service!]!
-  "execute function \"vehicle_service.get_vehicle_services_for_date\" and query aggregates on result of table type \"vehicle_service.vehicle_service\""
-  timetables_vehicle_service_get_vehicle_services_for_date_aggregate(
-    "input parameters for function \"vehicle_service_get_vehicle_services_for_date_aggregate\""
-    args: timetables_vehicle_service_get_vehicle_services_for_date_args!,
-    "distinct select on columns"
-    distinct_on: [timetables_vehicle_service_vehicle_service_select_column!],
-    "limit the number of rows returned"
-    limit: Int,
-    "skip the first n rows. Use only with order_by"
-    offset: Int,
-    "sort the rows by one or more columns"
-    order_by: [timetables_vehicle_service_vehicle_service_order_by!],
-    "filter the rows returned"
-    where: timetables_vehicle_service_vehicle_service_bool_exp
-  ): timetables_vehicle_service_vehicle_service_aggregate!
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -6292,6 +5886,43 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_vehicle_service_vehicle_service_bool_exp
   ): [timetables_vehicle_service_vehicle_service!]!
+  "fetch data from the table: \"vehicle_type.vehicle_type\""
+  timetables_vehicle_type_vehicle_type(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_type_vehicle_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_type_vehicle_type_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_type_vehicle_type_bool_exp
+  ): [timetables_vehicle_type_vehicle_type!]!
+  "fetch aggregated fields from the table: \"vehicle_type.vehicle_type\""
+  timetables_vehicle_type_vehicle_type_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_type_vehicle_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_type_vehicle_type_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_type_vehicle_type_bool_exp
+  ): timetables_vehicle_type_vehicle_type_aggregate!
+  "fetch data from the table: \"vehicle_type.vehicle_type\" using primary key columns"
+  timetables_vehicle_type_vehicle_type_by_pk(vehicle_type_id: uuid!): timetables_vehicle_type_vehicle_type
+  "fetch data from the table in a streaming manner: \"vehicle_type.vehicle_type\""
+  timetables_vehicle_type_vehicle_type_stream(
+    "maximum number of rows returned in a single batch"
+    batch_size: Int!,
+    "cursor to stream the results returned by the query"
+    cursor: [timetables_vehicle_type_vehicle_type_stream_cursor_input]!,
+    "filter the rows returned"
+    where: timetables_vehicle_type_vehicle_type_bool_exp
+  ): [timetables_vehicle_type_vehicle_type!]!
 }
 
 "The planned movement of a public transport vehicle on a DAY TYPE from the start point to the end point of a JOURNEY PATTERN on a specified ROUTE. Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=3:1:1:831 "
@@ -6300,12 +5931,29 @@ type timetables_vehicle_journey_vehicle_journey {
   block: timetables_vehicle_service_block!
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid!
+  "Displayed name of the journey."
+  displayed_name: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_end_time\""
   end_time: String
+  "Is the journey a backup journey."
+  is_backup_journey: Boolean!
+  "Is the journey an extra journey."
+  is_extra_journey: Boolean!
+  "It is required to use the same vehicle type as required in vehicle service."
+  is_vehicle_type_mandatory: Boolean!
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n(
+    "JSON select path"
+    path: String
+  ): jsonb
   "An object relationship"
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref!
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid!
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String!
+  "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
+  layover_time: interval
   "A computed field, executes function \"vehicle_journey.vehicle_journey_start_time\""
   start_time: String
   "An array relationship"
@@ -6334,6 +5982,8 @@ type timetables_vehicle_journey_vehicle_journey {
     "filter the rows returned"
     where: timetables_passing_times_timetabled_passing_time_bool_exp
   ): timetables_passing_times_timetabled_passing_time_aggregate!
+  "Turnaround time is the time taken by a vehicle to proceed from the end of a ROUTE to the start of another."
+  turnaround_time: interval
   vehicle_journey_id: uuid!
 }
 
@@ -6354,8 +6004,12 @@ type timetables_vehicle_journey_vehicle_journey_aggregate_fields {
 type timetables_vehicle_journey_vehicle_journey_max_fields {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "Displayed name of the journey."
+  displayed_name: String
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String
   vehicle_journey_id: uuid
 }
 
@@ -6363,8 +6017,12 @@ type timetables_vehicle_journey_vehicle_journey_max_fields {
 type timetables_vehicle_journey_vehicle_journey_min_fields {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "Displayed name of the journey."
+  displayed_name: String
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String
   vehicle_journey_id: uuid
 }
 
@@ -6378,11 +6036,20 @@ type timetables_vehicle_journey_vehicle_journey_mutation_response {
 
 "A coherent set of BLOCKS, COMPOUND BLOCKs, COURSEs of JOURNEY and VEHICLE SCHEDULEs to which the same set of VALIDITY CONDITIONs have been assigned. Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=3:7:2:993 "
 type timetables_vehicle_schedule_vehicle_schedule_frame {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n(
+    "JSON select path"
+    path: String
+  ): jsonb
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String!
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String!
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n(
     "JSON select path"
     path: String
-  ): jsonb!
+  ): jsonb
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
   priority: Int!
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity end. Null if always will be valid."
@@ -6447,6 +6114,10 @@ type timetables_vehicle_schedule_vehicle_schedule_frame_avg_fields {
 
 "aggregate max on columns"
 type timetables_vehicle_schedule_vehicle_schedule_frame_max_fields {
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
   priority: Int
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity end. Null if always will be valid."
@@ -6458,6 +6129,10 @@ type timetables_vehicle_schedule_vehicle_schedule_frame_max_fields {
 
 "aggregate min on columns"
 type timetables_vehicle_schedule_vehicle_schedule_frame_min_fields {
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
   priority: Int
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity end. Null if always will be valid."
@@ -6520,6 +6195,10 @@ type timetables_vehicle_schedule_vehicle_schedule_frame_variance_fields {
 "The work of a vehicle from the time it leaves a PARKING POINT after parking until its next return to park at a PARKING POINT. Any subsequent departure from a PARKING POINT after parking marks the start of a new BLOCK. The period of a BLOCK has to be covered by DUTies. Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=3:5:958 "
 type timetables_vehicle_service_block {
   block_id: uuid!
+  "Finishing time after end of vehicle service block."
+  finishing_time: interval
+  "Preparation time before start of vehicle service block."
+  preparing_time: interval
   "An array relationship"
   vehicle_journeys(
     "distinct select on columns"
@@ -6550,6 +6229,8 @@ type timetables_vehicle_service_block {
   vehicle_service: timetables_vehicle_service_vehicle_service!
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid!
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 "aggregated selection of \"vehicle_service.block\""
@@ -6570,6 +6251,8 @@ type timetables_vehicle_service_block_max_fields {
   block_id: uuid
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 "aggregate min on columns"
@@ -6577,6 +6260,8 @@ type timetables_vehicle_service_block_min_fields {
   block_id: uuid
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 "response of any mutation on the table \"vehicle_service.block\""
@@ -6619,6 +6304,11 @@ type timetables_vehicle_service_vehicle_service {
   day_type: timetables_service_calendar_day_type!
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid!
+  "Name for vehicle service."
+  name_i18n(
+    "JSON select path"
+    path: String
+  ): jsonb
   "An object relationship"
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame!
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
@@ -6663,6 +6353,115 @@ type timetables_vehicle_service_vehicle_service_mutation_response {
   affected_rows: Int!
   "data from the rows affected by the mutation"
   returning: [timetables_vehicle_service_vehicle_service!]!
+}
+
+"The VEHICLE entity is used to describe the physical public transport vehicles available for short-term planning of operations and daily assignment (in contrast to logical vehicles considered for resource planning of operations and daily assignment (in contrast to logical vehicles cplanning). Each VEHICLE shall be classified as of a particular VEHICLE TYPE."
+type timetables_vehicle_type_vehicle_type {
+  "Description of the vehicle type."
+  description_i18n(
+    "JSON select path"
+    path: String
+  ): jsonb
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint!
+  "Label of the vehicle type."
+  label: String!
+  vehicle_type_id: uuid!
+}
+
+"aggregated selection of \"vehicle_type.vehicle_type\""
+type timetables_vehicle_type_vehicle_type_aggregate {
+  aggregate: timetables_vehicle_type_vehicle_type_aggregate_fields
+  nodes: [timetables_vehicle_type_vehicle_type!]!
+}
+
+"aggregate fields of \"vehicle_type.vehicle_type\""
+type timetables_vehicle_type_vehicle_type_aggregate_fields {
+  avg: timetables_vehicle_type_vehicle_type_avg_fields
+  count(columns: [timetables_vehicle_type_vehicle_type_select_column!], distinct: Boolean): Int!
+  max: timetables_vehicle_type_vehicle_type_max_fields
+  min: timetables_vehicle_type_vehicle_type_min_fields
+  stddev: timetables_vehicle_type_vehicle_type_stddev_fields
+  stddev_pop: timetables_vehicle_type_vehicle_type_stddev_pop_fields
+  stddev_samp: timetables_vehicle_type_vehicle_type_stddev_samp_fields
+  sum: timetables_vehicle_type_vehicle_type_sum_fields
+  var_pop: timetables_vehicle_type_vehicle_type_var_pop_fields
+  var_samp: timetables_vehicle_type_vehicle_type_var_samp_fields
+  variance: timetables_vehicle_type_vehicle_type_variance_fields
+}
+
+"aggregate avg on columns"
+type timetables_vehicle_type_vehicle_type_avg_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate max on columns"
+type timetables_vehicle_type_vehicle_type_max_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+  "Label of the vehicle type."
+  label: String
+  vehicle_type_id: uuid
+}
+
+"aggregate min on columns"
+type timetables_vehicle_type_vehicle_type_min_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+  "Label of the vehicle type."
+  label: String
+  vehicle_type_id: uuid
+}
+
+"response of any mutation on the table \"vehicle_type.vehicle_type\""
+type timetables_vehicle_type_vehicle_type_mutation_response {
+  "number of rows affected by the mutation"
+  affected_rows: Int!
+  "data from the rows affected by the mutation"
+  returning: [timetables_vehicle_type_vehicle_type!]!
+}
+
+"aggregate stddev on columns"
+type timetables_vehicle_type_vehicle_type_stddev_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate stddev_pop on columns"
+type timetables_vehicle_type_vehicle_type_stddev_pop_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate stddev_samp on columns"
+type timetables_vehicle_type_vehicle_type_stddev_samp_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate sum on columns"
+type timetables_vehicle_type_vehicle_type_sum_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+}
+
+"aggregate var_pop on columns"
+type timetables_vehicle_type_vehicle_type_var_pop_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate var_samp on columns"
+type timetables_vehicle_type_vehicle_type_var_samp_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
+}
+
+"aggregate variance on columns"
+type timetables_vehicle_type_vehicle_type_variance_fields {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: Float
 }
 
 "A set of SCHEDULED STOP POINTs against which the timing information necessary to build schedules may be recorded. In HSL context this is \"Hastus paikka\". Based on Transmodel entity TIMING POINT: https://www.transmodel-cen.eu/model/index.htm?goto=2:3:2:709 "
@@ -6740,64 +6539,6 @@ enum cursor_ordering {
   ASC
   "descending ordering of the cursor"
   DESC
-}
-
-"unique or primary key constraints on table \"hsl_route.legacy_hsl_municipality_code\""
-enum hsl_route_legacy_hsl_municipality_code_constraint {
-  "unique or primary key constraint on columns \"hsl_municipality\""
-  legacy_hsl_municipality_code_pkey
-}
-
-"select columns of table \"hsl_route.legacy_hsl_municipality_code\""
-enum hsl_route_legacy_hsl_municipality_code_select_column {
-  "column name"
-  hsl_municipality
-  "column name"
-  jore3_code
-}
-
-"update columns of table \"hsl_route.legacy_hsl_municipality_code\""
-enum hsl_route_legacy_hsl_municipality_code_update_column {
-  "column name"
-  hsl_municipality
-  "column name"
-  jore3_code
-}
-
-"unique or primary key constraints on table \"hsl_route.transport_target\""
-enum hsl_route_transport_target_constraint {
-  "unique or primary key constraint on columns \"transport_target\""
-  transport_target_pkey
-}
-
-enum hsl_route_transport_target_enum {
-  espoo_and_kauniainen_internal_traffic
-  espoo_regional_traffic
-  helsinki_internal_traffic
-  kerava_internal_traffic
-  kerava_regional_traffic
-  kirkkonummi_internal_traffic
-  kirkkonummi_regional_traffic
-  sipoo_internal_traffic
-  siuntio_internal_traffic
-  siuntio_regional_traffic
-  transverse_regional
-  tuusula_internal_traffic
-  tuusula_regional_traffic
-  vantaa_internal_traffic
-  vantaa_regional_traffic
-}
-
-"select columns of table \"hsl_route.transport_target\""
-enum hsl_route_transport_target_select_column {
-  "column name"
-  transport_target
-}
-
-"update columns of table \"hsl_route.transport_target\""
-enum hsl_route_transport_target_update_column {
-  "column name"
-  transport_target
 }
 
 "unique or primary key constraints on table \"infrastructure_network.direction\""
@@ -7558,6 +7299,8 @@ enum timetables_journey_pattern_journey_pattern_ref_update_column {
 enum timetables_passing_times_timetabled_passing_time_constraint {
   "unique or primary key constraint on columns \"timetabled_passing_time_id\""
   timetabled_passing_time_pkey
+  "unique or primary key constraint on columns \"vehicle_journey_id\", \"scheduled_stop_point_in_journey_pattern_ref_id\""
+  timetabled_passing_time_stop_point_unique_idx
 }
 
 "select columns of table \"passing_times.timetabled_passing_time\""
@@ -7683,9 +7426,45 @@ enum timetables_vehicle_journey_vehicle_journey_select_column {
   "column name"
   block_id
   "column name"
+  displayed_name
+  "column name"
+  is_backup_journey
+  "column name"
+  is_extra_journey
+  "column name"
+  is_vehicle_type_mandatory
+  "column name"
+  journey_name_i18n
+  "column name"
   journey_pattern_ref_id
   "column name"
+  journey_type
+  "column name"
+  layover_time
+  "column name"
+  turnaround_time
+  "column name"
   vehicle_journey_id
+}
+
+"select \"vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_and_arguments_columns\" columns of table \"vehicle_journey.vehicle_journey\""
+enum timetables_vehicle_journey_vehicle_journey_select_column_vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_and_arguments_columns {
+  "column name"
+  is_backup_journey
+  "column name"
+  is_extra_journey
+  "column name"
+  is_vehicle_type_mandatory
+}
+
+"select \"vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_or_arguments_columns\" columns of table \"vehicle_journey.vehicle_journey\""
+enum timetables_vehicle_journey_vehicle_journey_select_column_vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_or_arguments_columns {
+  "column name"
+  is_backup_journey
+  "column name"
+  is_extra_journey
+  "column name"
+  is_vehicle_type_mandatory
 }
 
 "update columns of table \"vehicle_journey.vehicle_journey\""
@@ -7693,7 +7472,23 @@ enum timetables_vehicle_journey_vehicle_journey_update_column {
   "column name"
   block_id
   "column name"
+  displayed_name
+  "column name"
+  is_backup_journey
+  "column name"
+  is_extra_journey
+  "column name"
+  is_vehicle_type_mandatory
+  "column name"
+  journey_name_i18n
+  "column name"
   journey_pattern_ref_id
+  "column name"
+  journey_type
+  "column name"
+  layover_time
+  "column name"
+  turnaround_time
   "column name"
   vehicle_journey_id
 }
@@ -7706,6 +7501,12 @@ enum timetables_vehicle_schedule_vehicle_schedule_frame_constraint {
 
 "select columns of table \"vehicle_schedule.vehicle_schedule_frame\""
 enum timetables_vehicle_schedule_vehicle_schedule_frame_select_column {
+  "column name"
+  booking_description_i18n
+  "column name"
+  booking_label
+  "column name"
+  label
   "column name"
   name_i18n
   "column name"
@@ -7720,6 +7521,12 @@ enum timetables_vehicle_schedule_vehicle_schedule_frame_select_column {
 
 "update columns of table \"vehicle_schedule.vehicle_schedule_frame\""
 enum timetables_vehicle_schedule_vehicle_schedule_frame_update_column {
+  "column name"
+  booking_description_i18n
+  "column name"
+  booking_label
+  "column name"
+  label
   "column name"
   name_i18n
   "column name"
@@ -7743,7 +7550,13 @@ enum timetables_vehicle_service_block_select_column {
   "column name"
   block_id
   "column name"
+  finishing_time
+  "column name"
+  preparing_time
+  "column name"
   vehicle_service_id
+  "column name"
+  vehicle_type_id
 }
 
 "update columns of table \"vehicle_service.block\""
@@ -7751,7 +7564,13 @@ enum timetables_vehicle_service_block_update_column {
   "column name"
   block_id
   "column name"
+  finishing_time
+  "column name"
+  preparing_time
+  "column name"
   vehicle_service_id
+  "column name"
+  vehicle_type_id
 }
 
 "unique or primary key constraints on table \"vehicle_service.vehicle_service\""
@@ -7765,6 +7584,8 @@ enum timetables_vehicle_service_vehicle_service_select_column {
   "column name"
   day_type_id
   "column name"
+  name_i18n
+  "column name"
   vehicle_schedule_frame_id
   "column name"
   vehicle_service_id
@@ -7775,9 +7596,41 @@ enum timetables_vehicle_service_vehicle_service_update_column {
   "column name"
   day_type_id
   "column name"
+  name_i18n
+  "column name"
   vehicle_schedule_frame_id
   "column name"
   vehicle_service_id
+}
+
+"unique or primary key constraints on table \"vehicle_type.vehicle_type\""
+enum timetables_vehicle_type_vehicle_type_constraint {
+  "unique or primary key constraint on columns \"vehicle_type_id\""
+  vehicle_type_pkey
+}
+
+"select columns of table \"vehicle_type.vehicle_type\""
+enum timetables_vehicle_type_vehicle_type_select_column {
+  "column name"
+  description_i18n
+  "column name"
+  hsl_id
+  "column name"
+  label
+  "column name"
+  vehicle_type_id
+}
+
+"update columns of table \"vehicle_type.vehicle_type\""
+enum timetables_vehicle_type_vehicle_type_update_column {
+  "column name"
+  description_i18n
+  "column name"
+  hsl_id
+  "column name"
+  label
+  "column name"
+  vehicle_type_id
 }
 
 "unique or primary key constraints on table \"timing_pattern.timing_place\""
@@ -7971,161 +7824,6 @@ input geometry_comparison_exp {
   _st_touches: geometry
   "is the column contained in the given geometry value"
   _st_within: geometry
-}
-
-"Boolean expression to filter rows from the table \"hsl_route.legacy_hsl_municipality_code\". All fields are combined with a logical 'AND'."
-input hsl_route_legacy_hsl_municipality_code_bool_exp {
-  _and: [hsl_route_legacy_hsl_municipality_code_bool_exp!]
-  _not: hsl_route_legacy_hsl_municipality_code_bool_exp
-  _or: [hsl_route_legacy_hsl_municipality_code_bool_exp!]
-  hsl_municipality: String_comparison_exp
-  jore3_code: smallint_comparison_exp
-  lines: route_line_bool_exp
-  lines_aggregate: route_line_aggregate_bool_exp
-  routes: route_route_bool_exp
-  routes_aggregate: route_route_aggregate_bool_exp
-}
-
-"input type for incrementing numeric columns in table \"hsl_route.legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_inc_input {
-  jore3_code: smallint
-}
-
-"input type for inserting data into table \"hsl_route.legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_insert_input {
-  hsl_municipality: String
-  jore3_code: smallint
-  lines: route_line_arr_rel_insert_input
-  routes: route_route_arr_rel_insert_input
-}
-
-"input type for inserting object relation for remote table \"hsl_route.legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input {
-  data: hsl_route_legacy_hsl_municipality_code_insert_input!
-  "upsert condition"
-  on_conflict: hsl_route_legacy_hsl_municipality_code_on_conflict
-}
-
-"on_conflict condition type for table \"hsl_route.legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_on_conflict {
-  constraint: hsl_route_legacy_hsl_municipality_code_constraint!
-  update_columns: [hsl_route_legacy_hsl_municipality_code_update_column!]! = []
-  where: hsl_route_legacy_hsl_municipality_code_bool_exp
-}
-
-"Ordering options when selecting data from \"hsl_route.legacy_hsl_municipality_code\"."
-input hsl_route_legacy_hsl_municipality_code_order_by {
-  hsl_municipality: order_by
-  jore3_code: order_by
-  lines_aggregate: route_line_aggregate_order_by
-  routes_aggregate: route_route_aggregate_order_by
-}
-
-"primary key columns input for table: hsl_route.legacy_hsl_municipality_code"
-input hsl_route_legacy_hsl_municipality_code_pk_columns_input {
-  hsl_municipality: String!
-}
-
-"input type for updating data in table \"hsl_route.legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_set_input {
-  hsl_municipality: String
-  jore3_code: smallint
-}
-
-"Streaming cursor of the table \"hsl_route_legacy_hsl_municipality_code\""
-input hsl_route_legacy_hsl_municipality_code_stream_cursor_input {
-  "Stream column input with initial value"
-  initial_value: hsl_route_legacy_hsl_municipality_code_stream_cursor_value_input!
-  "cursor ordering"
-  ordering: cursor_ordering
-}
-
-"Initial value of the column from where the streaming should start"
-input hsl_route_legacy_hsl_municipality_code_stream_cursor_value_input {
-  hsl_municipality: String
-  jore3_code: smallint
-}
-
-input hsl_route_legacy_hsl_municipality_code_updates {
-  "increments the numeric columns with given value of the filtered values"
-  _inc: hsl_route_legacy_hsl_municipality_code_inc_input
-  "sets the columns of the filtered rows to the given values"
-  _set: hsl_route_legacy_hsl_municipality_code_set_input
-  where: hsl_route_legacy_hsl_municipality_code_bool_exp!
-}
-
-"Boolean expression to filter rows from the table \"hsl_route.transport_target\". All fields are combined with a logical 'AND'."
-input hsl_route_transport_target_bool_exp {
-  _and: [hsl_route_transport_target_bool_exp!]
-  _not: hsl_route_transport_target_bool_exp
-  _or: [hsl_route_transport_target_bool_exp!]
-  lines: route_line_bool_exp
-  lines_aggregate: route_line_aggregate_bool_exp
-  transport_target: String_comparison_exp
-}
-
-"Boolean expression to compare columns of type \"hsl_route_transport_target_enum\". All fields are combined with logical 'AND'."
-input hsl_route_transport_target_enum_comparison_exp {
-  _eq: hsl_route_transport_target_enum
-  _in: [hsl_route_transport_target_enum!]
-  _is_null: Boolean
-  _neq: hsl_route_transport_target_enum
-  _nin: [hsl_route_transport_target_enum!]
-}
-
-"input type for inserting data into table \"hsl_route.transport_target\""
-input hsl_route_transport_target_insert_input {
-  lines: route_line_arr_rel_insert_input
-  transport_target: String
-}
-
-"input type for inserting object relation for remote table \"hsl_route.transport_target\""
-input hsl_route_transport_target_obj_rel_insert_input {
-  data: hsl_route_transport_target_insert_input!
-  "upsert condition"
-  on_conflict: hsl_route_transport_target_on_conflict
-}
-
-"on_conflict condition type for table \"hsl_route.transport_target\""
-input hsl_route_transport_target_on_conflict {
-  constraint: hsl_route_transport_target_constraint!
-  update_columns: [hsl_route_transport_target_update_column!]! = []
-  where: hsl_route_transport_target_bool_exp
-}
-
-"Ordering options when selecting data from \"hsl_route.transport_target\"."
-input hsl_route_transport_target_order_by {
-  lines_aggregate: route_line_aggregate_order_by
-  transport_target: order_by
-}
-
-"primary key columns input for table: hsl_route.transport_target"
-input hsl_route_transport_target_pk_columns_input {
-  transport_target: String!
-}
-
-"input type for updating data in table \"hsl_route.transport_target\""
-input hsl_route_transport_target_set_input {
-  transport_target: String
-}
-
-"Streaming cursor of the table \"hsl_route_transport_target\""
-input hsl_route_transport_target_stream_cursor_input {
-  "Stream column input with initial value"
-  initial_value: hsl_route_transport_target_stream_cursor_value_input!
-  "cursor ordering"
-  ordering: cursor_ordering
-}
-
-"Initial value of the column from where the streaming should start"
-input hsl_route_transport_target_stream_cursor_value_input {
-  transport_target: String
-}
-
-input hsl_route_transport_target_updates {
-  "sets the columns of the filtered rows to the given values"
-  _set: hsl_route_transport_target_set_input
-  where: hsl_route_transport_target_bool_exp!
 }
 
 "Boolean expression to filter rows from the table \"infrastructure_network.direction\". All fields are combined with a logical 'AND'."
@@ -9763,7 +9461,6 @@ input route_line_bool_exp {
   _not: route_line_bool_exp
   _or: [route_line_bool_exp!]
   label: String_comparison_exp
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_bool_exp
   legacy_hsl_municipality_code: String_comparison_exp
   line_id: uuid_comparison_exp
   line_routes: route_route_bool_exp
@@ -9772,8 +9469,7 @@ input route_line_bool_exp {
   primary_vehicle_mode: reusable_components_vehicle_mode_enum_comparison_exp
   priority: Int_comparison_exp
   short_name_i18n: jsonb_comparison_exp
-  transportTargetByTransportTarget: hsl_route_transport_target_bool_exp
-  transport_target: hsl_route_transport_target_enum_comparison_exp
+  transport_target: String_comparison_exp
   typeOfLineByTypeOfLine: route_type_of_line_bool_exp
   type_of_line: route_type_of_line_enum_comparison_exp
   validity_end: date_comparison_exp
@@ -9815,7 +9511,6 @@ input route_line_inc_input {
 input route_line_insert_input {
   "The label of the line definition. The label is unique for a certain priority and validity period."
   label: String
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input
   "Defines the legacy municipality that is mainly used for data exports."
   legacy_hsl_municipality_code: String
   "The ID of the line."
@@ -9829,8 +9524,7 @@ input route_line_insert_input {
   priority: Int
   "The shorted name of the line. Placeholder for multilingual strings."
   short_name_i18n: jsonb
-  transportTargetByTransportTarget: hsl_route_transport_target_obj_rel_insert_input
-  transport_target: hsl_route_transport_target_enum
+  transport_target: String
   typeOfLineByTypeOfLine: route_type_of_line_obj_rel_insert_input
   "The type of the line."
   type_of_line: route_type_of_line_enum
@@ -9851,6 +9545,7 @@ input route_line_max_order_by {
   line_id: order_by
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  transport_target: order_by
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
   validity_end: order_by
   "The point in time when the line becomes valid. If NULL, the line has been always valid."
@@ -9867,6 +9562,7 @@ input route_line_min_order_by {
   line_id: order_by
   "The priority of the line definition. The definition may be overridden by higher priority definitions."
   priority: order_by
+  transport_target: order_by
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
   validity_end: order_by
   "The point in time when the line becomes valid. If NULL, the line has been always valid."
@@ -9890,7 +9586,6 @@ input route_line_on_conflict {
 "Ordering options when selecting data from \"route.line\"."
 input route_line_order_by {
   label: order_by
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_order_by
   legacy_hsl_municipality_code: order_by
   line_id: order_by
   line_routes_aggregate: route_route_aggregate_order_by
@@ -9898,7 +9593,6 @@ input route_line_order_by {
   primary_vehicle_mode: order_by
   priority: order_by
   short_name_i18n: order_by
-  transportTargetByTransportTarget: hsl_route_transport_target_order_by
   transport_target: order_by
   typeOfLineByTypeOfLine: route_type_of_line_order_by
   type_of_line: order_by
@@ -9937,7 +9631,7 @@ input route_line_set_input {
   priority: Int
   "The shorted name of the line. Placeholder for multilingual strings."
   short_name_i18n: jsonb
-  transport_target: hsl_route_transport_target_enum
+  transport_target: String
   "The type of the line."
   type_of_line: route_type_of_line_enum
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
@@ -9988,7 +9682,7 @@ input route_line_stream_cursor_value_input {
   priority: Int
   "The shorted name of the line. Placeholder for multilingual strings."
   short_name_i18n: jsonb
-  transport_target: hsl_route_transport_target_enum
+  transport_target: String
   "The type of the line."
   type_of_line: route_type_of_line_enum
   "The point in time from which onwards the line is no longer valid. If NULL, the line will be always valid."
@@ -10103,7 +9797,6 @@ input route_route_bool_exp {
   infrastructure_links_along_route: route_infrastructure_link_along_route_bool_exp
   infrastructure_links_along_route_aggregate: route_infrastructure_link_along_route_aggregate_bool_exp
   label: String_comparison_exp
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_bool_exp
   legacy_hsl_municipality_code: String_comparison_exp
   name_i18n: jsonb_comparison_exp
   on_line_id: uuid_comparison_exp
@@ -10173,7 +9866,6 @@ input route_route_insert_input {
   infrastructure_links_along_route: route_infrastructure_link_along_route_arr_rel_insert_input
   "The label of the route definition."
   label: String
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_obj_rel_insert_input
   "Defines the legacy municipality that is mainly used for data exports."
   legacy_hsl_municipality_code: String
   name_i18n: jsonb
@@ -10261,7 +9953,6 @@ input route_route_order_by {
   direction: order_by
   infrastructure_links_along_route_aggregate: route_infrastructure_link_along_route_aggregate_order_by
   label: order_by
-  legacyHslMunicipalityCodeByLegacyHslMunicipalityCode: hsl_route_legacy_hsl_municipality_code_order_by
   legacy_hsl_municipality_code: order_by
   name_i18n: order_by
   on_line_id: order_by
@@ -11596,10 +11287,6 @@ input timetables_service_calendar_day_type_updates {
   where: timetables_service_calendar_day_type_bool_exp!
 }
 
-input timetables_service_calendar_get_active_day_types_for_date_args {
-  observation_date: date
-}
-
 "order by aggregate values of table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
 input timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_order_by {
   avg: timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_avg_order_by
@@ -11799,6 +11486,12 @@ input timetables_vehicle_journey_vehicle_journey_aggregate_order_by {
   min: timetables_vehicle_journey_vehicle_journey_min_order_by
 }
 
+"append existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_journey_vehicle_journey_append_input {
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: jsonb
+}
+
 "input type for inserting array relation for remote table \"vehicle_journey.vehicle_journey\""
 input timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input {
   data: [timetables_vehicle_journey_vehicle_journey_insert_input!]!
@@ -11813,13 +11506,39 @@ input timetables_vehicle_journey_vehicle_journey_bool_exp {
   _or: [timetables_vehicle_journey_vehicle_journey_bool_exp!]
   block: timetables_vehicle_service_block_bool_exp
   block_id: uuid_comparison_exp
+  displayed_name: String_comparison_exp
   end_time: String_comparison_exp
+  is_backup_journey: Boolean_comparison_exp
+  is_extra_journey: Boolean_comparison_exp
+  is_vehicle_type_mandatory: Boolean_comparison_exp
+  journey_name_i18n: jsonb_comparison_exp
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref_bool_exp
   journey_pattern_ref_id: uuid_comparison_exp
+  journey_type: String_comparison_exp
+  layover_time: interval_comparison_exp
   start_time: String_comparison_exp
   timetabled_passing_times: timetables_passing_times_timetabled_passing_time_bool_exp
   timetabled_passing_times_aggregate: passing_times_timetabled_passing_time_aggregate_bool_exp
+  turnaround_time: interval_comparison_exp
   vehicle_journey_id: uuid_comparison_exp
+}
+
+"delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+input timetables_vehicle_journey_vehicle_journey_delete_at_path_input {
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: [String!]
+}
+
+"delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+input timetables_vehicle_journey_vehicle_journey_delete_elem_input {
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: Int
+}
+
+"delete key/value pair or string element. key/value pairs are matched based on their key value"
+input timetables_vehicle_journey_vehicle_journey_delete_key_input {
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: String
 }
 
 "input type for inserting data into table \"vehicle_journey.vehicle_journey\""
@@ -11827,10 +11546,26 @@ input timetables_vehicle_journey_vehicle_journey_insert_input {
   block: timetables_vehicle_service_block_obj_rel_insert_input
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "Displayed name of the journey."
+  displayed_name: String
+  "Is the journey a backup journey."
+  is_backup_journey: Boolean
+  "Is the journey an extra journey."
+  is_extra_journey: Boolean
+  "It is required to use the same vehicle type as required in vehicle service."
+  is_vehicle_type_mandatory: Boolean
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: jsonb
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref_obj_rel_insert_input
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String
+  "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
+  layover_time: interval
   timetabled_passing_times: timetables_passing_times_timetabled_passing_time_arr_rel_insert_input
+  "Turnaround time is the time taken by a vehicle to proceed from the end of a ROUTE to the start of another."
+  turnaround_time: interval
   vehicle_journey_id: uuid
 }
 
@@ -11838,8 +11573,12 @@ input timetables_vehicle_journey_vehicle_journey_insert_input {
 input timetables_vehicle_journey_vehicle_journey_max_order_by {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: order_by
+  "Displayed name of the journey."
+  displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: order_by
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: order_by
   vehicle_journey_id: order_by
 }
 
@@ -11847,8 +11586,12 @@ input timetables_vehicle_journey_vehicle_journey_max_order_by {
 input timetables_vehicle_journey_vehicle_journey_min_order_by {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: order_by
+  "Displayed name of the journey."
+  displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: order_by
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: order_by
   vehicle_journey_id: order_by
 }
 
@@ -11870,11 +11613,19 @@ input timetables_vehicle_journey_vehicle_journey_on_conflict {
 input timetables_vehicle_journey_vehicle_journey_order_by {
   block: timetables_vehicle_service_block_order_by
   block_id: order_by
+  displayed_name: order_by
   end_time: order_by
+  is_backup_journey: order_by
+  is_extra_journey: order_by
+  is_vehicle_type_mandatory: order_by
+  journey_name_i18n: order_by
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref_order_by
   journey_pattern_ref_id: order_by
+  journey_type: order_by
+  layover_time: order_by
   start_time: order_by
   timetabled_passing_times_aggregate: timetables_passing_times_timetabled_passing_time_aggregate_order_by
+  turnaround_time: order_by
   vehicle_journey_id: order_by
 }
 
@@ -11883,12 +11634,34 @@ input timetables_vehicle_journey_vehicle_journey_pk_columns_input {
   vehicle_journey_id: uuid!
 }
 
+"prepend existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_journey_vehicle_journey_prepend_input {
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: jsonb
+}
+
 "input type for updating data in table \"vehicle_journey.vehicle_journey\""
 input timetables_vehicle_journey_vehicle_journey_set_input {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "Displayed name of the journey."
+  displayed_name: String
+  "Is the journey a backup journey."
+  is_backup_journey: Boolean
+  "Is the journey an extra journey."
+  is_extra_journey: Boolean
+  "It is required to use the same vehicle type as required in vehicle service."
+  is_vehicle_type_mandatory: Boolean
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: jsonb
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String
+  "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
+  layover_time: interval
+  "Turnaround time is the time taken by a vehicle to proceed from the end of a ROUTE to the start of another."
+  turnaround_time: interval
   vehicle_journey_id: uuid
 }
 
@@ -11904,12 +11677,38 @@ input timetables_vehicle_journey_vehicle_journey_stream_cursor_input {
 input timetables_vehicle_journey_vehicle_journey_stream_cursor_value_input {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "Displayed name of the journey."
+  displayed_name: String
+  "Is the journey a backup journey."
+  is_backup_journey: Boolean
+  "Is the journey an extra journey."
+  is_extra_journey: Boolean
+  "It is required to use the same vehicle type as required in vehicle service."
+  is_vehicle_type_mandatory: Boolean
+  "Name that user can give to the vehicle journey."
+  journey_name_i18n: jsonb
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
+  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  journey_type: String
+  "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
+  layover_time: interval
+  "Turnaround time is the time taken by a vehicle to proceed from the end of a ROUTE to the start of another."
+  turnaround_time: interval
   vehicle_journey_id: uuid
 }
 
 input timetables_vehicle_journey_vehicle_journey_updates {
+  "append existing jsonb value of filtered columns with new jsonb value"
+  _append: timetables_vehicle_journey_vehicle_journey_append_input
+  "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+  _delete_at_path: timetables_vehicle_journey_vehicle_journey_delete_at_path_input
+  "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+  _delete_elem: timetables_vehicle_journey_vehicle_journey_delete_elem_input
+  "delete key/value pair or string element. key/value pairs are matched based on their key value"
+  _delete_key: timetables_vehicle_journey_vehicle_journey_delete_key_input
+  "prepend existing jsonb value of filtered columns with new jsonb value"
+  _prepend: timetables_vehicle_journey_vehicle_journey_prepend_input
   "sets the columns of the filtered rows to the given values"
   _set: timetables_vehicle_journey_vehicle_journey_set_input
   where: timetables_vehicle_journey_vehicle_journey_bool_exp!
@@ -11917,6 +11716,8 @@ input timetables_vehicle_journey_vehicle_journey_updates {
 
 "append existing jsonb value of filtered columns with new jsonb value"
 input timetables_vehicle_schedule_vehicle_schedule_frame_append_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: jsonb
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: jsonb
 }
@@ -11926,6 +11727,9 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp {
   _and: [timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp!]
   _not: timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp
   _or: [timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp!]
+  booking_description_i18n: jsonb_comparison_exp
+  booking_label: String_comparison_exp
+  label: String_comparison_exp
   name_i18n: jsonb_comparison_exp
   priority: Int_comparison_exp
   validity_end: date_comparison_exp
@@ -11937,18 +11741,24 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp {
 
 "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
 input timetables_vehicle_schedule_vehicle_schedule_frame_delete_at_path_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: [String!]
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: [String!]
 }
 
 "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
 input timetables_vehicle_schedule_vehicle_schedule_frame_delete_elem_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: Int
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: Int
 }
 
 "delete key/value pair or string element. key/value pairs are matched based on their key value"
 input timetables_vehicle_schedule_vehicle_schedule_frame_delete_key_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: String
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: String
 }
@@ -11961,6 +11771,12 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_inc_input {
 
 "input type for inserting data into table \"vehicle_schedule.vehicle_schedule_frame\""
 input timetables_vehicle_schedule_vehicle_schedule_frame_insert_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: jsonb
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: jsonb
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
@@ -11989,6 +11805,9 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_on_conflict {
 
 "Ordering options when selecting data from \"vehicle_schedule.vehicle_schedule_frame\"."
 input timetables_vehicle_schedule_vehicle_schedule_frame_order_by {
+  booking_description_i18n: order_by
+  booking_label: order_by
+  label: order_by
   name_i18n: order_by
   priority: order_by
   validity_end: order_by
@@ -12004,12 +11823,20 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_pk_columns_input {
 
 "prepend existing jsonb value of filtered columns with new jsonb value"
 input timetables_vehicle_schedule_vehicle_schedule_frame_prepend_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: jsonb
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: jsonb
 }
 
 "input type for updating data in table \"vehicle_schedule.vehicle_schedule_frame\""
 input timetables_vehicle_schedule_vehicle_schedule_frame_set_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: jsonb
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: jsonb
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
@@ -12031,6 +11858,12 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_stream_cursor_input {
 
 "Initial value of the column from where the streaming should start"
 input timetables_vehicle_schedule_vehicle_schedule_frame_stream_cursor_value_input {
+  "Booking description for the vehicle schedule frame. Comes from BookingRecord vsc_booking_desc field from Hastus."
+  booking_description_i18n: jsonb
+  "Booking label for the vehicle schedule frame. Comes from BookingRecord vsc_booking field from Hastus."
+  booking_label: String
+  "Label for the vehicle schedule frame. Comes from BookingRecord vsc_name field from Hastus."
+  label: String
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   name_i18n: jsonb
   "The priority of the timetable definition. The definition may be overridden by higher priority definitions."
@@ -12080,19 +11913,28 @@ input timetables_vehicle_service_block_bool_exp {
   _not: timetables_vehicle_service_block_bool_exp
   _or: [timetables_vehicle_service_block_bool_exp!]
   block_id: uuid_comparison_exp
+  finishing_time: interval_comparison_exp
+  preparing_time: interval_comparison_exp
   vehicle_journeys: timetables_vehicle_journey_vehicle_journey_bool_exp
   vehicle_journeys_aggregate: vehicle_journey_vehicle_journey_aggregate_bool_exp
   vehicle_service: timetables_vehicle_service_vehicle_service_bool_exp
   vehicle_service_id: uuid_comparison_exp
+  vehicle_type_id: uuid_comparison_exp
 }
 
 "input type for inserting data into table \"vehicle_service.block\""
 input timetables_vehicle_service_block_insert_input {
   block_id: uuid
+  "Finishing time after end of vehicle service block."
+  finishing_time: interval
+  "Preparation time before start of vehicle service block."
+  preparing_time: interval
   vehicle_journeys: timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input
   vehicle_service: timetables_vehicle_service_vehicle_service_obj_rel_insert_input
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 "order by max() on columns of table \"vehicle_service.block\""
@@ -12100,6 +11942,8 @@ input timetables_vehicle_service_block_max_order_by {
   block_id: order_by
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: order_by
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: order_by
 }
 
 "order by min() on columns of table \"vehicle_service.block\""
@@ -12107,6 +11951,8 @@ input timetables_vehicle_service_block_min_order_by {
   block_id: order_by
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: order_by
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: order_by
 }
 
 "input type for inserting object relation for remote table \"vehicle_service.block\""
@@ -12126,9 +11972,12 @@ input timetables_vehicle_service_block_on_conflict {
 "Ordering options when selecting data from \"vehicle_service.block\"."
 input timetables_vehicle_service_block_order_by {
   block_id: order_by
+  finishing_time: order_by
+  preparing_time: order_by
   vehicle_journeys_aggregate: timetables_vehicle_journey_vehicle_journey_aggregate_order_by
   vehicle_service: timetables_vehicle_service_vehicle_service_order_by
   vehicle_service_id: order_by
+  vehicle_type_id: order_by
 }
 
 "primary key columns input for table: vehicle_service.block"
@@ -12139,8 +11988,14 @@ input timetables_vehicle_service_block_pk_columns_input {
 "input type for updating data in table \"vehicle_service.block\""
 input timetables_vehicle_service_block_set_input {
   block_id: uuid
+  "Finishing time after end of vehicle service block."
+  finishing_time: interval
+  "Preparation time before start of vehicle service block."
+  preparing_time: interval
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 "Streaming cursor of the table \"vehicle_service_block\""
@@ -12154,8 +12009,14 @@ input timetables_vehicle_service_block_stream_cursor_input {
 "Initial value of the column from where the streaming should start"
 input timetables_vehicle_service_block_stream_cursor_value_input {
   block_id: uuid
+  "Finishing time after end of vehicle service block."
+  finishing_time: interval
+  "Preparation time before start of vehicle service block."
+  preparing_time: interval
   "The VEHICLE SERVICE to which this BLOCK belongs."
   vehicle_service_id: uuid
+  "Reference to vehicle_type.vehicle_type."
+  vehicle_type_id: uuid
 }
 
 input timetables_vehicle_service_block_updates {
@@ -12164,15 +12025,17 @@ input timetables_vehicle_service_block_updates {
   where: timetables_vehicle_service_block_bool_exp!
 }
 
-input timetables_vehicle_service_get_vehicle_services_for_date_args {
-  observation_date: date
-}
-
 "order by aggregate values of table \"vehicle_service.vehicle_service\""
 input timetables_vehicle_service_vehicle_service_aggregate_order_by {
   count: order_by
   max: timetables_vehicle_service_vehicle_service_max_order_by
   min: timetables_vehicle_service_vehicle_service_min_order_by
+}
+
+"append existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_service_vehicle_service_append_input {
+  "Name for vehicle service."
+  name_i18n: jsonb
 }
 
 "input type for inserting array relation for remote table \"vehicle_service.vehicle_service\""
@@ -12191,9 +12054,28 @@ input timetables_vehicle_service_vehicle_service_bool_exp {
   blocks_aggregate: vehicle_service_block_aggregate_bool_exp
   day_type: timetables_service_calendar_day_type_bool_exp
   day_type_id: uuid_comparison_exp
+  name_i18n: jsonb_comparison_exp
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp
   vehicle_schedule_frame_id: uuid_comparison_exp
   vehicle_service_id: uuid_comparison_exp
+}
+
+"delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+input timetables_vehicle_service_vehicle_service_delete_at_path_input {
+  "Name for vehicle service."
+  name_i18n: [String!]
+}
+
+"delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+input timetables_vehicle_service_vehicle_service_delete_elem_input {
+  "Name for vehicle service."
+  name_i18n: Int
+}
+
+"delete key/value pair or string element. key/value pairs are matched based on their key value"
+input timetables_vehicle_service_vehicle_service_delete_key_input {
+  "Name for vehicle service."
+  name_i18n: String
 }
 
 "input type for inserting data into table \"vehicle_service.vehicle_service\""
@@ -12202,6 +12084,8 @@ input timetables_vehicle_service_vehicle_service_insert_input {
   day_type: timetables_service_calendar_day_type_obj_rel_insert_input
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid
+  "Name for vehicle service."
+  name_i18n: jsonb
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_obj_rel_insert_input
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   vehicle_schedule_frame_id: uuid
@@ -12245,6 +12129,7 @@ input timetables_vehicle_service_vehicle_service_order_by {
   blocks_aggregate: timetables_vehicle_service_block_aggregate_order_by
   day_type: timetables_service_calendar_day_type_order_by
   day_type_id: order_by
+  name_i18n: order_by
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_order_by
   vehicle_schedule_frame_id: order_by
   vehicle_service_id: order_by
@@ -12255,10 +12140,18 @@ input timetables_vehicle_service_vehicle_service_pk_columns_input {
   vehicle_service_id: uuid!
 }
 
+"prepend existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_service_vehicle_service_prepend_input {
+  "Name for vehicle service."
+  name_i18n: jsonb
+}
+
 "input type for updating data in table \"vehicle_service.vehicle_service\""
 input timetables_vehicle_service_vehicle_service_set_input {
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid
+  "Name for vehicle service."
+  name_i18n: jsonb
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   vehicle_schedule_frame_id: uuid
   vehicle_service_id: uuid
@@ -12276,15 +12169,153 @@ input timetables_vehicle_service_vehicle_service_stream_cursor_input {
 input timetables_vehicle_service_vehicle_service_stream_cursor_value_input {
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid
+  "Name for vehicle service."
+  name_i18n: jsonb
   "Human-readable name for the VEHICLE SCHEDULE FRAME"
   vehicle_schedule_frame_id: uuid
   vehicle_service_id: uuid
 }
 
 input timetables_vehicle_service_vehicle_service_updates {
+  "append existing jsonb value of filtered columns with new jsonb value"
+  _append: timetables_vehicle_service_vehicle_service_append_input
+  "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+  _delete_at_path: timetables_vehicle_service_vehicle_service_delete_at_path_input
+  "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+  _delete_elem: timetables_vehicle_service_vehicle_service_delete_elem_input
+  "delete key/value pair or string element. key/value pairs are matched based on their key value"
+  _delete_key: timetables_vehicle_service_vehicle_service_delete_key_input
+  "prepend existing jsonb value of filtered columns with new jsonb value"
+  _prepend: timetables_vehicle_service_vehicle_service_prepend_input
   "sets the columns of the filtered rows to the given values"
   _set: timetables_vehicle_service_vehicle_service_set_input
   where: timetables_vehicle_service_vehicle_service_bool_exp!
+}
+
+"append existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_type_vehicle_type_append_input {
+  "Description of the vehicle type."
+  description_i18n: jsonb
+}
+
+"Boolean expression to filter rows from the table \"vehicle_type.vehicle_type\". All fields are combined with a logical 'AND'."
+input timetables_vehicle_type_vehicle_type_bool_exp {
+  _and: [timetables_vehicle_type_vehicle_type_bool_exp!]
+  _not: timetables_vehicle_type_vehicle_type_bool_exp
+  _or: [timetables_vehicle_type_vehicle_type_bool_exp!]
+  description_i18n: jsonb_comparison_exp
+  hsl_id: smallint_comparison_exp
+  label: String_comparison_exp
+  vehicle_type_id: uuid_comparison_exp
+}
+
+"delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+input timetables_vehicle_type_vehicle_type_delete_at_path_input {
+  "Description of the vehicle type."
+  description_i18n: [String!]
+}
+
+"delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+input timetables_vehicle_type_vehicle_type_delete_elem_input {
+  "Description of the vehicle type."
+  description_i18n: Int
+}
+
+"delete key/value pair or string element. key/value pairs are matched based on their key value"
+input timetables_vehicle_type_vehicle_type_delete_key_input {
+  "Description of the vehicle type."
+  description_i18n: String
+}
+
+"input type for incrementing numeric columns in table \"vehicle_type.vehicle_type\""
+input timetables_vehicle_type_vehicle_type_inc_input {
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+}
+
+"input type for inserting data into table \"vehicle_type.vehicle_type\""
+input timetables_vehicle_type_vehicle_type_insert_input {
+  "Description of the vehicle type."
+  description_i18n: jsonb
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+  "Label of the vehicle type."
+  label: String
+  vehicle_type_id: uuid
+}
+
+"on_conflict condition type for table \"vehicle_type.vehicle_type\""
+input timetables_vehicle_type_vehicle_type_on_conflict {
+  constraint: timetables_vehicle_type_vehicle_type_constraint!
+  update_columns: [timetables_vehicle_type_vehicle_type_update_column!]! = []
+  where: timetables_vehicle_type_vehicle_type_bool_exp
+}
+
+"Ordering options when selecting data from \"vehicle_type.vehicle_type\"."
+input timetables_vehicle_type_vehicle_type_order_by {
+  description_i18n: order_by
+  hsl_id: order_by
+  label: order_by
+  vehicle_type_id: order_by
+}
+
+"primary key columns input for table: vehicle_type.vehicle_type"
+input timetables_vehicle_type_vehicle_type_pk_columns_input {
+  vehicle_type_id: uuid!
+}
+
+"prepend existing jsonb value of filtered columns with new jsonb value"
+input timetables_vehicle_type_vehicle_type_prepend_input {
+  "Description of the vehicle type."
+  description_i18n: jsonb
+}
+
+"input type for updating data in table \"vehicle_type.vehicle_type\""
+input timetables_vehicle_type_vehicle_type_set_input {
+  "Description of the vehicle type."
+  description_i18n: jsonb
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+  "Label of the vehicle type."
+  label: String
+  vehicle_type_id: uuid
+}
+
+"Streaming cursor of the table \"vehicle_type_vehicle_type\""
+input timetables_vehicle_type_vehicle_type_stream_cursor_input {
+  "Stream column input with initial value"
+  initial_value: timetables_vehicle_type_vehicle_type_stream_cursor_value_input!
+  "cursor ordering"
+  ordering: timetables_cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input timetables_vehicle_type_vehicle_type_stream_cursor_value_input {
+  "Description of the vehicle type."
+  description_i18n: jsonb
+  "ID used in Hastus to represent the vehicle type."
+  hsl_id: smallint
+  "Label of the vehicle type."
+  label: String
+  vehicle_type_id: uuid
+}
+
+input timetables_vehicle_type_vehicle_type_updates {
+  "append existing jsonb value of filtered columns with new jsonb value"
+  _append: timetables_vehicle_type_vehicle_type_append_input
+  "delete the field or element with specified path (for JSON arrays, negative integers count from the end)"
+  _delete_at_path: timetables_vehicle_type_vehicle_type_delete_at_path_input
+  "delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array"
+  _delete_elem: timetables_vehicle_type_vehicle_type_delete_elem_input
+  "delete key/value pair or string element. key/value pairs are matched based on their key value"
+  _delete_key: timetables_vehicle_type_vehicle_type_delete_key_input
+  "increments the numeric columns with given value of the filtered values"
+  _inc: timetables_vehicle_type_vehicle_type_inc_input
+  "prepend existing jsonb value of filtered columns with new jsonb value"
+  _prepend: timetables_vehicle_type_vehicle_type_prepend_input
+  "sets the columns of the filtered rows to the given values"
+  _set: timetables_vehicle_type_vehicle_type_set_input
+  where: timetables_vehicle_type_vehicle_type_bool_exp!
 }
 
 "append existing jsonb value of filtered columns with new jsonb value"
@@ -12411,7 +12442,23 @@ input uuid_comparison_exp {
 }
 
 input vehicle_journey_vehicle_journey_aggregate_bool_exp {
+  bool_and: vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_and
+  bool_or: vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_or
   count: vehicle_journey_vehicle_journey_aggregate_bool_exp_count
+}
+
+input vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_and {
+  arguments: timetables_vehicle_journey_vehicle_journey_select_column_vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_and_arguments_columns!
+  distinct: Boolean
+  filter: timetables_vehicle_journey_vehicle_journey_bool_exp
+  predicate: Boolean_comparison_exp!
+}
+
+input vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_or {
+  arguments: timetables_vehicle_journey_vehicle_journey_select_column_vehicle_journey_vehicle_journey_aggregate_bool_exp_bool_or_arguments_columns!
+  distinct: Boolean
+  filter: timetables_vehicle_journey_vehicle_journey_bool_exp
+  predicate: Boolean_comparison_exp!
 }
 
 input vehicle_journey_vehicle_journey_aggregate_bool_exp_count {

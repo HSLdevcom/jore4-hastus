@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
-import java.util.*
+import java.util.UUID
 
 class UUIDScalarConverter : ScalarConverter<UUID> {
     override fun toJson(value: UUID) = value.toString()
