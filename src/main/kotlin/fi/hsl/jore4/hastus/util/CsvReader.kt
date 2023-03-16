@@ -7,6 +7,7 @@ import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
 import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import mu.KotlinLogging
 
 class CsvReader(
     private val separator: String = ";"
