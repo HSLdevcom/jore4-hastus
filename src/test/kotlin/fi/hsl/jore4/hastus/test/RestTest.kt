@@ -30,7 +30,7 @@ class RestTest @Autowired constructor() {
         fun testJsonForm() {
             val jsonString = """
             {
-                "labels": ["65x", "65y"],
+                "uniqueLabels": ["65x", "65y"],
                 "priority": 20,
                 "observationDate": "2022-10-24"
             }
@@ -38,8 +38,8 @@ class RestTest @Autowired constructor() {
 
             val routes: ExportController.Routes = objectMapper.readValue(jsonString)
 
-            assert(routes.labels[0] == "65x")
-            assert(routes.labels[1] == "65y")
+            assert(routes.uniqueLabels[0] == "65x")
+            assert(routes.uniqueLabels[1] == "65y")
             assert(routes.priority == 20)
             assert(routes.observationDate == LocalDate.of(2022, 10, 24))
         }
