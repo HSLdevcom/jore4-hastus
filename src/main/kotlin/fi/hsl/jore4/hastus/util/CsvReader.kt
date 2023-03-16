@@ -32,4 +32,8 @@ class CsvReader(
             }
         }
     }
+
+    companion object {
+        private val LOGGER = KotlinLogging.logger {}
+    }
 }
