@@ -21,12 +21,12 @@
         <!-- Maven build plugins and their dependencies -->
         <build-helper-plugin.version>3.3.0</build-helper-plugin.version>
         <build-properties-plugin.version>1.1.0</build-properties-plugin.version>
-        <kotlin-plugin.version>1.7.20</kotlin-plugin.version>
-        <surefire-plugin.version>2.22.2</surefire-plugin.version>
-        <ktlint-plugin.version>1.15.2</ktlint-plugin.version>
+        <kotlin-plugin.version>1.8.10</kotlin-plugin.version>
+        <surefire-plugin.version>3.0.0</surefire-plugin.version>
+        <ktlint-plugin.version>1.16.0</ktlint-plugin.version>
 
         <!-- Library versions -->
-        <kotlin-logging-jvm.version>3.0.2</kotlin-logging-jvm.version>
+        <kotlin-logging-jvm.version>3.0.5</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
         <spring-boot.version>2.7.4</spring-boot.version>
 
@@ -147,7 +147,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
@@ -236,7 +236,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
