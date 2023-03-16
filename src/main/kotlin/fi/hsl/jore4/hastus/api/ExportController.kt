@@ -30,7 +30,7 @@ class ExportController(
     }
 
     data class Routes(
-        val labels: List<String>,
+        val uniqueLabels: List<String>,
         val priority: Int,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") val observationDate: LocalDate
     )
@@ -45,7 +45,7 @@ class ExportController(
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
             graphQLService.getRoutes(
-                request.labels,
+                request.uniqueLabels,
                 request.priority,
                 request.observationDate,
                 cookieHeader,
