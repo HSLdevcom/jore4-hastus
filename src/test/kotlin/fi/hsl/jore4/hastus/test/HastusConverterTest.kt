@@ -18,24 +18,23 @@ class HastusConverterTest {
     @Test
     @DisplayName("When converting from lines")
     fun whenMappingLines() {
-        // rvariant;1;Elielinaukio, l. 28-Kalajärvi;0;0;24361;2436
         val expectedResult = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
-            rvariant;1;Reitti A - B FI;1;0;651;65
-            rvpoint;place;1.234;0;0;0;1AACKT;651
-            rvpoint;place;1.000;0;0;1;1ELIMK;651
-            rvpoint;place;2.500;0;0;0;1AURLA;651
-            rvariant;2;Reitti A - B 3 FI;1;0;652;65
-            rvpoint;place;1.234;0;0;0;1AACKT;652
-            rvpoint;place;1.000;0;0;1;1ELIMK;652
-            rvpoint;place;2.500;0;0;0;1AURLA;652
+            rvariant;1;Reitti A - B FI;0;0;65x1;65
+            rvpoint;1AACKT;1.234;0;0;1;H1234;65x1
+            rvpoint;1ELIMK;1.000;1;0;0;H1235;65x1
+            rvpoint;1AURLA;2.500;0;1;0;H1236;65x1
+            rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
+            rvpoint;1AACKT;1.234;0;0;1;H1234;65y2
+            rvpoint;1ELIMK;1.000;1;0;0;H1235;65y2
+            rvpoint;1AURLA;2.500;0;1;0;H1236;65y2
         """.trimIndent()
 
         val joreStops = listOf(
             JoreRouteScheduledStop(
                 hastusPlace = "1AACKT",
                 distance = 1234.0,
-                isInUse = false,
+                isRegulatedTimingpoint = true,
                 isAllowedLoad = false,
                 isTimingPoint = false,
                 stopLabel = "H1234"
@@ -43,7 +42,7 @@ class HastusConverterTest {
             JoreRouteScheduledStop(
                 hastusPlace = "1ELIMK",
                 distance = 1000.0,
-                isInUse = false,
+                isRegulatedTimingpoint = false,
                 isAllowedLoad = false,
                 isTimingPoint = true,
                 stopLabel = "H1235"
@@ -51,15 +50,15 @@ class HastusConverterTest {
             JoreRouteScheduledStop(
                 hastusPlace = "1AURLA",
                 distance = 2500.0,
-                isInUse = false,
-                isAllowedLoad = false,
+                isRegulatedTimingpoint = false,
+                isAllowedLoad = true,
                 isTimingPoint = false,
                 stopLabel = "H1236"
             )
         )
         val joreRoutes = listOf(
-            JoreRoute("65x", "1", "651", "Reitti A - B FI", 1, false, joreStops),
-            JoreRoute("65y", "2", "652", "Reitti A - B 3 FI", 1, false, joreStops)
+            JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, joreStops),
+            JoreRoute("65y", "2", "65y2", "Reitti A - B 3 FI", 1, false, joreStops)
         )
         val joreLine = JoreLine(
             label = "65",
