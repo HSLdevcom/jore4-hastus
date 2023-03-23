@@ -32,16 +32,17 @@ class HastusConverter {
 
         fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
             return routes.flatMap { it ->
+                val variant = it.variant.ifEmpty { it.direction.toString() }
                 listOf(
                     RouteVariant(
-                        identifier = it.variant,
+                        identifier = variant,
                         description = it.name,
                         direction = it.direction,
                         reversible = it.reversible,
-                        routeIdAndVariantId = it.uniqueLabel,
+                        routeIdAndVariantId = it.label + variant,
                         routeId = routeLabel
                     )
-                ) + convertJoreRouteScheduledStopsToRouteVariantPoints(it.stopsOnRoute, routeLabel + it.variant)
+                ) + convertJoreRouteScheduledStopsToRouteVariantPoints(it.stopsOnRoute, it.label + variant)
             }
         }
 
@@ -51,12 +52,12 @@ class HastusConverter {
         ): List<RouteVariantPoint> {
             return stopPoints.map {
                 RouteVariantPoint(
-                    place = "place",
+                    place = it.hastusPlace,
                     specTpDistance = it.distance,
-                    isTimingPoint = it.isInUse, // is in use
+                    isTimingPoint = it.isTimingPoint,
                     allowLoadTime = it.isAllowedLoad,
-                    regulatedTp = it.isTimingPoint, // is a timing point
-                    stopLabel = it.hastusPlace,
+                    regulatedTp = it.isRegulatedTimingpoint,
+                    stopLabel = it.stopLabel,
                     routeIdAndVariantId = routeIdAndVariant
                 )
             }
