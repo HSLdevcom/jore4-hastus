@@ -14,6 +14,7 @@ import fi.hsl.jore4.hastus.data.jore.JorePassingTime
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleJourney
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleService
+import mu.KotlinLogging
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.*
@@ -150,7 +151,14 @@ class JoreConverter {
             joreJourneyPatterns: Map<String, JoreJourneyPattern>
         ): JoreVehicleJourney {
             val stopIds = stops.map { it.stopId }.distinct()
-            val joreStopsIdsOnRoute = joreJourneyPatterns[trip.tripRoute]?.stops.orEmpty()
+            val stopsOnRoute = joreJourneyPatterns[trip.tripRoute]?.stops?.associate { it.label to it }.orEmpty()
+
+            if (!stopsOnRoute.keys.containsAll(stopIds)) {
+                val unknowns = stopIds.subtract(stopsOnRoute.keys)
+                LOGGER.error { "Trip $trip has unknown stop along the route: $unknowns" }
+                throw IllegalStateException("Trip ${trip.tripRoute} contains unknown stop along the route: $unknowns")
+            }
+
             val journeyPatternId = joreJourneyPatterns[trip.tripRoute]?.journeyPatternId!!
             return JoreVehicleJourney(
                 trip.tripNumber,
@@ -162,14 +170,15 @@ class JoreConverter {
                 trip.isBackupTrip,
                 trip.isExtraTrip,
                 journeyPatternId,
-                stopIds.mapIndexed { index, stopId ->
-                    mapToJorePassingTimes(
-                        stops.filter { stop -> stop.stopId == stopId },
-                        joreStopsIdsOnRoute[index].id,
-                        index == 0,
-                        index == stopIds.size - 1
-                    )
-                }
+                stopIds
+                    .mapIndexed { index, stopId ->
+                        mapToJorePassingTimes(
+                            stops.filter { stop -> stop.stopId == stopId },
+                            stopsOnRoute[stopId]!!.id,
+                            index == 0,
+                            index == stopIds.size - 1
+                        )
+                    }
             )
         }
 
@@ -218,5 +227,7 @@ class JoreConverter {
             }
             return null
         }
+
+        private val LOGGER = KotlinLogging.logger {}
     }
 }
