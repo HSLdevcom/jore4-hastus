@@ -195,6 +195,7 @@ class GraphQLService(config: HasuraConfiguration) {
             it.unique_label.orEmpty() to JoreJourneyPattern(
                 it.unique_label,
                 it.route_journey_patterns[0].journey_pattern_id,
+                it.route_line?.type_of_line.toString().lowercase(),
                 it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
                     JoreStopPoint(
                         stop.scheduled_stop_points.first().scheduled_stop_point_id,
@@ -306,6 +307,7 @@ class GraphQLService(config: HasuraConfiguration) {
                         journey_pattern_id = OptionalInput.Defined(it.journeyPatternId),
                         observation_timestamp = OptionalInput.Defined(timestamp),
                         snapshot_timestamp = OptionalInput.Defined(timestamp),
+                        type_of_line = OptionalInput.Defined(it.typeOfLine),
                         scheduled_stop_point_in_journey_pattern_refs = OptionalInput.Defined(
                             timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input(
                                 it.stops.map { stop -> GraphQLConverter.mapToGraphQL(stop) }
