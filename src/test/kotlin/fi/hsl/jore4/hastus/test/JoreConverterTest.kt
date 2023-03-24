@@ -17,6 +17,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
@@ -68,14 +69,14 @@ class JoreConverterTest {
             generateTripStopRecord("trip2", "stop3", "0730", "T", ""),
             generateBlockRecord("block20", "service2", VEHICLE_TYPE_2_KEY),
             generateTripRecord("block20", "trip3", "PATTERN2"),
-            generateTripStopRecord("trip3", "stop1", "0455", "T", ""),
-            generateTripStopRecord("trip3", "stop2", "0520", "", ""),
-            generateTripStopRecord("trip3", "stop3", "0530", "T", ""),
+            generateTripStopRecord("trip3", "stop21", "0455", "T", ""),
+            generateTripStopRecord("trip3", "stop22", "0520", "", ""),
+            generateTripStopRecord("trip3", "stop23", "0530", "T", ""),
             generateBlockRecord("block21", "service2", VEHICLE_TYPE_2_KEY),
             generateTripRecord("block21", "trip4", "PATTERN2"),
-            generateTripStopRecord("trip4", "stop1", "0655", "T", ""),
-            generateTripStopRecord("trip4", "stop2", "0720", "", ""),
-            generateTripStopRecord("trip4", "stop3", "0730", "T", "")
+            generateTripStopRecord("trip4", "stop21", "0655", "T", ""),
+            generateTripStopRecord("trip4", "stop22", "0720", "", ""),
+            generateTripStopRecord("trip4", "stop23", "0730", "T", "")
         )
 
         val converted = JoreConverter.convertHastusDataToJore(
@@ -169,6 +170,52 @@ class JoreConverterTest {
             ),
             journey2.passingTimes[2]
         )
+    }
+
+    @DisplayName("When journey pattern does not have a stop defined in Hastus")
+    @Test
+    fun missingStopOnJourneyPatternTest() {
+        val label = "Testing"
+
+        val vehicleTypes = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)
+        val dayTypes = mapOf("MA" to MONDAY_DAY_TYPE_ID)
+
+        val joreStopIds1 = listOf(
+            JoreStopPoint(UUID.randomUUID(), "stop1", 0),
+            JoreStopPoint(UUID.randomUUID(), "stop2", 1),
+            JoreStopPoint(UUID.randomUUID(), "stop3", 2)
+        )
+        val joreJourneyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", joreStopIds1)
+
+        val joreJourneyPatterns = mapOf(
+            joreJourneyPattern1.uniqueLabel!! to joreJourneyPattern1
+        )
+
+        val hastusData: List<IHastusData> = listOf(
+            generateApplicationRecord(),
+            generateBookingRecord("name", "booking", "description"),
+            generateVehicleScheduleRecord(13),
+            generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
+            generateTripRecord("block1", "trip1", "PATTERN1"),
+            generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
+            generateTripStopRecord("trip1", "stop4", "0510", "", "t"),
+            generateTripStopRecord("trip1", "stop4", "0520", "", ""),
+            generateTripStopRecord("trip1", "stop3", "0530", "T", "")
+        )
+
+        val exception = assertFailsWith<IllegalStateException>(
+            block = {
+                JoreConverter.convertHastusDataToJore(
+                    label,
+                    hastusData,
+                    joreJourneyPatterns,
+                    vehicleTypes,
+                    dayTypes
+                )
+            }
+        )
+
+        assertEquals("Trip PATTERN1 contains unknown stop along the route: [stop4]", exception.message)
     }
 
     companion object {
