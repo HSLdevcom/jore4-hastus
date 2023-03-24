@@ -15,5 +15,8 @@ query JourneyPatternsForRoutes($route_labels: [String!]) {
         }
       }
     }
+    route_line {
+      type_of_line
+    }
   }
 }

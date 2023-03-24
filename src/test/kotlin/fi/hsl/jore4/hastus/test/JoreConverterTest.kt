@@ -45,14 +45,14 @@ class JoreConverterTest {
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val joreJourneyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), joreStopIds1)
+        val joreJourneyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", joreStopIds1)
 
         val joreStopIds2 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop21", 0),
             JoreStopPoint(UUID.randomUUID(), "stop22", 1),
             JoreStopPoint(UUID.randomUUID(), "stop23", 2)
         )
-        val joreJourneyPattern2 = JoreJourneyPattern("PATTERN2", UUID.randomUUID(), joreStopIds2)
+        val joreJourneyPattern2 = JoreJourneyPattern("PATTERN2", UUID.randomUUID(), "regional_bus_service", joreStopIds2)
 
         val joreJourneyPatterns = mapOf(
             joreJourneyPattern1.uniqueLabel!! to joreJourneyPattern1,
