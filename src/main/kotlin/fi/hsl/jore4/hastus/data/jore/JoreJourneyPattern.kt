@@ -12,5 +12,6 @@ import java.util.*
 data class JoreJourneyPattern(
     val uniqueLabel: String?,
     val journeyPatternId: UUID?,
+    val typeOfLine: String,
     val stops: List<JoreStopPoint>
 )
