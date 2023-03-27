@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Collect Workflow Telemetry
-        uses: runforesight/foresight-workflow-kit-action@v1
-        if: ${{ always() }}
-        with:
-          api_key: ${{ secrets.FORESIGHT_GITHUB_ACTIONS }}
+      # - name: Collect Workflow Telemetry
+      #   uses: runforesight/foresight-workflow-kit-action@v1
+      #   if: ${{ always() }}
+      #   with:
+      #     api_key: ${{ secrets.FORESIGHT_GITHUB_ACTIONS }}
 
       - name: Checkout code
         uses: actions/checkout@v3
