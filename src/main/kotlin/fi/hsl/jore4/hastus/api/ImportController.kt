@@ -6,7 +6,6 @@ import fi.hsl.jore4.hastus.data.mapper.JoreConverter
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.util.CsvReader
 import mu.KotlinLogging
-import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -31,9 +30,7 @@ class ImportController(
     @PostMapping("", consumes = [CSV_TYPE])
     fun importCsvFile(
         @RequestBody request: String,
-        @RequestHeader(HttpHeaders.COOKIE, required = false) cookieHeader: String?,
-        @RequestHeader("x-hasura-role", required = false) hasuraRole: String?,
-        @RequestHeader("x-hasura-admin-secret", required = false) hasuraSecret: String?
+        @RequestHeader headers: Map<String, String>
     ): String {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "CSV import request" }
@@ -43,22 +40,20 @@ class ImportController(
             val routesOfPatterns = parsedValues.filterIsInstance<TripRecord>().map { it.tripRoute }
             val name = parsedValues.filterIsInstance<BookingRecord>().first().name
 
-            val journeyPatterns = graphQLService.getJourneyPatternsForRoutes(routesOfPatterns, cookieHeader, hasuraRole, hasuraSecret)
+            val journeyPatterns = graphQLService.getJourneyPatternsForRoutes(routesOfPatterns, headers)
             LOGGER.trace { "Importing got journey patterns $journeyPatterns" }
 
-            val vehicleTypes = graphQLService.getVehicleTypes(cookieHeader, hasuraRole, hasuraSecret)
+            val vehicleTypes = graphQLService.getVehicleTypes(headers)
             LOGGER.trace { "Importing got vehicle types $vehicleTypes" }
 
-            val dayTypes = graphQLService.getDayTypes(cookieHeader, hasuraRole, hasuraSecret)
+            val dayTypes = graphQLService.getDayTypes(headers)
             LOGGER.trace { "Importing got day types $dayTypes" }
 
             val vehicleScheduleFrame = JoreConverter.convertHastusDataToJore(name, parsedValues, journeyPatterns, vehicleTypes, dayTypes)
             graphQLService.persistVehicleScheduleFrame(
                 journeyPatterns.values,
                 vehicleScheduleFrame,
-                cookieHeader,
-                hasuraRole,
-                hasuraSecret
+                headers
             )
             "200"
         }
