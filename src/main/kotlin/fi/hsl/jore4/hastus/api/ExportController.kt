@@ -39,8 +39,7 @@ class ExportController(
     @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [CSV_TYPE])
     fun exportForRoutes(
         @RequestBody request: Routes,
-        @RequestHeader(HttpHeaders.COOKIE, required = false) cookieHeader: String?,
-        @RequestHeader("x-hasura-role", required = false) hasuraRole: String?
+        @RequestHeader headers: Map<String, String>
     ): String {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
@@ -48,8 +47,7 @@ class ExportController(
                 request.uniqueLabels,
                 request.priority,
                 request.observationDate,
-                cookieHeader,
-                hasuraRole
+                headers
             )
         }
         LOGGER.info { "Routes request took $elapsed" }
