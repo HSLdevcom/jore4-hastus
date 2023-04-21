@@ -106,8 +106,7 @@ class GraphQLService(config: HasuraConfiguration) {
         )
         val result = runBlocking {
             val queryResponse = client.execute(query) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "distance between stops graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -127,8 +126,7 @@ class GraphQLService(config: HasuraConfiguration) {
         uniqueRoutes: List<String>,
         priority: Int,
         observationDate: LocalDate,
-        cookieToken: String?,
-        hasuraRole: String?
+        headers: Map<String, String>
     ): String {
         val query = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
@@ -139,8 +137,7 @@ class GraphQLService(config: HasuraConfiguration) {
         )
         val result = runBlocking {
             val queryResponse = client.execute(query) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "routes for routes graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -153,8 +150,7 @@ class GraphQLService(config: HasuraConfiguration) {
         val distances: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
             routeIds,
             observationDate,
-            cookieToken,
-            hasuraRole
+            headers
         )
 
         val distanceMap = distances.associate { Pair(it.startLabel, it.endLabel) to it.distance }
@@ -168,9 +164,7 @@ class GraphQLService(config: HasuraConfiguration) {
 
     fun getJourneyPatternsForRoutes(
         uniqueRoutes: List<String>,
-        cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        headers: Map<String, String>
     ): Map<String, JoreJourneyPattern> {
         val query = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
@@ -180,9 +174,7 @@ class GraphQLService(config: HasuraConfiguration) {
 
         val result = runBlocking {
             val queryResponse = client.execute(query) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "journey patterns for routes graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -208,17 +200,13 @@ class GraphQLService(config: HasuraConfiguration) {
     }
 
     fun getVehicleTypes(
-        cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        headers: Map<String, String>
     ): Map<Int, UUID> {
         val query = ListVehicleTypes()
 
         val result = runBlocking {
             val queryResponse = client.execute(query) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -233,17 +221,13 @@ class GraphQLService(config: HasuraConfiguration) {
     }
 
     fun getDayTypes(
-        cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        headers: Map<String, String>
     ): Map<String, UUID> {
         val query = ListDayTypes()
 
         val result = runBlocking {
             val queryResponse = client.execute(query) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -260,15 +244,11 @@ class GraphQLService(config: HasuraConfiguration) {
     fun persistVehicleScheduleFrame(
         journeyPatterns: Collection<JoreJourneyPattern>,
         vehicleScheduleFrame: JoreVehicleScheduleFrame,
-        cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        headers: Map<String, String>
     ): String {
         val journeyPatternRefMap = createJourneyPatternReferences(
             journeyPatterns,
-            cookieToken,
-            hasuraRole,
-            hasuraSecret
+            headers
         )
 
         val mutation = InsertVehicleScheduleFrame(
@@ -279,9 +259,7 @@ class GraphQLService(config: HasuraConfiguration) {
 
         val result = runBlocking {
             val queryResponse = client.execute(mutation) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
@@ -295,9 +273,7 @@ class GraphQLService(config: HasuraConfiguration) {
 
     fun createJourneyPatternReferences(
         journeyPatterns: Collection<JoreJourneyPattern>,
-        cookieToken: String?,
-        hasuraRole: String?,
-        hasuraSecret: String?
+        headers: Map<String, String>
     ): Map<UUID, JoreJourneyPatternReference> {
         val timestamp = OffsetDateTime.now()
         val mutation = InsertJourneyPatternRefs(
@@ -320,9 +296,7 @@ class GraphQLService(config: HasuraConfiguration) {
 
         val result = runBlocking {
             val queryResponse = client.execute(mutation) {
-                if (cookieToken != null) header("Cookie", cookieToken)
-                if (hasuraRole != null) header("x-hasura-role", hasuraRole)
-                if (hasuraSecret != null) header("x-hasura-admin-secret", hasuraSecret)
+                headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
             if (queryResponse.errors?.isNotEmpty() == true) {
