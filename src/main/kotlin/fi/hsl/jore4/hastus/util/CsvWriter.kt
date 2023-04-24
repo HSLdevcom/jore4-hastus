@@ -1,13 +1,25 @@
 package fi.hsl.jore4.hastus.util
 
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
+import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
+import fi.hsl.jore4.hastus.data.hastus.BlockRecord
+import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
+import fi.hsl.jore4.hastus.data.hastus.Place
+import fi.hsl.jore4.hastus.data.hastus.Route
+import fi.hsl.jore4.hastus.data.hastus.RouteVariant
+import fi.hsl.jore4.hastus.data.hastus.RouteVariantPoint
+import fi.hsl.jore4.hastus.data.hastus.Stop
+import fi.hsl.jore4.hastus.data.hastus.StopDistance
+import fi.hsl.jore4.hastus.data.hastus.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 
 class CsvWriter(
     private val separator: String = ";",
-    private val decimal: Char = '.'
+    decimal: Char = '.'
 ) {
 
     private val decimalFormat: DecimalFormat
@@ -24,7 +36,25 @@ class CsvWriter(
     }
 
     fun transformToCsvLine(data: IHastusData): String {
-        return data.getFields().joinToString(separator = separator, transform = { safeStringTransform(it) })
+        return (listOf(hastusFieldName(data)) + data.getFields())
+            .joinToString(separator = separator, transform = { safeStringTransform(it) })
+    }
+
+    private fun hastusFieldName(data: IHastusData): String {
+        return when (data) {
+            is ApplicationRecord -> "1"
+            is BlockRecord -> "4"
+            is BookingRecord -> "2"
+            is Place -> "place"
+            is Route -> "route"
+            is RouteVariant -> "rvariant"
+            is RouteVariantPoint -> "rvpoint"
+            is Stop -> "stop"
+            is StopDistance -> "stpdist"
+            is TripRecord -> "5"
+            is TripStopRecord -> "6"
+            is VehicleScheduleRecord -> "3"
+        }
     }
 
     // Use pre specified decimal point

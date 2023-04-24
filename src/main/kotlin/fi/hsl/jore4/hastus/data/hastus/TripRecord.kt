@@ -74,13 +74,7 @@ data class TripRecord(
         isExtraTrip = parseToBoolean(elements[21])
     )
 
-    override val fieldName = "5"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName()
-    }
-
-    override fun toString(): String {
-        return "TripRecord(contract='$contract', blockNumber='$blockNumber', tripInternalNumber='$tripInternalNumber', tripNumber='$tripNumber', tripType=$tripType, tripRoute='$tripRoute', tripDisplayedName='$tripDisplayedName', variant='$variant', startTime='$startTime', endTime='$endTime', duration=$duration, turnaroundTime=$turnaroundTime, layoverTime=$layoverTime, distance=$distance, note='$note', note2='$note2', direction=$direction, vehicleType=$vehicleType, isVehicleTypeMandatory=$isVehicleTypeMandatory, isBackupTrip=$isBackupTrip, isExtraTrip=$isExtraTrip, fieldName='$fieldName')"
+        return listOf()
     }
 }
