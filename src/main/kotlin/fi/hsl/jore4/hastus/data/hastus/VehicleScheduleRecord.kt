@@ -27,7 +27,6 @@ data class VehicleScheduleRecord(
     val editDate: LocalDate,
     val editTime: LocalTime
 ) : HastusData() {
-    override val fieldName = "3"
 
     constructor(elements: List<String>) : this(
         name = elements[1],
@@ -41,11 +40,11 @@ data class VehicleScheduleRecord(
     )
 
     override fun getFields(): List<Any> {
-        return listWithFieldName()
+        return listOf()
     }
 
     override fun toString(): String {
-        return "VehicleScheduleRecord(name='$name', scheduleType='$scheduleType', scenario=$scenario, startDate=$startDate, endDate=$endDate, editDate=$editDate, editTime=$editTime, fieldName='$fieldName')"
+        return "VehicleScheduleRecord(name='$name', scheduleType='$scheduleType', scenario=$scenario, startDate=$startDate, endDate=$endDate, editDate=$editDate, editTime=$editTime)"
     }
 
     companion object {

@@ -30,14 +30,12 @@ data class ApplicationRecord(
         jobTime = LocalTime.parse(elements[5].substring(0, 6), timeFormatter)
     )
 
-    override val fieldName = "1"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName()
+        return listOf()
     }
 
     override fun toString(): String {
-        return "ApplicationRecord(hastus='$hastus', companyName='$companyName', vscVersion=$vscVersion, jobDate=$jobDate, jobTime=$jobTime, fieldName='$fieldName')"
+        return "ApplicationRecord(hastus='$hastus', companyName='$companyName', vscVersion=$vscVersion, jobDate=$jobDate, jobTime=$jobTime)"
     }
 
     companion object {
