@@ -17,7 +17,7 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
  * @property shortIdentifier Short identifier from Jore4, combined letter + number. XXNNNN
  * @constructor Create a Hastus Stop with given values
  */
-class Stop(
+data class Stop(
     private val identifier: String,
     private val platform: String,
     private val descriptionFinnish: String,
@@ -25,23 +25,13 @@ class Stop(
     private val streetFinnish: String,
     private val streetSwedish: String,
     private val place: String,
-    gpsX: Number,
-    gpsY: Number,
+    private val gpsX: NumberWithAccuracy,
+    private val gpsY: NumberWithAccuracy,
     private val shortIdentifier: String
 ) : HastusData() {
 
-    private val gpsX: NumberWithAccuracy
-    private val gpsY: NumberWithAccuracy
-
-    init {
-        this.gpsX = NumberWithAccuracy(gpsX, 2, 6)
-        this.gpsY = NumberWithAccuracy(gpsY, 2, 6)
-    }
-
-    override val fieldName = "stop"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName(
+        return listOf(
             identifier,
             platform,
             descriptionFinnish,
@@ -53,43 +43,5 @@ class Stop(
             gpsY,
             shortIdentifier
         )
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Stop
-
-        if (identifier != other.identifier) return false
-        if (platform != other.platform) return false
-        if (descriptionFinnish != other.descriptionFinnish) return false
-        if (descriptionSwedish != other.descriptionSwedish) return false
-        if (streetFinnish != other.streetFinnish) return false
-        if (streetSwedish != other.streetSwedish) return false
-        if (place != other.place) return false
-        if (shortIdentifier != other.shortIdentifier) return false
-        if (gpsX != other.gpsX) return false
-        if (gpsY != other.gpsY) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = identifier.hashCode()
-        result = 31 * result + platform.hashCode()
-        result = 31 * result + descriptionFinnish.hashCode()
-        result = 31 * result + descriptionSwedish.hashCode()
-        result = 31 * result + streetFinnish.hashCode()
-        result = 31 * result + streetSwedish.hashCode()
-        result = 31 * result + place.hashCode()
-        result = 31 * result + shortIdentifier.hashCode()
-        result = 31 * result + gpsX.hashCode()
-        result = 31 * result + gpsY.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "Stop(identifier='$identifier', platform='$platform', descriptionFinnish='$descriptionFinnish', descriptionSwedish='$descriptionSwedish', streetFinnish='$streetFinnish', streetSwedish='$streetSwedish', place='$place', shortIdentifier='$shortIdentifier', gpsX=$gpsX, gpsY=$gpsY, fieldName='$fieldName')"
     }
 }

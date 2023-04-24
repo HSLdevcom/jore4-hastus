@@ -38,13 +38,7 @@ data class BlockRecord(
         vehicleType = parseToInt(elements[9])
     )
 
-    override val fieldName: String = "4"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName()
-    }
-
-    override fun toString(): String {
-        return "BlockRecord(internalNumber='$internalNumber', vehicleServiceName='$vehicleServiceName', sequence=$sequence, startTimingPlace='$startTimingPlace', endTimingPlace='$endTimingPlace', mainRoute='$mainRoute', prepOutTime=$prepOutTime, prepInTime=$prepInTime, vehicleType=$vehicleType, fieldName='$fieldName')"
+        return listOf()
     }
 }

@@ -44,13 +44,7 @@ data class TripStopRecord(
         note = elements[11]
     )
 
-    override val fieldName = "6"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName()
-    }
-
-    override fun toString(): String {
-        return "TripStopRecord(tripInternalNumber='$tripInternalNumber', timingPlace='$timingPlace', stopId='$stopId', stopZone='$stopZone', stopDistrict='$stopDistrict', xCoordinate='$xCoordinate', yCoordinate='$yCoordinate', passingTime='$passingTime', distanceFromPreviousStop=$distanceFromPreviousStop, stopType='$stopType', note='$note', fieldName='$fieldName')"
+        return listOf()
     }
 }

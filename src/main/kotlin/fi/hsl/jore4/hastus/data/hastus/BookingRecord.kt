@@ -35,14 +35,8 @@ data class BookingRecord(
         contract = elements[7]
     )
 
-    override val fieldName = "2"
-
     override fun getFields(): List<Any> {
-        return listWithFieldName()
-    }
-
-    override fun toString(): String {
-        return "BookingRecord(booking='$booking', bookingDescription='$bookingDescription', name='$name', scheduleDayType=$scheduleDayType, startDate=$startDate, endDate=$endDate, contract='$contract', fieldName='$fieldName')"
+        return listOf()
     }
 
     companion object {
