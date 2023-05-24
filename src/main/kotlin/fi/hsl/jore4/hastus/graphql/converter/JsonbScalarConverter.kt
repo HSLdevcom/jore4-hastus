@@ -1,13 +1,15 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.hsl.jore4.hastus.graphql.IJSONB
 
 class JsonbScalarConverter : ScalarConverter<IJSONB> {
 
-    override fun toJson(value: IJSONB): String {
-        return jacksonObjectMapper().writeValueAsString(value.content)
+    override fun toJson(value: IJSONB): Any {
+        val formattedValue = jacksonObjectMapper().writeValueAsString(value.content)
+        return jacksonObjectMapper().readTree(formattedValue) as ObjectNode
     }
 
     override fun toScalar(rawValue: Any): IJSONB {
