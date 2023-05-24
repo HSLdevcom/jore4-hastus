@@ -653,6 +653,30 @@ type journey_pattern_journey_pattern {
   ): timetables_journey_pattern_journey_pattern_ref_aggregate!
   "An object relationship"
   journey_pattern_route: route_route
+  journey_pattern_vehicle_services(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+  journey_pattern_vehicle_services_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate!
   "The ID of the route the journey pattern is on."
   on_route_id: uuid!
   "An array relationship"
@@ -3570,7 +3594,7 @@ type service_pattern_scheduled_stop_point {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
   "An array relationship"
   vehicle_mode_on_scheduled_stop_point(
@@ -3639,7 +3663,7 @@ type service_pattern_scheduled_stop_point_max_fields {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
 }
 
@@ -3656,7 +3680,7 @@ type service_pattern_scheduled_stop_point_min_fields {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
 }
 
@@ -5030,6 +5054,135 @@ type timetables_service_calendar_day_type_mutation_response {
   returning: [timetables_service_calendar_day_type!]!
 }
 
+"Models substitute public transit as (1) a reference day or (2) indicating that public transit does not occur on certain date. Substitute operating days are always bound to a type of line."
+type timetables_service_calendar_substitute_operating_day_by_line_type {
+  "Calculated timestamp for the instant from which the substituting public transit comes into effect."
+  begin_datetime: timestamptz!
+  "The time from which the substituting public transit comes into effect. If NULL, the substitution is in effect from the start of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys prior to this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys before this time are operated as usual."
+  begin_time: interval
+  "Calculated timestamp for the instant (exclusive) until which the substituting public transit is in effect."
+  end_datetime: timestamptz!
+  "The time (exclusive) until which the substituting public transit is valid. If NULL, the substitution is in effect until the end of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys starting from this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys starting from this time are operated as usual."
+  end_time: interval
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid!
+  "The date of operating day being superseded."
+  superseded_date: date!
+  timezone: String!
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String!
+}
+
+"aggregated selection of \"service_calendar.substitute_operating_day_by_line_type\""
+type timetables_service_calendar_substitute_operating_day_by_line_type_aggregate {
+  aggregate: timetables_service_calendar_substitute_operating_day_by_line_type_aggregate_fields
+  nodes: [timetables_service_calendar_substitute_operating_day_by_line_type!]!
+}
+
+"aggregate fields of \"service_calendar.substitute_operating_day_by_line_type\""
+type timetables_service_calendar_substitute_operating_day_by_line_type_aggregate_fields {
+  avg: timetables_service_calendar_substitute_operating_day_by_line_type_avg_fields
+  count(columns: [timetables_service_calendar_substitute_operating_day_by_line_type_select_column!], distinct: Boolean): Int!
+  max: timetables_service_calendar_substitute_operating_day_by_line_type_max_fields
+  min: timetables_service_calendar_substitute_operating_day_by_line_type_min_fields
+  stddev: timetables_service_calendar_substitute_operating_day_by_line_type_stddev_fields
+  stddev_pop: timetables_service_calendar_substitute_operating_day_by_line_type_stddev_pop_fields
+  stddev_samp: timetables_service_calendar_substitute_operating_day_by_line_type_stddev_samp_fields
+  sum: timetables_service_calendar_substitute_operating_day_by_line_type_sum_fields
+  var_pop: timetables_service_calendar_substitute_operating_day_by_line_type_var_pop_fields
+  var_samp: timetables_service_calendar_substitute_operating_day_by_line_type_var_samp_fields
+  variance: timetables_service_calendar_substitute_operating_day_by_line_type_variance_fields
+}
+
+"aggregate avg on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_avg_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate max on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_max_fields {
+  "Calculated timestamp for the instant from which the substituting public transit comes into effect."
+  begin_datetime: timestamptz
+  "Calculated timestamp for the instant (exclusive) until which the substituting public transit is in effect."
+  end_datetime: timestamptz
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid
+  "The date of operating day being superseded."
+  superseded_date: date
+  timezone: String
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String
+}
+
+"aggregate min on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_min_fields {
+  "Calculated timestamp for the instant from which the substituting public transit comes into effect."
+  begin_datetime: timestamptz
+  "Calculated timestamp for the instant (exclusive) until which the substituting public transit is in effect."
+  end_datetime: timestamptz
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid
+  "The date of operating day being superseded."
+  superseded_date: date
+  timezone: String
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String
+}
+
+"response of any mutation on the table \"service_calendar.substitute_operating_day_by_line_type\""
+type timetables_service_calendar_substitute_operating_day_by_line_type_mutation_response {
+  "number of rows affected by the mutation"
+  affected_rows: Int!
+  "data from the rows affected by the mutation"
+  returning: [timetables_service_calendar_substitute_operating_day_by_line_type!]!
+}
+
+"aggregate stddev on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_stddev_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate stddev_pop on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_stddev_pop_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate stddev_samp on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_stddev_samp_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate sum on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_sum_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+}
+
+"aggregate var_pop on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_var_pop_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate var_samp on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_var_samp_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
+"aggregate variance on columns"
+type timetables_service_calendar_substitute_operating_day_by_line_type_variance_fields {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Float
+}
+
 "Reference the a SCHEDULED STOP POINT within a JOURNEY PATTERN. Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=2:3:4:729 "
 type timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref {
   "An object relationship"
@@ -5226,6 +5379,13 @@ type timetables_timetables_mutation_frontend {
   ): timetables_service_calendar_day_type_active_on_day_of_week
   "delete single row from the table: \"service_calendar.day_type\""
   timetables_delete_service_calendar_day_type_by_pk(day_type_id: uuid!): timetables_service_calendar_day_type
+  "delete data from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_delete_service_calendar_substitute_operating_day_by_line_type(
+    "filter the rows which have to be deleted"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp!
+  ): timetables_service_calendar_substitute_operating_day_by_line_type_mutation_response
+  "delete single row from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_delete_service_calendar_substitute_operating_day_by_line_type_by_pk(substitute_operating_day_by_line_type_id: uuid!): timetables_service_calendar_substitute_operating_day_by_line_type
   "delete data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_delete_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "filter the rows which have to be deleted"
@@ -5254,6 +5414,20 @@ type timetables_timetables_mutation_frontend {
   ): timetables_vehicle_service_block_mutation_response
   "delete single row from the table: \"vehicle_service.block\""
   timetables_delete_vehicle_service_block_by_pk(block_id: uuid!): timetables_vehicle_service_block
+  "delete data from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_delete_vehicle_service_journey_patterns_in_vehicle_service(
+    "filter the rows which have to be deleted"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_mutation_response
+  "delete single row from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_delete_vehicle_service_journey_patterns_in_vehicle_service_by_pk(
+    """
+    The journey_pattern_id from journey_pattern.journey_pattern_ref.
+     No foreign key reference is set because the target column is not unique.
+    """
+    journey_pattern_id: uuid!,
+    vehicle_service_id: uuid!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service
   "delete data from the table: \"vehicle_service.vehicle_service\""
   timetables_delete_vehicle_service_vehicle_service(
     "filter the rows which have to be deleted"
@@ -5324,6 +5498,20 @@ type timetables_timetables_mutation_frontend {
     "upsert condition"
     on_conflict: timetables_service_calendar_day_type_on_conflict
   ): timetables_service_calendar_day_type
+  "insert data into the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_insert_service_calendar_substitute_operating_day_by_line_type(
+    "the rows to be inserted"
+    objects: [timetables_service_calendar_substitute_operating_day_by_line_type_insert_input!]!,
+    "upsert condition"
+    on_conflict: timetables_service_calendar_substitute_operating_day_by_line_type_on_conflict
+  ): timetables_service_calendar_substitute_operating_day_by_line_type_mutation_response
+  "insert a single row into the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_insert_service_calendar_substitute_operating_day_by_line_type_one(
+    "the row to be inserted"
+    object: timetables_service_calendar_substitute_operating_day_by_line_type_insert_input!,
+    "upsert condition"
+    on_conflict: timetables_service_calendar_substitute_operating_day_by_line_type_on_conflict
+  ): timetables_service_calendar_substitute_operating_day_by_line_type
   "insert data into the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_insert_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "the rows to be inserted"
@@ -5380,6 +5568,20 @@ type timetables_timetables_mutation_frontend {
     "upsert condition"
     on_conflict: timetables_vehicle_service_block_on_conflict
   ): timetables_vehicle_service_block
+  "insert data into the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_insert_vehicle_service_journey_patterns_in_vehicle_service(
+    "the rows to be inserted"
+    objects: [timetables_vehicle_service_journey_patterns_in_vehicle_service_insert_input!]!,
+    "upsert condition"
+    on_conflict: timetables_vehicle_service_journey_patterns_in_vehicle_service_on_conflict
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_mutation_response
+  "insert a single row into the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_insert_vehicle_service_journey_patterns_in_vehicle_service_one(
+    "the row to be inserted"
+    object: timetables_vehicle_service_journey_patterns_in_vehicle_service_insert_input!,
+    "upsert condition"
+    on_conflict: timetables_vehicle_service_journey_patterns_in_vehicle_service_on_conflict
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service
   "insert data into the table: \"vehicle_service.vehicle_service\""
   timetables_insert_vehicle_service_vehicle_service(
     "the rows to be inserted"
@@ -5504,6 +5706,28 @@ type timetables_timetables_mutation_frontend {
     "updates to execute, in order"
     updates: [timetables_service_calendar_day_type_updates!]!
   ): [timetables_service_calendar_day_type_mutation_response]
+  "update data of the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_update_service_calendar_substitute_operating_day_by_line_type(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_service_calendar_substitute_operating_day_by_line_type_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_service_calendar_substitute_operating_day_by_line_type_set_input,
+    "filter the rows which have to be updated"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp!
+  ): timetables_service_calendar_substitute_operating_day_by_line_type_mutation_response
+  "update single row of the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_update_service_calendar_substitute_operating_day_by_line_type_by_pk(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_service_calendar_substitute_operating_day_by_line_type_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_service_calendar_substitute_operating_day_by_line_type_set_input,
+    pk_columns: timetables_service_calendar_substitute_operating_day_by_line_type_pk_columns_input!
+  ): timetables_service_calendar_substitute_operating_day_by_line_type
+  "update multiples rows of table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_update_service_calendar_substitute_operating_day_by_line_type_many(
+    "updates to execute, in order"
+    updates: [timetables_service_calendar_substitute_operating_day_by_line_type_updates!]!
+  ): [timetables_service_calendar_substitute_operating_day_by_line_type_mutation_response]
   "update data of the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_update_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "increments the numeric columns with given value of the filtered values"
@@ -5624,6 +5848,28 @@ type timetables_timetables_mutation_frontend {
     "updates to execute, in order"
     updates: [timetables_vehicle_service_block_updates!]!
   ): [timetables_vehicle_service_block_mutation_response]
+  "update data of the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_update_vehicle_service_journey_patterns_in_vehicle_service(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_vehicle_service_journey_patterns_in_vehicle_service_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_vehicle_service_journey_patterns_in_vehicle_service_set_input,
+    "filter the rows which have to be updated"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_mutation_response
+  "update single row of the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_update_vehicle_service_journey_patterns_in_vehicle_service_by_pk(
+    "increments the numeric columns with given value of the filtered values"
+    _inc: timetables_vehicle_service_journey_patterns_in_vehicle_service_inc_input,
+    "sets the columns of the filtered rows to the given values"
+    _set: timetables_vehicle_service_journey_patterns_in_vehicle_service_set_input,
+    pk_columns: timetables_vehicle_service_journey_patterns_in_vehicle_service_pk_columns_input!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service
+  "update multiples rows of table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_update_vehicle_service_journey_patterns_in_vehicle_service_many(
+    "updates to execute, in order"
+    updates: [timetables_vehicle_service_journey_patterns_in_vehicle_service_updates!]!
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service_mutation_response]
   "update data of the table: \"vehicle_service.vehicle_service\""
   timetables_update_vehicle_service_vehicle_service(
     "append existing jsonb value of filtered columns with new jsonb value"
@@ -5854,6 +6100,34 @@ type timetables_timetables_query {
     "filter the rows returned"
     where: timetables_service_calendar_day_type_bool_exp
   ): timetables_service_calendar_day_type_aggregate!
+  "fetch data from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_service_calendar_substitute_operating_day_by_line_type(
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_substitute_operating_day_by_line_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_substitute_operating_day_by_line_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  ): [timetables_service_calendar_substitute_operating_day_by_line_type!]!
+  "fetch aggregated fields from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_service_calendar_substitute_operating_day_by_line_type_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_substitute_operating_day_by_line_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_substitute_operating_day_by_line_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  ): timetables_service_calendar_substitute_operating_day_by_line_type_aggregate!
+  "fetch data from the table: \"service_calendar.substitute_operating_day_by_line_type\" using primary key columns"
+  timetables_service_calendar_substitute_operating_day_by_line_type_by_pk(substitute_operating_day_by_line_type_id: uuid!): timetables_service_calendar_substitute_operating_day_by_line_type
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -5996,6 +6270,41 @@ type timetables_timetables_query {
     "filter the rows returned"
     where: timetables_vehicle_service_vehicle_service_bool_exp
   ): timetables_vehicle_service_vehicle_service_aggregate!
+  "fetch data from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_vehicle_service_journey_patterns_in_vehicle_service(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+  "fetch aggregated fields from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate!
+  "fetch data from the table: \"vehicle_service.journey_patterns_in_vehicle_service\" using primary key columns"
+  timetables_vehicle_service_journey_patterns_in_vehicle_service_by_pk(
+    """
+    The journey_pattern_id from journey_pattern.journey_pattern_ref.
+     No foreign key reference is set because the target column is not unique.
+    """
+    journey_pattern_id: uuid!,
+    vehicle_service_id: uuid!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -6238,6 +6547,43 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_service_calendar_day_type_bool_exp
   ): timetables_service_calendar_day_type_aggregate!
+  "fetch data from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_service_calendar_substitute_operating_day_by_line_type(
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_substitute_operating_day_by_line_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_substitute_operating_day_by_line_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  ): [timetables_service_calendar_substitute_operating_day_by_line_type!]!
+  "fetch aggregated fields from the table: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_service_calendar_substitute_operating_day_by_line_type_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_service_calendar_substitute_operating_day_by_line_type_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_service_calendar_substitute_operating_day_by_line_type_order_by!],
+    "filter the rows returned"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  ): timetables_service_calendar_substitute_operating_day_by_line_type_aggregate!
+  "fetch data from the table: \"service_calendar.substitute_operating_day_by_line_type\" using primary key columns"
+  timetables_service_calendar_substitute_operating_day_by_line_type_by_pk(substitute_operating_day_by_line_type_id: uuid!): timetables_service_calendar_substitute_operating_day_by_line_type
+  "fetch data from the table in a streaming manner: \"service_calendar.substitute_operating_day_by_line_type\""
+  timetables_service_calendar_substitute_operating_day_by_line_type_stream(
+    "maximum number of rows returned in a single batch"
+    batch_size: Int!,
+    "cursor to stream the results returned by the query"
+    cursor: [timetables_service_calendar_substitute_operating_day_by_line_type_stream_cursor_input]!,
+    "filter the rows returned"
+    where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  ): [timetables_service_calendar_substitute_operating_day_by_line_type!]!
   "fetch data from the table: \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
   timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref(
     "distinct select on columns"
@@ -6416,6 +6762,50 @@ type timetables_timetables_subscription {
     "filter the rows returned"
     where: timetables_vehicle_service_vehicle_service_bool_exp
   ): timetables_vehicle_service_vehicle_service_aggregate!
+  "fetch data from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_vehicle_service_journey_patterns_in_vehicle_service(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+  "fetch aggregated fields from the table: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate!
+  "fetch data from the table: \"vehicle_service.journey_patterns_in_vehicle_service\" using primary key columns"
+  timetables_vehicle_service_journey_patterns_in_vehicle_service_by_pk(
+    """
+    The journey_pattern_id from journey_pattern.journey_pattern_ref.
+     No foreign key reference is set because the target column is not unique.
+    """
+    journey_pattern_id: uuid!,
+    vehicle_service_id: uuid!
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service
+  "fetch data from the table in a streaming manner: \"vehicle_service.journey_patterns_in_vehicle_service\""
+  timetables_vehicle_service_journey_patterns_in_vehicle_service_stream(
+    "maximum number of rows returned in a single batch"
+    batch_size: Int!,
+    "cursor to stream the results returned by the query"
+    cursor: [timetables_vehicle_service_journey_patterns_in_vehicle_service_stream_cursor_input]!,
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
   "fetch data from the table: \"vehicle_service.vehicle_service\""
   timetables_vehicle_service_vehicle_service(
     "distinct select on columns"
@@ -6622,6 +7012,14 @@ type timetables_vehicle_schedule_vehicle_schedule_frame {
   priority: Int!
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity ends (inclusive). Null if always will be valid."
   validity_end: date!
+  """
+  
+  A denormalized column for actual daterange when vehicle schedule frame is valid,
+  that is, a closed date range [validity_start, validity_end].
+  Added to make working with PostgreSQL functions easier:
+  they typically expect ranges to be half closed.
+  """
+  validity_range: daterange!
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity starts (inclusive). Null if always has been valid."
   validity_start: date!
   vehicle_schedule_frame_id: uuid!
@@ -6844,6 +7242,159 @@ type timetables_vehicle_service_block_mutation_response {
   returning: [timetables_vehicle_service_block!]!
 }
 
+"""
+A denormalized table containing relationships between vehicle_services and journey_patterns (via journey_pattern_ref.journey_pattern_id).
+ Without this table this relationship could be found via vehicle_service -> block -> vehicle_journey -> journey_pattern_ref.
+ Kept up to date with triggers, should not be updated manually.
+"""
+type timetables_vehicle_service_journey_patterns_in_vehicle_service {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid!
+  journey_pattern_instance: journey_pattern_journey_pattern
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int!
+  "An object relationship"
+  vehicle_service: timetables_vehicle_service_vehicle_service!
+  vehicle_service_id: uuid!
+}
+
+"aggregated selection of \"vehicle_service.journey_patterns_in_vehicle_service\""
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate {
+  aggregate: timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate_fields
+  nodes: [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+}
+
+"aggregate fields of \"vehicle_service.journey_patterns_in_vehicle_service\""
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate_fields {
+  avg: timetables_vehicle_service_journey_patterns_in_vehicle_service_avg_fields
+  count(columns: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!], distinct: Boolean): Int!
+  max: timetables_vehicle_service_journey_patterns_in_vehicle_service_max_fields
+  min: timetables_vehicle_service_journey_patterns_in_vehicle_service_min_fields
+  stddev: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_fields
+  stddev_pop: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_pop_fields
+  stddev_samp: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_samp_fields
+  sum: timetables_vehicle_service_journey_patterns_in_vehicle_service_sum_fields
+  var_pop: timetables_vehicle_service_journey_patterns_in_vehicle_service_var_pop_fields
+  var_samp: timetables_vehicle_service_journey_patterns_in_vehicle_service_var_samp_fields
+  variance: timetables_vehicle_service_journey_patterns_in_vehicle_service_variance_fields
+}
+
+"aggregate avg on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_avg_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate max on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_max_fields {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+  vehicle_service_id: uuid
+}
+
+"aggregate min on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_min_fields {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+  vehicle_service_id: uuid
+}
+
+"response of any mutation on the table \"vehicle_service.journey_patterns_in_vehicle_service\""
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_mutation_response {
+  "number of rows affected by the mutation"
+  affected_rows: Int!
+  "data from the rows affected by the mutation"
+  returning: [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+}
+
+"aggregate stddev on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate stddev_pop on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_pop_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate stddev_samp on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_samp_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate sum on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_sum_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+}
+
+"aggregate var_pop on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_var_pop_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate var_samp on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_var_samp_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
+"aggregate variance on columns"
+type timetables_vehicle_service_journey_patterns_in_vehicle_service_variance_fields {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Float
+}
+
 "A work plan for a single vehicle for a whole day, planned for a specific DAY TYPE. A VEHICLE SERVICE includes one or several BLOCKs. If there is no service on a given day, it does not include any BLOCKs. Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=3:5:965 "
 type timetables_vehicle_service_vehicle_service {
   "An array relationship"
@@ -6876,6 +7427,32 @@ type timetables_vehicle_service_vehicle_service {
   day_type: timetables_service_calendar_day_type!
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid!
+  "An array relationship"
+  journey_patterns_in_vehicle_service(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): [timetables_vehicle_service_journey_patterns_in_vehicle_service!]!
+  "An aggregate relationship"
+  journey_patterns_in_vehicle_service_aggregate(
+    "distinct select on columns"
+    distinct_on: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!],
+    "limit the number of rows returned"
+    limit: Int,
+    "skip the first n rows. Use only with order_by"
+    offset: Int,
+    "sort the rows by one or more columns"
+    order_by: [timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by!],
+    "filter the rows returned"
+    where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  ): timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate!
   "Name for vehicle service."
   name_i18n(
     "JSON select path"
@@ -7203,7 +7780,7 @@ enum infrastructure_network_external_source_constraint {
 
 enum infrastructure_network_external_source_enum {
   digiroad_r
-  fixup
+  hsl_fixup
 }
 
 "select columns of table \"infrastructure_network.external_source\""
@@ -8017,6 +8594,52 @@ enum timetables_service_calendar_day_type_update_column {
   name_i18n
 }
 
+"unique or primary key constraints on table \"service_calendar.substitute_operating_day_by_line_type\""
+enum timetables_service_calendar_substitute_operating_day_by_line_type_constraint {
+  "unique or primary key constraint on columns \"substitute_operating_day_by_line_type_id\""
+  substitute_operating_day_by_line_type_pkey
+}
+
+"select columns of table \"service_calendar.substitute_operating_day_by_line_type\""
+enum timetables_service_calendar_substitute_operating_day_by_line_type_select_column {
+  "column name"
+  begin_datetime
+  "column name"
+  begin_time
+  "column name"
+  end_datetime
+  "column name"
+  end_time
+  "column name"
+  substitute_day_of_week
+  "column name"
+  substitute_operating_day_by_line_type_id
+  "column name"
+  superseded_date
+  "column name"
+  timezone
+  "column name"
+  type_of_line
+}
+
+"update columns of table \"service_calendar.substitute_operating_day_by_line_type\""
+enum timetables_service_calendar_substitute_operating_day_by_line_type_update_column {
+  "column name"
+  begin_time
+  "column name"
+  end_time
+  "column name"
+  substitute_day_of_week
+  "column name"
+  substitute_operating_day_by_line_type_id
+  "column name"
+  superseded_date
+  "column name"
+  timezone
+  "column name"
+  type_of_line
+}
+
 "unique or primary key constraints on table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
 enum timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_constraint {
   "unique or primary key constraint on columns \"scheduled_stop_point_in_journey_pattern_ref_id\""
@@ -8150,6 +8773,8 @@ enum timetables_vehicle_schedule_vehicle_schedule_frame_select_column {
   "column name"
   validity_end
   "column name"
+  validity_range
+  "column name"
   validity_start
   "column name"
   vehicle_schedule_frame_id
@@ -8209,6 +8834,32 @@ enum timetables_vehicle_service_block_update_column {
   vehicle_service_id
   "column name"
   vehicle_type_id
+}
+
+"unique or primary key constraints on table \"vehicle_service.journey_patterns_in_vehicle_service\""
+enum timetables_vehicle_service_journey_patterns_in_vehicle_service_constraint {
+  "unique or primary key constraint on columns \"vehicle_service_id\", \"journey_pattern_id\""
+  journey_patterns_in_vehicle_service_pkey
+}
+
+"select columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+enum timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column {
+  "column name"
+  journey_pattern_id
+  "column name"
+  reference_count
+  "column name"
+  vehicle_service_id
+}
+
+"update columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+enum timetables_vehicle_service_journey_patterns_in_vehicle_service_update_column {
+  "column name"
+  journey_pattern_id
+  "column name"
+  reference_count
+  "column name"
+  vehicle_service_id
 }
 
 "unique or primary key constraints on table \"vehicle_service.vehicle_service\""
@@ -8307,6 +8958,8 @@ scalar _uuid
 
 scalar date
 
+scalar daterange
+
 scalar float8
 
 scalar geography
@@ -8393,6 +9046,19 @@ input date_comparison_exp {
   _lte: date
   _neq: date
   _nin: [date!]
+}
+
+"Boolean expression to compare columns of type \"daterange\". All fields are combined with logical 'AND'."
+input daterange_comparison_exp {
+  _eq: daterange
+  _gt: daterange
+  _gte: daterange
+  _in: [daterange!]
+  _is_null: Boolean
+  _lt: daterange
+  _lte: daterange
+  _neq: daterange
+  _nin: [daterange!]
 }
 
 "Boolean expression to compare columns of type \"float8\". All fields are combined with logical 'AND'."
@@ -11289,7 +11955,7 @@ input service_pattern_scheduled_stop_point_insert_input {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
   vehicle_mode_on_scheduled_stop_point: service_pattern_vehicle_mode_on_scheduled_stop_point_arr_rel_insert_input
 }
@@ -11307,7 +11973,7 @@ input service_pattern_scheduled_stop_point_max_order_by {
   timing_place_id: order_by
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: order_by
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: order_by
 }
 
@@ -11324,7 +11990,7 @@ input service_pattern_scheduled_stop_point_min_order_by {
   timing_place_id: order_by
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: order_by
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: order_by
 }
 
@@ -11378,7 +12044,7 @@ input service_pattern_scheduled_stop_point_set_input {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
 }
 
@@ -11422,7 +12088,7 @@ input service_pattern_scheduled_stop_point_stream_cursor_value_input {
   timing_place_id: uuid
   "end of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_end: date
-  "start of the operating date span in the scheduled stop point's local time(inclusive)."
+  "start of the operating date span in the scheduled stop point's local time (inclusive)."
   validity_start: date
 }
 
@@ -12125,6 +12791,122 @@ input timetables_service_calendar_get_active_day_types_for_date_args {
   observation_date: date
 }
 
+"Boolean expression to filter rows from the table \"service_calendar.substitute_operating_day_by_line_type\". All fields are combined with a logical 'AND'."
+input timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp {
+  _and: [timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp!]
+  _not: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+  _or: [timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp!]
+  begin_datetime: timestamptz_comparison_exp
+  begin_time: interval_comparison_exp
+  end_datetime: timestamptz_comparison_exp
+  end_time: interval_comparison_exp
+  substitute_day_of_week: Int_comparison_exp
+  substitute_operating_day_by_line_type_id: uuid_comparison_exp
+  superseded_date: date_comparison_exp
+  timezone: String_comparison_exp
+  type_of_line: String_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"service_calendar.substitute_operating_day_by_line_type\""
+input timetables_service_calendar_substitute_operating_day_by_line_type_inc_input {
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+}
+
+"input type for inserting data into table \"service_calendar.substitute_operating_day_by_line_type\""
+input timetables_service_calendar_substitute_operating_day_by_line_type_insert_input {
+  "The time from which the substituting public transit comes into effect. If NULL, the substitution is in effect from the start of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys prior to this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys before this time are operated as usual."
+  begin_time: interval
+  "The time (exclusive) until which the substituting public transit is valid. If NULL, the substitution is in effect until the end of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys starting from this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys starting from this time are operated as usual."
+  end_time: interval
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid
+  "The date of operating day being superseded."
+  superseded_date: date
+  timezone: String
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String
+}
+
+"on_conflict condition type for table \"service_calendar.substitute_operating_day_by_line_type\""
+input timetables_service_calendar_substitute_operating_day_by_line_type_on_conflict {
+  constraint: timetables_service_calendar_substitute_operating_day_by_line_type_constraint!
+  update_columns: [timetables_service_calendar_substitute_operating_day_by_line_type_update_column!]! = []
+  where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp
+}
+
+"Ordering options when selecting data from \"service_calendar.substitute_operating_day_by_line_type\"."
+input timetables_service_calendar_substitute_operating_day_by_line_type_order_by {
+  begin_datetime: order_by
+  begin_time: order_by
+  end_datetime: order_by
+  end_time: order_by
+  substitute_day_of_week: order_by
+  substitute_operating_day_by_line_type_id: order_by
+  superseded_date: order_by
+  timezone: order_by
+  type_of_line: order_by
+}
+
+"primary key columns input for table: service_calendar.substitute_operating_day_by_line_type"
+input timetables_service_calendar_substitute_operating_day_by_line_type_pk_columns_input {
+  substitute_operating_day_by_line_type_id: uuid!
+}
+
+"input type for updating data in table \"service_calendar.substitute_operating_day_by_line_type\""
+input timetables_service_calendar_substitute_operating_day_by_line_type_set_input {
+  "The time from which the substituting public transit comes into effect. If NULL, the substitution is in effect from the start of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys prior to this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys before this time are operated as usual."
+  begin_time: interval
+  "The time (exclusive) until which the substituting public transit is valid. If NULL, the substitution is in effect until the end of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys starting from this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys starting from this time are operated as usual."
+  end_time: interval
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid
+  "The date of operating day being superseded."
+  superseded_date: date
+  timezone: String
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String
+}
+
+"Streaming cursor of the table \"service_calendar_substitute_operating_day_by_line_type\""
+input timetables_service_calendar_substitute_operating_day_by_line_type_stream_cursor_input {
+  "Stream column input with initial value"
+  initial_value: timetables_service_calendar_substitute_operating_day_by_line_type_stream_cursor_value_input!
+  "cursor ordering"
+  ordering: timetables_cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input timetables_service_calendar_substitute_operating_day_by_line_type_stream_cursor_value_input {
+  "Calculated timestamp for the instant from which the substituting public transit comes into effect."
+  begin_datetime: timestamptz
+  "The time from which the substituting public transit comes into effect. If NULL, the substitution is in effect from the start of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys prior to this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys before this time are operated as usual."
+  begin_time: interval
+  "Calculated timestamp for the instant (exclusive) until which the substituting public transit is in effect."
+  end_datetime: timestamptz
+  "The time (exclusive) until which the substituting public transit is valid. If NULL, the substitution is in effect until the end of the operating day. When substitute_day_of_week is not NULL (reference day case), vehicle journeys starting from this time are not operated. When substitute_day_of_week is NULL (no traffic case), the vehicle journeys starting from this time are operated as usual."
+  end_time: interval
+  "The ISO day of week (1=Monday, ... , 7=Sunday) of the day type used as the basis for operating day substitution. A NULL value indicates that there is no public transit at all, i.e. no vehicle journeys are operated within the given time period."
+  substitute_day_of_week: Int
+  substitute_operating_day_by_line_type_id: uuid
+  "The date of operating day being superseded."
+  superseded_date: date
+  timezone: String
+  "The type of line this substitute operating day is bound to."
+  type_of_line: String
+}
+
+input timetables_service_calendar_substitute_operating_day_by_line_type_updates {
+  "increments the numeric columns with given value of the filtered values"
+  _inc: timetables_service_calendar_substitute_operating_day_by_line_type_inc_input
+  "sets the columns of the filtered rows to the given values"
+  _set: timetables_service_calendar_substitute_operating_day_by_line_type_set_input
+  "filter the rows which have to be updated"
+  where: timetables_service_calendar_substitute_operating_day_by_line_type_bool_exp!
+}
+
 "order by aggregate values of table \"service_pattern.scheduled_stop_point_in_journey_pattern_ref\""
 input timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_aggregate_order_by {
   avg: timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_avg_order_by
@@ -12574,6 +13356,7 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp {
   name_i18n: jsonb_comparison_exp
   priority: Int_comparison_exp
   validity_end: date_comparison_exp
+  validity_range: daterange_comparison_exp
   validity_start: date_comparison_exp
   vehicle_schedule_frame_id: uuid_comparison_exp
   vehicle_services: timetables_vehicle_service_vehicle_service_bool_exp
@@ -12654,6 +13437,7 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_order_by {
   name_i18n: order_by
   priority: order_by
   validity_end: order_by
+  validity_range: order_by
   validity_start: order_by
   vehicle_schedule_frame_id: order_by
   vehicle_services_aggregate: timetables_vehicle_service_vehicle_service_aggregate_order_by
@@ -12715,6 +13499,14 @@ input timetables_vehicle_schedule_vehicle_schedule_frame_stream_cursor_value_inp
   priority: Int
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity ends (inclusive). Null if always will be valid."
   validity_end: date
+  """
+  
+  A denormalized column for actual daterange when vehicle schedule frame is valid,
+  that is, a closed date range [validity_start, validity_end].
+  Added to make working with PostgreSQL functions easier:
+  they typically expect ranges to be half closed.
+  """
+  validity_range: daterange
   "OPERATING DAY when the VEHICLE SCHEDULE FRAME validity starts (inclusive). Null if always has been valid."
   validity_start: date
   vehicle_schedule_frame_id: uuid
@@ -12879,6 +13671,238 @@ input timetables_vehicle_service_get_vehicle_services_for_date_args {
   observation_date: date
 }
 
+"order by aggregate values of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate_order_by {
+  avg: timetables_vehicle_service_journey_patterns_in_vehicle_service_avg_order_by
+  count: order_by
+  max: timetables_vehicle_service_journey_patterns_in_vehicle_service_max_order_by
+  min: timetables_vehicle_service_journey_patterns_in_vehicle_service_min_order_by
+  stddev: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_order_by
+  stddev_pop: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_pop_order_by
+  stddev_samp: timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_samp_order_by
+  sum: timetables_vehicle_service_journey_patterns_in_vehicle_service_sum_order_by
+  var_pop: timetables_vehicle_service_journey_patterns_in_vehicle_service_var_pop_order_by
+  var_samp: timetables_vehicle_service_journey_patterns_in_vehicle_service_var_samp_order_by
+  variance: timetables_vehicle_service_journey_patterns_in_vehicle_service_variance_order_by
+}
+
+"input type for inserting array relation for remote table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_arr_rel_insert_input {
+  data: [timetables_vehicle_service_journey_patterns_in_vehicle_service_insert_input!]!
+  "upsert condition"
+  on_conflict: timetables_vehicle_service_journey_patterns_in_vehicle_service_on_conflict
+}
+
+"order by avg() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_avg_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"Boolean expression to filter rows from the table \"vehicle_service.journey_patterns_in_vehicle_service\". All fields are combined with a logical 'AND'."
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp {
+  _and: [timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp!]
+  _not: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  _or: [timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp!]
+  journey_pattern_id: uuid_comparison_exp
+  reference_count: Int_comparison_exp
+  vehicle_service: timetables_vehicle_service_vehicle_service_bool_exp
+  vehicle_service_id: uuid_comparison_exp
+}
+
+"input type for incrementing numeric columns in table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_inc_input {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+}
+
+"input type for inserting data into table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_insert_input {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+  vehicle_service: timetables_vehicle_service_vehicle_service_obj_rel_insert_input
+  vehicle_service_id: uuid
+}
+
+"order by max() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_max_order_by {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: order_by
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+  vehicle_service_id: order_by
+}
+
+"order by min() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_min_order_by {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: order_by
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+  vehicle_service_id: order_by
+}
+
+"on_conflict condition type for table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_on_conflict {
+  constraint: timetables_vehicle_service_journey_patterns_in_vehicle_service_constraint!
+  update_columns: [timetables_vehicle_service_journey_patterns_in_vehicle_service_update_column!]! = []
+  where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+}
+
+"Ordering options when selecting data from \"vehicle_service.journey_patterns_in_vehicle_service\"."
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_order_by {
+  journey_pattern_id: order_by
+  reference_count: order_by
+  vehicle_service: timetables_vehicle_service_vehicle_service_order_by
+  vehicle_service_id: order_by
+}
+
+"primary key columns input for table: vehicle_service.journey_patterns_in_vehicle_service"
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_pk_columns_input {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid!
+  vehicle_service_id: uuid!
+}
+
+"input type for updating data in table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_set_input {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+  vehicle_service_id: uuid
+}
+
+"order by stddev() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"order by stddev_pop() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_pop_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"order by stddev_samp() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_stddev_samp_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"Streaming cursor of the table \"vehicle_service_journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_stream_cursor_input {
+  "Stream column input with initial value"
+  initial_value: timetables_vehicle_service_journey_patterns_in_vehicle_service_stream_cursor_value_input!
+  "cursor ordering"
+  ordering: timetables_cursor_ordering
+}
+
+"Initial value of the column from where the streaming should start"
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_stream_cursor_value_input {
+  """
+  The journey_pattern_id from journey_pattern.journey_pattern_ref.
+   No foreign key reference is set because the target column is not unique.
+  """
+  journey_pattern_id: uuid
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: Int
+  vehicle_service_id: uuid
+}
+
+"order by sum() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_sum_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_updates {
+  "increments the numeric columns with given value of the filtered values"
+  _inc: timetables_vehicle_service_journey_patterns_in_vehicle_service_inc_input
+  "sets the columns of the filtered rows to the given values"
+  _set: timetables_vehicle_service_journey_patterns_in_vehicle_service_set_input
+  "filter the rows which have to be updated"
+  where: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp!
+}
+
+"order by var_pop() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_var_pop_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"order by var_samp() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_var_samp_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
+"order by variance() on columns of table \"vehicle_service.journey_patterns_in_vehicle_service\""
+input timetables_vehicle_service_journey_patterns_in_vehicle_service_variance_order_by {
+  """
+  The amount of unique references between the journey_pattern and vehicle_service.
+    When this reaches 0 the row will be deleted.
+  """
+  reference_count: order_by
+}
+
 "order by aggregate values of table \"vehicle_service.vehicle_service\""
 input timetables_vehicle_service_vehicle_service_aggregate_order_by {
   count: order_by
@@ -12908,6 +13932,8 @@ input timetables_vehicle_service_vehicle_service_bool_exp {
   blocks_aggregate: vehicle_service_block_aggregate_bool_exp
   day_type: timetables_service_calendar_day_type_bool_exp
   day_type_id: uuid_comparison_exp
+  journey_patterns_in_vehicle_service: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
+  journey_patterns_in_vehicle_service_aggregate: vehicle_service_journey_patterns_in_vehicle_service_aggregate_bool_exp
   name_i18n: jsonb_comparison_exp
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_bool_exp
   vehicle_schedule_frame_id: uuid_comparison_exp
@@ -12938,6 +13964,7 @@ input timetables_vehicle_service_vehicle_service_insert_input {
   day_type: timetables_service_calendar_day_type_obj_rel_insert_input
   "The DAY TYPE for the VEHICLE SERVICE."
   day_type_id: uuid
+  journey_patterns_in_vehicle_service: timetables_vehicle_service_journey_patterns_in_vehicle_service_arr_rel_insert_input
   "Name for vehicle service."
   name_i18n: jsonb
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_obj_rel_insert_input
@@ -12983,6 +14010,7 @@ input timetables_vehicle_service_vehicle_service_order_by {
   blocks_aggregate: timetables_vehicle_service_block_aggregate_order_by
   day_type: timetables_service_calendar_day_type_order_by
   day_type_id: order_by
+  journey_patterns_in_vehicle_service_aggregate: timetables_vehicle_service_journey_patterns_in_vehicle_service_aggregate_order_by
   name_i18n: order_by
   vehicle_schedule_frame: timetables_vehicle_schedule_vehicle_schedule_frame_order_by
   vehicle_schedule_frame_id: order_by
@@ -13340,6 +14368,17 @@ input vehicle_service_block_aggregate_bool_exp_count {
   arguments: [timetables_vehicle_service_block_select_column!]
   distinct: Boolean
   filter: timetables_vehicle_service_block_bool_exp
+  predicate: Int_comparison_exp!
+}
+
+input vehicle_service_journey_patterns_in_vehicle_service_aggregate_bool_exp {
+  count: vehicle_service_journey_patterns_in_vehicle_service_aggregate_bool_exp_count
+}
+
+input vehicle_service_journey_patterns_in_vehicle_service_aggregate_bool_exp_count {
+  arguments: [timetables_vehicle_service_journey_patterns_in_vehicle_service_select_column!]
+  distinct: Boolean
+  filter: timetables_vehicle_service_journey_patterns_in_vehicle_service_bool_exp
   predicate: Int_comparison_exp!
 }
 
