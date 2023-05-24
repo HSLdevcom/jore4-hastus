@@ -423,6 +423,8 @@
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.LocationScalarConverter</converter>
                                 </customScalar>
                                 <customScalar>
+                                    <!-- Uses java.time.Duration instead of Kotlin because value classes are not
+                                    supported by Jackson -->
                                     <scalar>interval</scalar>
                                     <type>kotlin.time.Duration</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.DurationConverter</converter>
