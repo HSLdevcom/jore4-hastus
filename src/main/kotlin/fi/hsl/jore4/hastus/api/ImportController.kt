@@ -36,24 +36,25 @@ class ImportController(
             LOGGER.debug { "CSV import request" }
             val reader = CsvReader(";")
             val parsedValues = reader.parseCsv(request)
+            val filteredHeaders = HasuraHeaders.filterHeaders(headers)
 
             val routesOfPatterns = parsedValues.filterIsInstance<TripRecord>().map { it.tripRoute }
             val name = parsedValues.filterIsInstance<BookingRecord>().first().name
 
-            val journeyPatterns = graphQLService.getJourneyPatternsForRoutes(routesOfPatterns, headers)
+            val journeyPatterns = graphQLService.getJourneyPatternsForRoutes(routesOfPatterns, filteredHeaders)
             LOGGER.trace { "Importing got journey patterns $journeyPatterns" }
 
-            val vehicleTypes = graphQLService.getVehicleTypes(headers)
+            val vehicleTypes = graphQLService.getVehicleTypes(filteredHeaders)
             LOGGER.trace { "Importing got vehicle types $vehicleTypes" }
 
-            val dayTypes = graphQLService.getDayTypes(headers)
+            val dayTypes = graphQLService.getDayTypes(filteredHeaders)
             LOGGER.trace { "Importing got day types $dayTypes" }
 
             val vehicleScheduleFrame = JoreConverter.convertHastusDataToJore(name, parsedValues, journeyPatterns, vehicleTypes, dayTypes)
             graphQLService.persistVehicleScheduleFrame(
                 journeyPatterns.values,
                 vehicleScheduleFrame,
-                headers
+                filteredHeaders
             )
             "200"
         }
