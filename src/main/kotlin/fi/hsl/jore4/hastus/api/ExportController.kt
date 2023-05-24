@@ -47,7 +47,7 @@ class ExportController(
                 request.uniqueLabels,
                 request.priority,
                 request.observationDate,
-                headers
+                HeaderUtils.filterInHasuraHeaders(headers)
             )
         }
         LOGGER.info { "Routes request took $elapsed" }
