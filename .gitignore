@@ -6,8 +6,8 @@ profiles/dev/config.*.properties
 .idea/**
 
 # Docker
-!docker/docker-compose.custom.yml
 docker/**
+!docker/docker-compose.custom.yml
 
 # Build target
 target/**
