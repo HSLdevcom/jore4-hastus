@@ -29,8 +29,8 @@
         <kotlin-logging-jvm.version>3.0.2</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
         <spring-boot.version>2.7.4</spring-boot.version>
-        <graphql-kotlin.version>6.2.5</graphql-kotlin.version>
-        <jackson-datatype.version>2.13.4</jackson-datatype.version>
+        <graphql-kotlin.version>6.4.1</graphql-kotlin.version>
+        <jackson-datatype.version>2.15.1</jackson-datatype.version>
 
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
@@ -424,7 +424,7 @@
                                 </customScalar>
                                 <customScalar>
                                     <scalar>interval</scalar>
-                                    <type>kotlin.time.Duration</type>
+                                    <type>java.time.Duration</type>
                                     <converter>fi.hsl.jore4.hastus.graphql.converter.DurationConverter</converter>
                                 </customScalar>
                                 <customScalar>
@@ -488,6 +488,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
+            <version>${jackson-datatype.version}</version>
         </dependency>
 
         <dependency>
