@@ -1,12 +1,13 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.hsl.jore4.hastus.data.format.Coordinate
 
 class LocationScalarConverter : ScalarConverter<Coordinate> {
-    override fun toJson(value: Coordinate): String {
-        return jacksonObjectMapper().writeValueAsString(
+    override fun toJson(value: Coordinate): Any {
+        val formattedValue = jacksonObjectMapper().writeValueAsString(
             mapOf(
                 "type" to "Point",
                 "crs" to mapOf(
@@ -22,6 +23,7 @@ class LocationScalarConverter : ScalarConverter<Coordinate> {
                 )
             )
         )
+        return jacksonObjectMapper().readTree(formattedValue) as ObjectNode
     }
 
     override fun toScalar(rawValue: Any): Coordinate {
