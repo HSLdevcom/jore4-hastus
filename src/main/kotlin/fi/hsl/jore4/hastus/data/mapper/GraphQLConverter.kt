@@ -22,6 +22,7 @@ import fi.hsl.jore4.hastus.generated.inputs.timetables_vehicle_service_vehicle_s
 import fi.hsl.jore4.hastus.graphql.IJSONB
 import fi.hsl.jore4.hastus.graphql.converter.JsonbScalarConverter
 import java.util.UUID
+import kotlin.time.toJavaDuration
 
 class GraphQLConverter {
 
@@ -69,8 +70,8 @@ class GraphQLConverter {
 
         fun mapToGraphQL(block: JoreBlock, journeyPatternRefMap: Map<UUID, JoreJourneyPatternReference>): timetables_vehicle_service_block_insert_input {
             return timetables_vehicle_service_block_insert_input(
-                finishing_time = OptionalInput.Defined(block.finishingTime),
-                preparing_time = OptionalInput.Defined(block.preparingTime),
+                finishing_time = OptionalInput.Defined(block.finishingTime.toJavaDuration()),
+                preparing_time = OptionalInput.Defined(block.preparingTime.toJavaDuration()),
                 vehicle_journeys = OptionalInput.Defined(
                     timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input(
                         block.vehicleJourneys.map { mapToGraphQL(it, journeyPatternRefMap) }
@@ -88,8 +89,8 @@ class GraphQLConverter {
                 is_vehicle_type_mandatory = OptionalInput.Defined(vehicleJourney.isVehicleTypeMandatory),
                 journey_name_i18n = mapToFiJson(vehicleJourney.name),
                 journey_type = OptionalInput.Defined(vehicleJourney.journeyType.toString()),
-                layover_time = OptionalInput.Defined(vehicleJourney.layoverTime),
-                turnaround_time = OptionalInput.Defined(vehicleJourney.turnaroundTime),
+                layover_time = OptionalInput.Defined(vehicleJourney.layoverTime.toJavaDuration()),
+                turnaround_time = OptionalInput.Defined(vehicleJourney.turnaroundTime.toJavaDuration()),
                 journey_pattern_ref_id = OptionalInput.Defined(associatedJourneyPatternRef.id),
                 timetabled_passing_times = OptionalInput.Defined(
                     timetables_passing_times_timetabled_passing_time_arr_rel_insert_input(
@@ -101,8 +102,8 @@ class GraphQLConverter {
 
         fun mapToGraphQL(passingTime: Pair<JorePassingTime, JoreStopReference>): timetables_passing_times_timetabled_passing_time_insert_input {
             return timetables_passing_times_timetabled_passing_time_insert_input(
-                arrival_time = OptionalInput.Defined(passingTime.first.arrivalTime),
-                departure_time = OptionalInput.Defined(passingTime.first.departureTime),
+                arrival_time = OptionalInput.Defined(passingTime.first.arrivalTime?.toJavaDuration()),
+                departure_time = OptionalInput.Defined(passingTime.first.departureTime?.toJavaDuration()),
                 scheduled_stop_point_in_journey_pattern_ref_id = OptionalInput.Defined(passingTime.second.stopId)
             )
         }
