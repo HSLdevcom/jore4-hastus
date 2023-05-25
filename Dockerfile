@@ -1,4 +1,4 @@
-FROM maven:3-openjdk-11-slim AS builder
+FROM maven:3-eclipse-temurin-17 AS builder
 
 # set up workdir
 WORKDIR /build
@@ -14,7 +14,7 @@ COPY ./profiles/prod /build/profiles/prod
 RUN mvn -Pprod clean package spring-boot:repackage
 
 
-FROM amazoncorretto:11-al2-full
+FROM eclipse-temurin:17-jre
 
 # expose server port
 EXPOSE 8080
