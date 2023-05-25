@@ -11,22 +11,23 @@ mkdir -p ./docker
 
 DOCKER_COMPOSE_CMD="docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
 
-function check_docker {
+function download_docker_bundle {
+  echo "Downloading latest version of E2E docker-compose package..."
   curl https://raw.githubusercontent.com/HSLdevcom/jore4-tools/main/docker/download-docker-bundle.sh | bash
 }
 
 function start {
-  check_docker
+  download_docker_bundle
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus jore4-hasura jore4-testdb
 }
 
 function stop_all {
-  check_docker
+  download_docker_bundle
   $DOCKER_COMPOSE_CMD stop
 }
 
 function remove_all {
-  check_docker
+  download_docker_bundle
   $DOCKER_COMPOSE_CMD down
 }
 
