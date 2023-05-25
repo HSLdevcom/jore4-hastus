@@ -49,10 +49,35 @@ object HastusConverter {
         stopPoints: List<JoreRouteScheduledStop>,
         routeIdAndVariant: String
     ): List<RouteVariantPoint> {
+        var firstTimingPointEncountered = false
+        var accumulatedDistanceFromPreviousTimingPoint = 0.0
+
+        // Regarding the distances between the stops, the following transformations are made in
+        // relation to the input:
+        // - Distances are given only for stops that are used as timing points.
+        // - In the input, the distances are given as distances to the next stop. The distances are
+        //   converted in such a way that we calculate for each timing point the distance from the
+        //   previous timing point.
         return stopPoints.map {
+            val specTpDistance: NumberWithAccuracy? = if (it.isTimingPoint) {
+                val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
+
+                firstTimingPointEncountered = true
+                accumulatedDistanceFromPreviousTimingPoint = it.distanceToNextStop
+
+                NumberWithAccuracy(distanceFromPreviousTimingPoint / 1000.0, 1, 3)
+            } else {
+                if (firstTimingPointEncountered) {
+                    accumulatedDistanceFromPreviousTimingPoint += it.distanceToNextStop
+                }
+
+                // This is not timing point, so no distance is given.
+                null
+            }
+
             RouteVariantPoint(
                 place = it.hastusPlace,
-                specTpDistance = NumberWithAccuracy(it.distanceToNextStop / 1000.0, 1, 3),
+                specTpDistance = specTpDistance,
                 isTimingPoint = it.isTimingPoint,
                 allowLoadTime = it.isAllowedLoad,
                 regulatedTp = it.isRegulatedTimingPoint,
