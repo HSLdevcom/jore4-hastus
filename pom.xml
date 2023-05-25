@@ -30,6 +30,7 @@
         <quicktheories.version>0.26</quicktheories.version>
         <spring-boot.version>2.7.12</spring-boot.version>
         <graphql-kotlin.version>6.4.1</graphql-kotlin.version>
+        <ktor.version>2.0.3</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
         <jackson-datatype.version>2.15.1</jackson-datatype.version>
 
         <!-- Other properties -->
@@ -515,6 +516,12 @@
             <groupId>com.expediagroup</groupId>
             <artifactId>graphql-kotlin-client-jackson</artifactId>
             <version>${graphql-kotlin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.ktor</groupId>
+            <artifactId>ktor-client-logging-jvm</artifactId>
+            <version>${ktor.version}</version>
         </dependency>
 
         <dependency>
