@@ -27,6 +27,9 @@ jobs:
         uses: HSLdevcom/jore4-tools/github-actions/setup-e2e-environment@setup-e2e-environment-v1
         with:
           hastus_version: "${{ env.IMAGE_NAME }}:${{ env.COMMIT_ID }}"
+      
+      - name: Seed infrastructure links
+        uses: HSLdevcom/jore4-tools/github-actions/seed-infrastructure-links@seed-infrastructure-links-v1
 
       - name: Run e2e tests from github action
         uses: HSLdevcom/jore4-tools/github-actions/run-cypress-tests@run-cypress-tests-v1
