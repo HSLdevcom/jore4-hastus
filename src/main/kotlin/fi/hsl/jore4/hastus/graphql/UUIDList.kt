@@ -4,6 +4,6 @@ import java.util.UUID
 
 // Container to get around type erasure
 // Not declared as value class because of support from Jackson
-class UUIDList(
+data class UUIDList(
     val content: List<UUID>
 )
