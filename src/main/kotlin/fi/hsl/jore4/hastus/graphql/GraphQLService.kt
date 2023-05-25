@@ -3,6 +3,8 @@ package fi.hsl.jore4.hastus.graphql
 import com.expediagroup.graphql.client.jackson.GraphQLClientJacksonSerializer
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
+import com.expediagroup.graphql.client.types.GraphQLClientRequest
+import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.StopDistance
@@ -63,6 +65,31 @@ class GraphQLService(config: HasuraConfiguration) {
 
     private val writer = CsvWriter()
 
+    private fun <T : Any> sendRequest(
+        request: GraphQLClientRequest<T>,
+        headers: Map<String, String>
+    ): T? {
+        return runBlocking {
+            LOGGER.debug {
+                "GraphQL request:\n${request.query},\nvariables: ${request.variables}"
+            }
+
+            val queryResponse: GraphQLClientResponse<T> = client.execute(request) {
+                headers.map { header(it.key, it.value) }
+            }
+
+            LOGGER.debug {
+                "GraphQL ${request.operationName} response: $queryResponse"
+            }
+
+            if (queryResponse.errors?.isNotEmpty() == true) {
+                throw IllegalStateException(queryResponse.errors?.toString())
+            }
+
+            queryResponse.data
+        }
+    }
+
     private fun convertRoutes(
         routes: List<route_route>,
         distances: Map<Pair<String, String>, Int>
@@ -115,16 +142,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val distancesBetweenStops: DistanceBetweenStopPoints.Result? = runBlocking {
-            val queryResponse = client.execute(distancesQuery) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "distance between stops graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val distancesBetweenStops: DistanceBetweenStopPoints.Result? = sendRequest(distancesQuery, headers)
 
         val transformedDistances = distancesBetweenStops
             ?.service_pattern_get_distances_between_stop_points_by_routes
@@ -148,16 +166,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val routes: RoutesWithHastusData.Result? = runBlocking {
-            val queryResponse = client.execute(routesQuery) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "routes for routes graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val routes: RoutesWithHastusData.Result? = sendRequest(routesQuery, headers)
 
         val routeIds: List<UUID> = routes?.route_route?.map { it.route_id }.orEmpty()
         val distancesBetweenStops: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
@@ -187,16 +196,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val journeyPatterns: JourneyPatternsForRoutes.Result? = runBlocking {
-            val queryResponse = client.execute(journeyPatternsQuery) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "journey patterns for routes graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val journeyPatterns: JourneyPatternsForRoutes.Result? = sendRequest(journeyPatternsQuery, headers)
 
         return journeyPatterns
             ?.route_route
@@ -220,16 +220,7 @@ class GraphQLService(config: HasuraConfiguration) {
     fun getVehicleTypes(
         headers: Map<String, String>
     ): Map<Int, UUID> {
-        val vehicleTypes: ListVehicleTypes.Result? = runBlocking {
-            val queryResponse = client.execute(ListVehicleTypes()) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val vehicleTypes: ListVehicleTypes.Result? = sendRequest(ListVehicleTypes(), headers)
 
         return vehicleTypes
             ?.timetables
@@ -243,16 +234,7 @@ class GraphQLService(config: HasuraConfiguration) {
     fun getDayTypes(
         headers: Map<String, String>
     ): Map<String, UUID> {
-        val dayTypes: ListDayTypes.Result? = runBlocking {
-            val queryResponse = client.execute(ListDayTypes()) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val dayTypes: ListDayTypes.Result? = sendRequest(ListDayTypes(), headers)
 
         return dayTypes
             ?.timetables
@@ -277,16 +259,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val vehicleScheduleFrames: InsertVehicleScheduleFrame.Result? = runBlocking {
-            val queryResponse = client.execute(insertVehicleScheduleFrames) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val vehicleScheduleFrames: InsertVehicleScheduleFrame.Result? = sendRequest(insertVehicleScheduleFrames, headers)
 
         return vehicleScheduleFrames
             ?.timetables
@@ -318,16 +291,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val journeyPatternRefs: InsertJourneyPatternRefs.Result? = runBlocking {
-            val queryResponse = client.execute(insertJourneyPatternRefs) {
-                headers.map { header(it.key, it.value) }
-            }
-            LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
-            }
-            queryResponse.data
-        }
+        val journeyPatternRefs: InsertJourneyPatternRefs.Result? = sendRequest(insertJourneyPatternRefs, headers)
 
         return journeyPatternRefs
             ?.timetables
