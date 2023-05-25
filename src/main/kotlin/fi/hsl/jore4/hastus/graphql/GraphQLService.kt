@@ -5,6 +5,7 @@ import com.expediagroup.graphql.client.jackson.types.OptionalInput
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
+import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.StopDistance
@@ -35,6 +36,8 @@ import fi.hsl.jore4.hastus.graphql.converter.ResultConverter
 import fi.hsl.jore4.hastus.util.CsvWriter
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -47,7 +50,10 @@ import java.time.OffsetDateTime
 import java.util.UUID
 
 @Service
-class GraphQLService(config: HasuraConfiguration) {
+class GraphQLService(
+    config: HasuraConfiguration,
+    val objectMapper: ObjectMapper
+) {
 
     companion object {
         private val LOGGER = KotlinLogging.logger {}
@@ -58,6 +64,10 @@ class GraphQLService(config: HasuraConfiguration) {
         httpClient = HttpClient {
             defaultRequest {
                 contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
+            }
+            install(Logging) {
+                // Can be changed to HEADERS for debugging purposes
+                level = LogLevel.INFO
             }
         },
         serializer = GraphQLClientJacksonSerializer()
@@ -71,7 +81,11 @@ class GraphQLService(config: HasuraConfiguration) {
     ): T? {
         return runBlocking {
             LOGGER.debug {
-                "GraphQL request:\n${request.query},\nvariables: ${request.variables}"
+                "GraphQL request:\n${request.query},\nvariables: ${
+                    objectMapper
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(request.variables)
+                }"
             }
 
             val queryResponse: GraphQLClientResponse<T> = client.execute(request) {
@@ -79,7 +93,11 @@ class GraphQLService(config: HasuraConfiguration) {
             }
 
             LOGGER.debug {
-                "GraphQL ${request.operationName} response: $queryResponse"
+                "GraphQL ${request.operationName} response: ${
+                    objectMapper
+                        // .writerWithDefaultPrettyPrinter() // disable commenting to get pretty-printed output
+                        .writeValueAsString(queryResponse)
+                }"
             }
 
             if (queryResponse.errors?.isNotEmpty() == true) {
