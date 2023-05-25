@@ -16,9 +16,14 @@ function download_docker_bundle {
   curl https://raw.githubusercontent.com/HSLdevcom/jore4-tools/main/docker/download-docker-bundle.sh | bash
 }
 
-function start {
+function start_all {
   download_docker_bundle
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus jore4-hasura jore4-testdb
+}
+
+function start_deps {
+  download_docker_bundle
+  $DOCKER_COMPOSE_CMD up --build -d jore4-hasura jore4-testdb
 }
 
 function stop_all {
@@ -49,6 +54,9 @@ function usage {
   start
     Start Hastus service in Docker container
 
+  start:deps
+    Start only the Docker containers that are dependencies of Hastus service
+
   stop
     Stop all Hastus Docker container
 
@@ -68,7 +76,11 @@ if [[ -z ${1} ]]; then
 else
   case $1 in
   start)
-    start
+    start_all
+    ;;
+
+  start:deps)
+    start_deps
     ;;
 
   stop)
