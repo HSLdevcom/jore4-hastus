@@ -29,7 +29,7 @@ object HastusConverter {
         }
     }
 
-    fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
+    private fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
         return routes.flatMap {
             val variant = it.variant.ifEmpty { it.direction.toString() }
             listOf(
@@ -45,18 +45,43 @@ object HastusConverter {
         }
     }
 
-    fun convertJoreRouteScheduledStopsToRouteVariantPoints(
+    private fun convertJoreRouteScheduledStopsToRouteVariantPoints(
         stopPoints: List<JoreRouteScheduledStop>,
         routeIdAndVariant: String
     ): List<RouteVariantPoint> {
-        return stopPoints.map {
+        var firstTimingPointEncountered = false
+        var accumulatedDistanceFromPreviousTimingPoint = 0.0
+
+        // Regarding the distances between the stops, the following transformations are made in
+        // relation to the input:
+        // - Distances are given only for stops that are used as timing points.
+        // - In the input, the distances are given as distances to the next stop. The distances are
+        //   converted in such a way that we calculate for each timing point the distance from the
+        //   previous timing point.
+        return stopPoints.map { stop ->
+            val specTpDistance: NumberWithAccuracy? = if (stop.isTimingPoint) {
+                val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
+
+                firstTimingPointEncountered = true
+                accumulatedDistanceFromPreviousTimingPoint = stop.distanceToNextStop
+
+                NumberWithAccuracy(distanceFromPreviousTimingPoint / 1000.0, 1, 3)
+            } else {
+                if (firstTimingPointEncountered) {
+                    accumulatedDistanceFromPreviousTimingPoint += stop.distanceToNextStop
+                }
+
+                // This is not timing point, so no distance is given.
+                null
+            }
+
             RouteVariantPoint(
-                place = it.hastusPlace,
-                specTpDistance = NumberWithAccuracy(it.distanceToNextStop / 1000.0, 1, 3),
-                isTimingPoint = it.isTimingPoint,
-                allowLoadTime = it.isAllowedLoad,
-                regulatedTp = it.isRegulatedTimingPoint,
-                stopLabel = it.stopLabel,
+                place = stop.hastusPlace,
+                specTpDistance = specTpDistance,
+                isTimingPoint = stop.isTimingPoint,
+                allowLoadTime = stop.isAllowedLoad,
+                regulatedTp = stop.isRegulatedTimingPoint,
+                stopLabel = stop.stopLabel,
                 routeIdAndVariantId = routeIdAndVariant
             )
         }
