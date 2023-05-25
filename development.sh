@@ -46,13 +46,13 @@ function usage {
     Build the project locally
 
   start
-    Start hastus service in Docker container
+    Start Hastus service in Docker container
 
   stop
-    Stop all hastus Docker container
+    Stop all Hastus Docker container
 
   remove
-    Stop and remove hastus Docker container
+    Stop and remove Hastus Docker container
 
   test
     Run tests locally
