@@ -7,8 +7,11 @@ import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.StopDistance
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
+import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
+import fi.hsl.jore4.hastus.data.jore.JoreLine
+import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
@@ -23,7 +26,9 @@ import fi.hsl.jore4.hastus.generated.ListVehicleTypes
 import fi.hsl.jore4.hastus.generated.RoutesWithHastusData
 import fi.hsl.jore4.hastus.generated.inputs.timetables_journey_pattern_journey_pattern_ref_insert_input
 import fi.hsl.jore4.hastus.generated.inputs.timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.graphql.converter.ResultConverter
 import fi.hsl.jore4.hastus.util.CsvWriter
 import io.ktor.client.HttpClient
@@ -62,19 +67,19 @@ class GraphQLService(config: HasuraConfiguration) {
         routes: List<route_route>,
         distances: Map<Pair<String, String>, Int>
     ): List<IHastusData> {
-        val dbLines = routes.mapNotNull { it.route_line }.distinctBy { it.label }
-        val joreLines = dbLines.map {
+        val dbLines: List<route_line> = routes.mapNotNull { it.route_line }.distinctBy { it.label }
+        val joreLines: List<JoreLine> = dbLines.map {
             ResultConverter.mapJoreLine(it, routes.filter { r -> r.route_line?.label == it.label }, distances)
         }
 
-        val stops = routes
+        val stops: List<service_pattern_scheduled_stop_point> = routes
             .flatMap { it.route_journey_patterns }
             .flatMap { it.scheduled_stop_point_in_journey_patterns }
             .flatMap { it.scheduled_stop_points }
             .distinct()
 
-        val joreStops = stops.map { ResultConverter.mapJoreStop(it) }
-        val jorePlaces = stops
+        val joreStops: List<JoreScheduledStop> = stops.map { ResultConverter.mapJoreStop(it) }
+        val jorePlaces: List<JoreHastusPlace> = stops
             .mapNotNull { it.timing_place }
             .distinct()
             .map { ResultConverter.mapJoreHastusPlace(it) }
@@ -105,7 +110,7 @@ class GraphQLService(config: HasuraConfiguration) {
                 observation_date = observationDate
             )
         )
-        val result = runBlocking {
+        val result: DistanceBetweenStopPoints.Result? = runBlocking {
             val queryResponse = client.execute(query) {
                 headers.map { header(it.key, it.value) }
             }
@@ -136,7 +141,7 @@ class GraphQLService(config: HasuraConfiguration) {
                 observation_date = observationDate
             )
         )
-        val result = runBlocking {
+        val result: RoutesWithHastusData.Result? = runBlocking {
             val queryResponse = client.execute(query) {
                 headers.map { header(it.key, it.value) }
             }
@@ -154,10 +159,12 @@ class GraphQLService(config: HasuraConfiguration) {
             headers
         )
 
-        val distanceMap = distances.associate { Pair(it.startLabel, it.endLabel) to it.distance }
+        val distanceMap: Map<Pair<String, String>, Int> = distances.associate {
+            Pair(it.startLabel, it.endLabel) to it.distance
+        }
 
-        val routesAndVariants = convertRoutes(result?.route_route.orEmpty(), distanceMap)
-        val convertedDistances = convertDistances(distances)
+        val routesAndVariants: List<IHastusData> = convertRoutes(result?.route_route.orEmpty(), distanceMap)
+        val convertedDistances: List<StopDistance> = convertDistances(distances)
 
         return (routesAndVariants + convertedDistances).distinct()
             .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
@@ -173,7 +180,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val result = runBlocking {
+        val result: JourneyPatternsForRoutes.Result? = runBlocking {
             val queryResponse = client.execute(query) {
                 headers.map { header(it.key, it.value) }
             }
@@ -205,7 +212,7 @@ class GraphQLService(config: HasuraConfiguration) {
     ): Map<Int, UUID> {
         val query = ListVehicleTypes()
 
-        val result = runBlocking {
+        val result: ListVehicleTypes.Result? = runBlocking {
             val queryResponse = client.execute(query) {
                 headers.map { header(it.key, it.value) }
             }
@@ -226,7 +233,7 @@ class GraphQLService(config: HasuraConfiguration) {
     ): Map<String, UUID> {
         val query = ListDayTypes()
 
-        val result = runBlocking {
+        val result: ListDayTypes.Result? = runBlocking {
             val queryResponse = client.execute(query) {
                 headers.map { header(it.key, it.value) }
             }
@@ -258,7 +265,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val result = runBlocking {
+        val result: InsertVehicleScheduleFrame.Result? = runBlocking {
             val queryResponse = client.execute(mutation) {
                 headers.map { header(it.key, it.value) }
             }
@@ -295,7 +302,7 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val result = runBlocking {
+        val result: InsertJourneyPatternRefs.Result? = runBlocking {
             val queryResponse = client.execute(mutation) {
                 headers.map { header(it.key, it.value) }
             }
