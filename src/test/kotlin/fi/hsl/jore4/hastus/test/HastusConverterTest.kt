@@ -33,24 +33,24 @@ class HastusConverterTest {
         val joreStops = listOf(
             JoreRouteScheduledStop(
                 hastusPlace = "1AACKT",
-                distance = 1234.0,
-                isRegulatedTimingpoint = true,
+                distanceToNextStop = 1234.0,
+                isRegulatedTimingPoint = true,
                 isAllowedLoad = false,
                 isTimingPoint = false,
                 stopLabel = "H1234"
             ),
             JoreRouteScheduledStop(
                 hastusPlace = "1ELIMK",
-                distance = 1000.0,
-                isRegulatedTimingpoint = false,
+                distanceToNextStop = 1000.0,
+                isRegulatedTimingPoint = false,
                 isAllowedLoad = false,
                 isTimingPoint = true,
                 stopLabel = "H1235"
             ),
             JoreRouteScheduledStop(
                 hastusPlace = "1AURLA",
-                distance = 2500.0,
-                isRegulatedTimingpoint = false,
+                distanceToNextStop = 2500.0,
+                isRegulatedTimingPoint = false,
                 isAllowedLoad = true,
                 isTimingPoint = false,
                 stopLabel = "H1236"

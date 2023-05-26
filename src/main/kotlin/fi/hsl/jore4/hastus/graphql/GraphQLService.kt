@@ -52,12 +52,12 @@ class GraphQLService(config: HasuraConfiguration) {
     }
 
     private val client = GraphQLKtorClient(
+        url = URL(config.url),
         httpClient = HttpClient {
             defaultRequest {
                 contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
             }
         },
-        url = URL(config.url),
         serializer = GraphQLClientJacksonSerializer()
     )
 
@@ -69,7 +69,11 @@ class GraphQLService(config: HasuraConfiguration) {
     ): List<IHastusData> {
         val dbLines: List<route_line> = routes.mapNotNull { it.route_line }.distinctBy { it.label }
         val joreLines: List<JoreLine> = dbLines.map {
-            ResultConverter.mapJoreLine(it, routes.filter { r -> r.route_line?.label == it.label }, distances)
+            ResultConverter.mapJoreLine(
+                it,
+                routes.filter { r -> r.route_line?.label == it.label },
+                distances
+            )
         }
 
         val stops: List<service_pattern_scheduled_stop_point> = routes
@@ -104,14 +108,15 @@ class GraphQLService(config: HasuraConfiguration) {
         observationDate: LocalDate,
         headers: Map<String, String>
     ): List<JoreDistanceBetweenTwoStopPoints> {
-        val query = DistanceBetweenStopPoints(
+        val distancesQuery = DistanceBetweenStopPoints(
             variables = DistanceBetweenStopPoints.Variables(
                 routes = OptionalInput.Defined(UUIDList(routeIds)),
                 observation_date = observationDate
             )
         )
-        val result: DistanceBetweenStopPoints.Result? = runBlocking {
-            val queryResponse = client.execute(query) {
+
+        val distancesBetweenStops: DistanceBetweenStopPoints.Result? = runBlocking {
+            val queryResponse = client.execute(distancesQuery) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "distance between stops graphQL response: $queryResponse" }
@@ -121,11 +126,12 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        val convertedResult = result?.service_pattern_get_distances_between_stop_points_by_routes?.map {
-            ResultConverter.mapJoreDistance(it)
-        }.orEmpty()
+        val transformedDistances = distancesBetweenStops
+            ?.service_pattern_get_distances_between_stop_points_by_routes
+            ?.map(ResultConverter::mapJoreDistance)
+            .orEmpty()
 
-        return convertedResult.distinct()
+        return transformedDistances.distinct()
     }
 
     fun getRoutes(
@@ -134,15 +140,16 @@ class GraphQLService(config: HasuraConfiguration) {
         observationDate: LocalDate,
         headers: Map<String, String>
     ): String {
-        val query = RoutesWithHastusData(
+        val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
                 route_labels = OptionalInput.Defined(uniqueRoutes),
                 route_priority = priority,
                 observation_date = observationDate
             )
         )
-        val result: RoutesWithHastusData.Result? = runBlocking {
-            val queryResponse = client.execute(query) {
+
+        val routes: RoutesWithHastusData.Result? = runBlocking {
+            val queryResponse = client.execute(routesQuery) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "routes for routes graphQL response: $queryResponse" }
@@ -152,21 +159,21 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        val routeIds: List<UUID> = result?.route_route?.map { it.route_id }.orEmpty()
-        val distances: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
+        val routeIds: List<UUID> = routes?.route_route?.map { it.route_id }.orEmpty()
+        val distancesBetweenStops: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
             routeIds,
             observationDate,
             headers
         )
 
-        val distanceMap: Map<Pair<String, String>, Int> = distances.associate {
-            Pair(it.startLabel, it.endLabel) to it.distance
+        val distanceMap: Map<Pair<String, String>, Int> = distancesBetweenStops.associate {
+            (it.startLabel to it.endLabel) to it.distance
         }
 
-        val routesAndVariants: List<IHastusData> = convertRoutes(result?.route_route.orEmpty(), distanceMap)
-        val convertedDistances: List<StopDistance> = convertDistances(distances)
+        val routesAndVariants: List<IHastusData> = convertRoutes(routes?.route_route.orEmpty(), distanceMap)
+        val transformedDistances: List<StopDistance> = convertDistances(distancesBetweenStops)
 
-        return (routesAndVariants + convertedDistances).distinct()
+        return (routesAndVariants + transformedDistances).distinct()
             .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
     }
 
@@ -174,14 +181,14 @@ class GraphQLService(config: HasuraConfiguration) {
         uniqueRoutes: List<String>,
         headers: Map<String, String>
     ): Map<String, JoreJourneyPattern> {
-        val query = JourneyPatternsForRoutes(
+        val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
                 route_labels = OptionalInput.Defined(uniqueRoutes)
             )
         )
 
-        val result: JourneyPatternsForRoutes.Result? = runBlocking {
-            val queryResponse = client.execute(query) {
+        val journeyPatterns: JourneyPatternsForRoutes.Result? = runBlocking {
+            val queryResponse = client.execute(journeyPatternsQuery) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "journey patterns for routes graphQL response: $queryResponse" }
@@ -191,29 +198,30 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        return result?.route_route?.associate {
-            it.unique_label.orEmpty() to JoreJourneyPattern(
-                it.unique_label,
-                it.route_journey_patterns[0].journey_pattern_id,
-                it.route_line?.type_of_line.toString().lowercase(),
-                it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
-                    JoreStopPoint(
-                        stop.scheduled_stop_points.first().scheduled_stop_point_id,
-                        stop.scheduled_stop_point_label,
-                        stop.scheduled_stop_point_sequence + 1
-                    )
-                }
-            )
-        }.orEmpty()
+        return journeyPatterns
+            ?.route_route
+            ?.associate {
+                it.unique_label.orEmpty() to JoreJourneyPattern(
+                    it.unique_label,
+                    it.route_journey_patterns[0].journey_pattern_id,
+                    it.route_line?.type_of_line.toString().lowercase(),
+                    it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
+                        JoreStopPoint(
+                            stop.scheduled_stop_points.first().scheduled_stop_point_id,
+                            stop.scheduled_stop_point_label,
+                            stop.scheduled_stop_point_sequence + 1
+                        )
+                    }
+                )
+            }
+            .orEmpty()
     }
 
     fun getVehicleTypes(
         headers: Map<String, String>
     ): Map<Int, UUID> {
-        val query = ListVehicleTypes()
-
-        val result: ListVehicleTypes.Result? = runBlocking {
-            val queryResponse = client.execute(query) {
+        val vehicleTypes: ListVehicleTypes.Result? = runBlocking {
+            val queryResponse = client.execute(ListVehicleTypes()) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
@@ -223,18 +231,20 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        return result?.timetables?.timetables_vehicle_type_vehicle_type?.associate {
-            it.hsl_id.toInt() to it.vehicle_type_id
-        }.orEmpty()
+        return vehicleTypes
+            ?.timetables
+            ?.timetables_vehicle_type_vehicle_type
+            ?.associate {
+                it.hsl_id.toInt() to it.vehicle_type_id
+            }
+            .orEmpty()
     }
 
     fun getDayTypes(
         headers: Map<String, String>
     ): Map<String, UUID> {
-        val query = ListDayTypes()
-
-        val result: ListDayTypes.Result? = runBlocking {
-            val queryResponse = client.execute(query) {
+        val dayTypes: ListDayTypes.Result? = runBlocking {
+            val queryResponse = client.execute(ListDayTypes()) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
@@ -244,9 +254,11 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        return result?.timetables?.timetables_service_calendar_day_type?.associate {
-            it.label to it.day_type_id
-        }.orEmpty()
+        return dayTypes
+            ?.timetables
+            ?.timetables_service_calendar_day_type
+            ?.associate { it.label to it.day_type_id }
+            .orEmpty()
     }
 
     fun persistVehicleScheduleFrame(
@@ -259,14 +271,14 @@ class GraphQLService(config: HasuraConfiguration) {
             headers
         )
 
-        val mutation = InsertVehicleScheduleFrame(
+        val insertVehicleScheduleFrames = InsertVehicleScheduleFrame(
             variables = InsertVehicleScheduleFrame.Variables(
                 vehicle_schedule_frame = GraphQLConverter.mapToGraphQL(vehicleScheduleFrame, journeyPatternRefMap)
             )
         )
 
-        val result: InsertVehicleScheduleFrame.Result? = runBlocking {
-            val queryResponse = client.execute(mutation) {
+        val vehicleScheduleFrames: InsertVehicleScheduleFrame.Result? = runBlocking {
+            val queryResponse = client.execute(insertVehicleScheduleFrames) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
@@ -276,7 +288,10 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        return result?.timetables?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one?.vehicle_schedule_frame_id.toString()
+        return vehicleScheduleFrames
+            ?.timetables
+            ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
+            ?.vehicle_schedule_frame_id.toString()
     }
 
     fun createJourneyPatternReferences(
@@ -284,7 +299,8 @@ class GraphQLService(config: HasuraConfiguration) {
         headers: Map<String, String>
     ): Map<UUID, JoreJourneyPatternReference> {
         val timestamp = OffsetDateTime.now()
-        val mutation = InsertJourneyPatternRefs(
+
+        val insertJourneyPatternRefs = InsertJourneyPatternRefs(
             variables = InsertJourneyPatternRefs.Variables(
                 journey_pattern_refs = journeyPatterns.map {
                     timetables_journey_pattern_journey_pattern_ref_insert_input(
@@ -302,8 +318,8 @@ class GraphQLService(config: HasuraConfiguration) {
             )
         )
 
-        val result: InsertJourneyPatternRefs.Result? = runBlocking {
-            val queryResponse = client.execute(mutation) {
+        val journeyPatternRefs: InsertJourneyPatternRefs.Result? = runBlocking {
+            val queryResponse = client.execute(insertJourneyPatternRefs) {
                 headers.map { header(it.key, it.value) }
             }
             LOGGER.debug { "vehicle type graphQL response: $queryResponse" }
@@ -313,18 +329,23 @@ class GraphQLService(config: HasuraConfiguration) {
             queryResponse.data
         }
 
-        return result?.timetables?.timetables_insert_journey_pattern_journey_pattern_ref?.returning?.associate {
-            it.journey_pattern_id to JoreJourneyPatternReference(
-                it.journey_pattern_ref_id,
-                it.journey_pattern_id,
-                it.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
-                    JoreStopReference(
-                        stop.scheduled_stop_point_in_journey_pattern_ref_id,
-                        stop.scheduled_stop_point_label,
-                        stop.scheduled_stop_point_sequence
-                    )
-                }
-            )
-        }.orEmpty()
+        return journeyPatternRefs
+            ?.timetables
+            ?.timetables_insert_journey_pattern_journey_pattern_ref
+            ?.returning
+            ?.associate {
+                it.journey_pattern_id to JoreJourneyPatternReference(
+                    it.journey_pattern_ref_id,
+                    it.journey_pattern_id,
+                    it.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
+                        JoreStopReference(
+                            stop.scheduled_stop_point_in_journey_pattern_ref_id,
+                            stop.scheduled_stop_point_label,
+                            stop.scheduled_stop_point_sequence
+                        )
+                    }
+                )
+            }
+            .orEmpty()
     }
 }

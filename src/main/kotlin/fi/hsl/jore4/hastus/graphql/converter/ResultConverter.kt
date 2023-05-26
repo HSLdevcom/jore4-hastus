@@ -25,32 +25,32 @@ object ResultConverter {
     }
 
     // 1 = outbound, 2 = inbound
-    private fun convertRouteDirection(direction: route_direction_enum): Int {
-        return when (direction) {
+    private fun convertRouteDirection(routeDirection: route_direction_enum): Int {
+        return when (routeDirection) {
             route_direction_enum.OUTBOUND -> 1
             route_direction_enum.INBOUND -> 2
-            else -> throw IllegalArgumentException("Illegal value for route direction: $direction")
+            else -> throw IllegalArgumentException("Illegal value for route direction: $routeDirection")
         }
     }
 
-    fun mapJoreHastusPlace(hastusPlace: timing_pattern_timing_place): JoreHastusPlace {
+    fun mapJoreHastusPlace(timingPlace: timing_pattern_timing_place): JoreHastusPlace {
         return JoreHastusPlace(
-            hastusPlace.label,
-            hastusPlace.description?.content?.get(LANG_FINNISH)
-                ?: hastusPlace.label // Use label as description if one is not provided
+            timingPlace.label,
+            timingPlace.description?.content?.get(LANG_FINNISH)
+                ?: timingPlace.label // Use label as description if one is not provided
         )
     }
 
     fun mapJoreLine(
-        routeLine: route_line,
+        line: route_line,
         routes: List<route_route>,
-        distances: Map<Pair<String, String>, Int>
+        distancesBetweenStops: Map<Pair<String, String>, Int>
     ): JoreLine {
         return JoreLine(
-            routeLine.label,
-            routeLine.name_i18n.content[LANG_FINNISH].orEmpty(),
-            convertVehicleMode(routeLine.vehicle_mode.vehicle_mode),
-            routes.map { mapJoreRoute(it, distances) }
+            line.label,
+            line.name_i18n.content[LANG_FINNISH].orEmpty(),
+            convertVehicleMode(line.vehicle_mode.vehicle_mode),
+            routes.map { mapJoreRoute(it, distancesBetweenStops) }
         )
     }
 
@@ -68,27 +68,27 @@ object ResultConverter {
     }
 
     private fun mapJoreRouteScheduledStop(
-        routeStop: journey_pattern_scheduled_stop_point_in_journey_pattern?,
+        stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
         distance: Int
     ): JoreRouteScheduledStop {
-        if (routeStop == null) {
+        if (stopInJourneyPattern == null) {
             throw IllegalStateException("Should not be possible to get a null route stop when mapping")
         }
         return JoreRouteScheduledStop(
-            routeStop.scheduled_stop_points.first().timing_place?.label.orEmpty(),
+            stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label.orEmpty(),
             distance.toDouble(),
-            routeStop.is_regulated_timing_point,
-            routeStop.is_loading_time_allowed,
-            routeStop.is_used_as_timing_point,
-            routeStop.scheduled_stop_point_label
+            stopInJourneyPattern.is_regulated_timing_point,
+            stopInJourneyPattern.is_loading_time_allowed,
+            stopInJourneyPattern.is_used_as_timing_point,
+            stopInJourneyPattern.scheduled_stop_point_label
         )
     }
 
     private fun mapJoreRoute(
-        routeRoute: route_route,
-        distances: Map<Pair<String, String>, Int>
+        route: route_route,
+        distancesBetweenStops: Map<Pair<String, String>, Int>
     ): JoreRoute {
-        val stops = routeRoute.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
+        val stops = route.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
 
         // Add a null value to end so zipWithNext includes the last element as the last .first() element
         val stopsWithNextLabel = (stops + null).zipWithNext().map {
@@ -96,16 +96,16 @@ object ResultConverter {
         }
 
         return JoreRoute(
-            label = routeRoute.label,
-            variant = routeRoute.variant.orEmpty(),
-            uniqueLabel = routeRoute.unique_label.orEmpty(),
-            name = routeRoute.name_i18n.content.getOrDefault(LANG_FINNISH, routeRoute.label),
-            direction = convertRouteDirection(routeRoute.direction),
+            label = route.label,
+            variant = route.variant.orEmpty(),
+            uniqueLabel = route.unique_label.orEmpty(),
+            name = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label),
+            direction = convertRouteDirection(route.direction),
             reversible = false,
             stopsOnRoute = stopsWithNextLabel.map {
                 mapJoreRouteScheduledStop(
                     it.first,
-                    distances.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0)
+                    distancesBetweenStops.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0)
                 )
             }
         )
