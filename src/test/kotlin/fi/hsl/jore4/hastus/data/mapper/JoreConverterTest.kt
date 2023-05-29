@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.test
+package fi.hsl.jore4.hastus.data.mapper
 
 import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
 import fi.hsl.jore4.hastus.data.hastus.BlockRecord
@@ -10,7 +10,6 @@ import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
 import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
-import fi.hsl.jore4.hastus.data.mapper.JoreConverter
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate

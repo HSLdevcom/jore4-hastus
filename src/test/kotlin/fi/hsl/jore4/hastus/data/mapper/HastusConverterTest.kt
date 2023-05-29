@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.test
+package fi.hsl.jore4.hastus.data.mapper
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
 import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
@@ -6,7 +6,6 @@ import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
-import fi.hsl.jore4.hastus.data.mapper.HastusConverter
 import fi.hsl.jore4.hastus.util.CsvWriter
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
