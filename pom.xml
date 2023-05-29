@@ -23,7 +23,7 @@
         <build-properties-plugin.version>1.1.0</build-properties-plugin.version>
         <kotlin-plugin.version>1.7.20</kotlin-plugin.version>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
-        <ktlint-plugin.version>1.15.2</ktlint-plugin.version>
+        <ktlint-plugin.version>1.16.0</ktlint-plugin.version>
 
         <!-- Library versions -->
         <kotlin-logging-jvm.version>3.0.2</kotlin-logging-jvm.version>
