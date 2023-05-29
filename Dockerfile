@@ -26,7 +26,7 @@ RUN curl -o /tmp/read-secrets.sh "https://raw.githubusercontent.com/HSLdevcom/jo
 COPY --from=builder /build/target/*.jar /usr/src/jore4-hastus/jore4-hastus.jar
 
 # read Docker secrets into environment variables and run application
-CMD /bin/sh -c "source /tmp/read-secrets.sh && java -jar /usr/src/jore4-hastus/jore4-hastus.jar"
+CMD /bin/bash -c "source /tmp/read-secrets.sh && java -jar /usr/src/jore4-hastus/jore4-hastus.jar"
 
 HEALTHCHECK --interval=1m --timeout=5s \
   CMD curl --fail http://localhost:8080/actuator/health
