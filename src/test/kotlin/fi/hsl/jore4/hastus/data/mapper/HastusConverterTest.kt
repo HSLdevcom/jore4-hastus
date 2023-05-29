@@ -20,22 +20,24 @@ class HastusConverterTest {
         val expectedResult = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
-            rvpoint;1AACKT;1.234;0;0;1;H1234;65x1
-            rvpoint;1ELIMK;1.000;1;0;0;H1235;65x1
-            rvpoint;1AURLA;2.500;0;1;0;H1236;65x1
+            rvpoint;1AACKT;1.234;1;0;0;H1234;65x1
+            rvpoint;1ELIMK;1.000;0;0;0;H1235;65x1
+            rvpoint;1AURLA;.250;1;1;1;H1236;65x1
+            rvpoint;1KALA;.000;1;0;0;H1237;65x1
             rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
-            rvpoint;1AACKT;1.234;0;0;1;H1234;65y2
-            rvpoint;1ELIMK;1.000;1;0;0;H1235;65y2
-            rvpoint;1AURLA;2.500;0;1;0;H1236;65y2
+            rvpoint;1AACKT;1.234;1;0;0;H1234;65y2
+            rvpoint;1ELIMK;1.000;0;0;0;H1235;65y2
+            rvpoint;1AURLA;.250;1;1;1;H1236;65y2
+            rvpoint;1KALA;.000;1;0;0;H1237;65y2
         """.trimIndent()
 
         val joreStops = listOf(
             JoreRouteScheduledStop(
                 hastusPlace = "1AACKT",
                 distanceToNextStop = 1234.0,
-                isRegulatedTimingPoint = true,
+                isRegulatedTimingPoint = false,
                 isAllowedLoad = false,
-                isTimingPoint = false,
+                isTimingPoint = true,
                 stopLabel = "H1234"
             ),
             JoreRouteScheduledStop(
@@ -43,16 +45,24 @@ class HastusConverterTest {
                 distanceToNextStop = 1000.0,
                 isRegulatedTimingPoint = false,
                 isAllowedLoad = false,
-                isTimingPoint = true,
+                isTimingPoint = false,
                 stopLabel = "H1235"
             ),
             JoreRouteScheduledStop(
                 hastusPlace = "1AURLA",
-                distanceToNextStop = 2500.0,
-                isRegulatedTimingPoint = false,
+                distanceToNextStop = 250.0,
+                isRegulatedTimingPoint = true,
                 isAllowedLoad = true,
-                isTimingPoint = false,
+                isTimingPoint = true,
                 stopLabel = "H1236"
+            ),
+            JoreRouteScheduledStop(
+                hastusPlace = "1KALA",
+                distanceToNextStop = 0.0,
+                isRegulatedTimingPoint = false,
+                isAllowedLoad = false,
+                isTimingPoint = true,
+                stopLabel = "H1237"
             )
         )
         val joreRoutes = listOf(
