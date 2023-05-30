@@ -22,13 +22,13 @@ class HastusConverterTest {
             rvariant;1;Reitti A - B FI;0;0;65x1;65
             rvpoint;1AACKT;1.234;1;0;0;H1234;65x1
             rvpoint;1ELIMK;1.000;0;0;0;H1235;65x1
-            rvpoint;1AURLA;.250;1;1;1;H1236;65x1
-            rvpoint;1KALA;.000;1;0;0;H1237;65x1
+            rvpoint;1AURLA;0.250;1;1;1;H1236;65x1
+            rvpoint;1KALA;0.000;1;0;0;H1237;65x1
             rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
             rvpoint;1AACKT;1.234;1;0;0;H1234;65y2
             rvpoint;1ELIMK;1.000;0;0;0;H1235;65y2
-            rvpoint;1AURLA;.250;1;1;1;H1236;65y2
-            rvpoint;1KALA;.000;1;0;0;H1237;65y2
+            rvpoint;1AURLA;0.250;1;1;1;H1236;65y2
+            rvpoint;1KALA;0.000;1;0;0;H1237;65y2
         """.trimIndent()
 
         val joreStops = listOf(
