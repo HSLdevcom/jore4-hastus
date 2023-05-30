@@ -52,7 +52,7 @@ object HastusConverter {
         return stopPoints.map {
             RouteVariantPoint(
                 place = it.hastusPlace,
-                specTpDistance = NumberWithAccuracy(it.distanceToNextStop / 1000.0, 0, 3),
+                specTpDistance = NumberWithAccuracy(it.distanceToNextStop / 1000.0, 1, 3),
                 isTimingPoint = it.isTimingPoint,
                 allowLoadTime = it.isAllowedLoad,
                 regulatedTp = it.isRegulatedTimingPoint,
