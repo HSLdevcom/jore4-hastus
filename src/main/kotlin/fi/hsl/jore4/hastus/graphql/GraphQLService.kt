@@ -26,6 +26,7 @@ import fi.hsl.jore4.hastus.generated.inputs.timetables_service_pattern_scheduled
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.graphql.converter.ResultConverter
 import fi.hsl.jore4.hastus.util.CsvWriter
+import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
@@ -46,7 +47,7 @@ class GraphQLService(config: HasuraConfiguration) {
     }
 
     private val client = GraphQLKtorClient(
-        httpClient = io.ktor.client.HttpClient() {
+        httpClient = HttpClient {
             defaultRequest {
                 contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
             }

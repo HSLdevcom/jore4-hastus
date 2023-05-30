@@ -6,8 +6,13 @@ import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.generated.distancebetweenstoppoints.service_pattern_distance_between_stops_calculation
 import fi.hsl.jore4.hastus.generated.enums.route_direction_enum
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place
 import kotlin.math.roundToInt
 
 object ResultConverter {
@@ -28,7 +33,7 @@ object ResultConverter {
         }
     }
 
-    fun mapJoreHastusPlace(hastusPlace: fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place): JoreHastusPlace {
+    fun mapJoreHastusPlace(hastusPlace: timing_pattern_timing_place): JoreHastusPlace {
         return JoreHastusPlace(
             hastusPlace.label,
             hastusPlace.description?.content?.get(LANG_FINNISH)
@@ -37,8 +42,8 @@ object ResultConverter {
     }
 
     fun mapJoreLine(
-        routeLine: fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line,
-        routes: List<fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route>,
+        routeLine: route_line,
+        routes: List<route_route>,
         distances: Map<Pair<String, String>, Int>
     ): JoreLine {
         return JoreLine(
@@ -49,7 +54,7 @@ object ResultConverter {
         )
     }
 
-    fun mapJoreStop(stop: fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point): JoreScheduledStop {
+    fun mapJoreStop(stop: service_pattern_scheduled_stop_point): JoreScheduledStop {
         return JoreScheduledStop(
             stop.label,
             "00", // TODO
@@ -80,7 +85,7 @@ object ResultConverter {
     }
 
     private fun mapJoreRoute(
-        routeRoute: fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route,
+        routeRoute: route_route,
         distances: Map<Pair<String, String>, Int>
     ): JoreRoute {
         val stops = routeRoute.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
@@ -106,7 +111,7 @@ object ResultConverter {
         )
     }
 
-    fun mapJoreDistance(distance: fi.hsl.jore4.hastus.generated.distancebetweenstoppoints.service_pattern_distance_between_stops_calculation): JoreDistanceBetweenTwoStopPoints {
+    fun mapJoreDistance(distance: service_pattern_distance_between_stops_calculation): JoreDistanceBetweenTwoStopPoints {
         return JoreDistanceBetweenTwoStopPoints(
             distance.start_stop_label,
             distance.end_stop_label,
