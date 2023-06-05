@@ -10,6 +10,7 @@ import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
 import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
+import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -26,28 +27,28 @@ class JoreConverterTest {
     @DisplayName("When converting parsed CSV to jore types")
     @Test
     fun convertParsedCsvTest() {
-        val label = "Testing"
+        val hastusBookingRecordName = "Testing"
 
-        val vehicleTypes = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID, VEHICLE_TYPE_2_KEY to VEHICLE_TYPE_2_ID)
-        val dayTypes = mapOf("MA" to MONDAY_DAY_TYPE_ID, "PE" to FRIDAY_DAY_TYPE_ID)
+        val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID, VEHICLE_TYPE_2_KEY to VEHICLE_TYPE_2_ID)
+        val dayTypeIndex = mapOf("MA" to MONDAY_DAY_TYPE_ID, "PE" to FRIDAY_DAY_TYPE_ID)
 
-        val joreStopIds1 = listOf(
+        val stopList1 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop1", 0),
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val joreJourneyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", joreStopIds1)
+        val journeyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", stopList1)
 
-        val joreStopIds2 = listOf(
+        val stopList2 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop21", 0),
             JoreStopPoint(UUID.randomUUID(), "stop22", 1),
             JoreStopPoint(UUID.randomUUID(), "stop23", 2)
         )
-        val joreJourneyPattern2 = JoreJourneyPattern("PATTERN2", UUID.randomUUID(), "regional_bus_service", joreStopIds2)
+        val journeyPattern2 = JoreJourneyPattern("PATTERN2", UUID.randomUUID(), "regional_bus_service", stopList2)
 
-        val joreJourneyPatterns = mapOf(
-            joreJourneyPattern1.uniqueLabel!! to joreJourneyPattern1,
-            joreJourneyPattern2.uniqueLabel!! to joreJourneyPattern2
+        val journeyPatternsIndexedByRouteLabel = mapOf(
+            journeyPattern1.uniqueLabel!! to journeyPattern1,
+            journeyPattern2.uniqueLabel!! to journeyPattern2
         )
 
         val hastusData: List<IHastusData> = listOf(
@@ -78,22 +79,22 @@ class JoreConverterTest {
             generateTripStopRecord("trip4", "stop23", "0730", "T", "")
         )
 
-        val converted = JoreConverter.convertHastusDataToJore(
-            label,
+        val vehicleScheduleFrame: JoreVehicleScheduleFrame = JoreConverter.convertHastusDataToJore(
+            hastusBookingRecordName,
             hastusData,
-            joreJourneyPatterns,
-            vehicleTypes,
-            dayTypes
+            journeyPatternsIndexedByRouteLabel,
+            vehicleTypeIndex,
+            dayTypeIndex
         )
 
-        assertEquals(label, converted.label)
-        assertEquals("name", converted.name)
-        assertEquals("booking", converted.bookingLabel)
-        assertEquals("description", converted.bookingDescription)
+        assertEquals(hastusBookingRecordName, vehicleScheduleFrame.label)
+        assertEquals("name", vehicleScheduleFrame.name)
+        assertEquals("booking", vehicleScheduleFrame.bookingLabel)
+        assertEquals("description", vehicleScheduleFrame.bookingDescription)
 
-        assertEquals(2, converted.vehicleServices.size)
+        assertEquals(2, vehicleScheduleFrame.vehicleServices.size)
 
-        val service1 = converted.vehicleServices[0]
+        val service1 = vehicleScheduleFrame.vehicleServices[0]
 
         assertEquals(MONDAY_DAY_TYPE_ID, service1.dayType)
         assertEquals("service1", service1.name)
@@ -112,7 +113,7 @@ class JoreConverterTest {
 
         assertEquals(
             JorePassingTime(
-                joreStopIds1[0].id,
+                stopList1[0].id,
                 null,
                 4.hours.plus(55.minutes)
             ),
@@ -120,7 +121,7 @@ class JoreConverterTest {
         )
         assertEquals(
             JorePassingTime(
-                joreStopIds1[1].id,
+                stopList1[1].id,
                 5.hours.plus(10.minutes),
                 5.hours.plus(20.minutes)
             ),
@@ -128,7 +129,7 @@ class JoreConverterTest {
         )
         assertEquals(
             JorePassingTime(
-                joreStopIds1[2].id,
+                stopList1[2].id,
                 5.hours.plus(30.minutes),
                 null
             ),
@@ -147,7 +148,7 @@ class JoreConverterTest {
 
         assertEquals(
             JorePassingTime(
-                joreStopIds1[0].id,
+                stopList1[0].id,
                 null,
                 6.hours.plus(55.minutes)
             ),
@@ -155,7 +156,7 @@ class JoreConverterTest {
         )
         assertEquals(
             JorePassingTime(
-                joreStopIds1[1].id,
+                stopList1[1].id,
                 7.hours.plus(10.minutes),
                 7.hours.plus(20.minutes)
             ),
@@ -163,7 +164,7 @@ class JoreConverterTest {
         )
         assertEquals(
             JorePassingTime(
-                joreStopIds1[2].id,
+                stopList1[2].id,
                 7.hours.plus(30.minutes),
                 null
             ),
@@ -174,20 +175,20 @@ class JoreConverterTest {
     @DisplayName("When journey pattern does not have a stop defined in Hastus")
     @Test
     fun missingStopOnJourneyPatternTest() {
-        val label = "Testing"
+        val hastusBookingRecordName = "Testing"
 
-        val vehicleTypes = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)
-        val dayTypes = mapOf("MA" to MONDAY_DAY_TYPE_ID)
+        val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)
+        val dayTypeIndex = mapOf("MA" to MONDAY_DAY_TYPE_ID)
 
-        val joreStopIds1 = listOf(
+        val stopList1 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop1", 0),
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val joreJourneyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", joreStopIds1)
+        val journeyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", stopList1)
 
-        val joreJourneyPatterns = mapOf(
-            joreJourneyPattern1.uniqueLabel!! to joreJourneyPattern1
+        val journeyPatternsIndexedByRouteLabel = mapOf(
+            journeyPattern1.uniqueLabel!! to journeyPattern1
         )
 
         val hastusData: List<IHastusData> = listOf(
@@ -205,11 +206,11 @@ class JoreConverterTest {
         val exception = assertFailsWith<IllegalStateException>(
             block = {
                 JoreConverter.convertHastusDataToJore(
-                    label,
+                    hastusBookingRecordName,
                     hastusData,
-                    joreJourneyPatterns,
-                    vehicleTypes,
-                    dayTypes
+                    journeyPatternsIndexedByRouteLabel,
+                    vehicleTypeIndex,
+                    dayTypeIndex
                 )
             }
         )

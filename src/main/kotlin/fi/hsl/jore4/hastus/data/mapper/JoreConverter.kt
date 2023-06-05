@@ -11,6 +11,7 @@ import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
 import fi.hsl.jore4.hastus.data.jore.JoreBlock
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
+import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleJourney
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleService
@@ -27,63 +28,68 @@ object JoreConverter {
     private val LOGGER = KotlinLogging.logger {}
 
     fun convertHastusDataToJore(
-        name: String,
+        hastusBookingRecordName: String,
         hastusData: List<IHastusData>,
-        joreJourneyPatterns: Map<String, JoreJourneyPattern>,
-        vehicleTypes: Map<Int, UUID>,
-        dayTypes: Map<String, UUID>
+        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
+        vehicleTypeIndex: Map<Int, UUID>,
+        dayTypeIndex: Map<String, UUID>
     ): JoreVehicleScheduleFrame {
-        val applicationRecord: ApplicationRecord = hastusData.filterIsInstance<ApplicationRecord>().first()
-        val bookingRecord: BookingRecord = hastusData.filterIsInstance<BookingRecord>().first()
-        val vehicleScheduleRecord: VehicleScheduleRecord = hastusData.filterIsInstance<VehicleScheduleRecord>().first()
-        val blockRecords: List<BlockRecord> = hastusData.filterIsInstance<BlockRecord>()
-        val tripRecords: List<TripRecord> = hastusData.filterIsInstance<TripRecord>()
-        val tripStopRecords: List<TripStopRecord> = hastusData.filterIsInstance<TripStopRecord>()
+        val hastusApplicationRecord: ApplicationRecord = hastusData.filterIsInstance<ApplicationRecord>().first()
+        val hastusBookingRecord: BookingRecord = hastusData.filterIsInstance<BookingRecord>().first()
+        val hastusVehicleScheduleRecord: VehicleScheduleRecord =
+            hastusData.filterIsInstance<VehicleScheduleRecord>().first()
+        val hastusBlockRecords: List<BlockRecord> = hastusData.filterIsInstance<BlockRecord>()
+        val hastusTripRecords: List<TripRecord> = hastusData.filterIsInstance<TripRecord>()
+        val hastusTripStopRecords: List<TripStopRecord> = hastusData.filterIsInstance<TripStopRecord>()
 
         // Construct relations according to the keys in the elements
-        val tripMap =
-            tripRecords.associateWith { trip -> tripStopRecords.filter { stop -> stop.tripInternalNumber == trip.tripInternalNumber } }
-        val blockMap =
-            blockRecords.associateWith { block -> tripMap.filter { trip -> trip.key.blockNumber == block.internalNumber } }
+        val hastusTripIndex: Map<TripRecord, List<TripStopRecord>> =
+            hastusTripRecords.associateWith { trip ->
+                hastusTripStopRecords.filter { stop -> stop.tripInternalNumber == trip.tripInternalNumber }
+            }
+        val hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>> =
+            hastusBlockRecords.associateWith { block ->
+                hastusTripIndex.filter { trip -> trip.key.blockNumber == block.internalNumber }
+            }
 
         // Collect the names for all included vehicle services
-        val vehicleServiceLabels: List<String> = blockMap.keys.map { it.vehicleServiceName }.distinct()
+        val vehicleServiceNames: List<String> = hastusBlockIndex.keys.map { it.vehicleServiceName }.distinct()
 
-        val vehicleServices: List<JoreVehicleService> = vehicleServiceLabels.map { vehicleService ->
+        val vehicleServices: List<JoreVehicleService> = vehicleServiceNames.map { vehicleServiceName ->
             mapToJoreVehicleService(
-                vehicleService,
-                blockMap.filter { block -> block.key.vehicleServiceName == vehicleService },
-                joreJourneyPatterns,
-                vehicleTypes,
+                vehicleServiceName,
+                hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
+                journeyPatternsIndexedByRouteLabel,
+                vehicleTypeIndex,
                 determineDayType(
-                    bookingRecord.startDate,
-                    bookingRecord.endDate,
-                    vehicleScheduleRecord.scheduleType,
-                    dayTypes
+                    hastusBookingRecord.startDate,
+                    hastusBookingRecord.endDate,
+                    hastusVehicleScheduleRecord.scheduleType,
+                    dayTypeIndex
                 )
             )
         }
 
         return JoreVehicleScheduleFrame(
-            bookingRecord.name,
-            name,
-            bookingRecord.booking,
-            bookingRecord.bookingDescription,
-            bookingRecord.startDate,
-            bookingRecord.endDate,
+            hastusBookingRecord.name,
+            hastusBookingRecordName,
+            hastusBookingRecord.booking,
+            hastusBookingRecord.bookingDescription,
+            hastusBookingRecord.startDate,
+            hastusBookingRecord.endDate,
             vehicleServices
         )
     }
 
     // Convert predefined magic numbers into those used in the database
     private fun determineDayType(
-        startDate: LocalDate,
-        endDate: LocalDate,
+        hastusBookingRecordStartDate: LocalDate,
+        hastusBookingRecordEndDate: LocalDate,
         day: Int,
-        dayTypes: Map<String, UUID>
+        dayTypeIndex: Map<String, UUID>
     ): UUID {
-        val key = if (startDate == endDate) {
-            when (startDate.dayOfWeek) {
+        val key = if (hastusBookingRecordStartDate == hastusBookingRecordEndDate) {
+            when (hastusBookingRecordStartDate.dayOfWeek) {
                 DayOfWeek.MONDAY -> "MA"
                 DayOfWeek.TUESDAY -> "TI"
                 DayOfWeek.WEDNESDAY -> "KE"
@@ -107,77 +113,89 @@ object JoreConverter {
                 else -> ""
             }
         }
-        if (!dayTypes.containsKey(key)) {
+
+        if (!dayTypeIndex.containsKey(key)) {
             throw IllegalArgumentException("Unknown schedule type $day when converting to Jore day type")
         }
-        return dayTypes[key]!!
+
+        return dayTypeIndex[key]!!
     }
 
     private fun mapToJoreVehicleService(
-        name: String,
-        blocks: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
-        joreJourneyPatterns: Map<String, JoreJourneyPattern>,
-        vehicleTypes: Map<Int, UUID>,
-        dayType: UUID
+        vehicleServiceName: String,
+        hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
+        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
+        vehicleTypeIndex: Map<Int, UUID>,
+        dayTypeId: UUID
     ): JoreVehicleService {
         return JoreVehicleService(
-            name,
-            dayType,
-            blocks.map { mapToJoreBlock(it.key, it.value, joreJourneyPatterns, vehicleTypes) }
+            vehicleServiceName,
+            dayTypeId,
+            hastusBlockIndex.map {
+                mapToJoreBlock(
+                    it.key,
+                    it.value,
+                    journeyPatternsIndexedByRouteLabel,
+                    vehicleTypeIndex
+                )
+            }
         )
     }
 
     private fun mapToJoreBlock(
-        block: BlockRecord,
-        trips: Map<TripRecord, List<TripStopRecord>>,
-        joreJourneyPatterns: Map<String, JoreJourneyPattern>,
-        vehicleTypes: Map<Int, UUID>
+        hastusBlock: BlockRecord,
+        hastusTripIndex: Map<TripRecord, List<TripStopRecord>>,
+        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
+        vehicleTypeIndex: Map<Int, UUID>
     ): JoreBlock {
-        if (!vehicleTypes.containsKey(block.vehicleType)) {
-            throw IllegalArgumentException("Unknown vehicle type ${block.vehicleType} when converting to Jore vehicle type")
+        if (!vehicleTypeIndex.containsKey(hastusBlock.vehicleType)) {
+            throw IllegalArgumentException("Unknown vehicle type ${hastusBlock.vehicleType} when converting to Jore vehicle type")
         }
 
         return JoreBlock(
-            block.internalNumber,
-            block.prepOutTime.minutes,
-            block.prepInTime.minutes,
-            vehicleTypes[block.vehicleType]!!,
-            trips.map { mapToJoreVehicleJourney(it.key, it.value, joreJourneyPatterns) }
+            hastusBlock.internalNumber,
+            hastusBlock.prepOutTime.minutes,
+            hastusBlock.prepInTime.minutes,
+            vehicleTypeIndex[hastusBlock.vehicleType]!!,
+            hastusTripIndex.map { mapToJoreVehicleJourney(it.key, it.value, journeyPatternsIndexedByRouteLabel) }
         )
     }
 
     private fun mapToJoreVehicleJourney(
-        trip: TripRecord,
-        stops: List<TripStopRecord>,
-        joreJourneyPatterns: Map<String, JoreJourneyPattern>
+        hastusTrip: TripRecord,
+        hastusStops: List<TripStopRecord>,
+        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>
     ): JoreVehicleJourney {
-        val stopIds = stops.map { it.stopId }.distinct()
-        val stopsOnRoute = joreJourneyPatterns[trip.tripRoute]?.stops?.associate { it.label to it }.orEmpty()
+        val routeLabel: String = hastusTrip.tripRoute
+        val journeyPatternStopLabels = hastusStops.map { it.stopId }.distinct()
+        val journeyPatternStopsIndexedByLabel: Map<String, JoreStopPoint> =
+            journeyPatternsIndexedByRouteLabel[routeLabel]?.stops?.associate { it.label to it }.orEmpty()
 
-        if (!stopsOnRoute.keys.containsAll(stopIds)) {
-            val unknowns = stopIds.subtract(stopsOnRoute.keys)
-            LOGGER.error { "Trip $trip has unknown stop along the route: $unknowns" }
-            throw IllegalStateException("Trip ${trip.tripRoute} contains unknown stop along the route: $unknowns")
+        if (!journeyPatternStopsIndexedByLabel.keys.containsAll(journeyPatternStopLabels)) {
+            val unknowns = journeyPatternStopLabels.subtract(journeyPatternStopsIndexedByLabel.keys)
+            LOGGER.error { "Trip $hastusTrip has unknown stop along the route: $unknowns" }
+            throw IllegalStateException("Trip $routeLabel contains unknown stop along the route: $unknowns")
         }
 
-        val journeyPatternId = joreJourneyPatterns[trip.tripRoute]?.journeyPatternId!!
+        val journeyPatternId = journeyPatternsIndexedByRouteLabel[routeLabel]?.journeyPatternId!!
+
         return JoreVehicleJourney(
-            trip.tripNumber,
-            trip.turnaroundTime.minutes,
-            trip.layoverTime.minutes,
-            mapJourneyType(trip.tripType),
-            trip.tripDisplayedName,
-            trip.isVehicleTypeMandatory,
-            trip.isBackupTrip,
-            trip.isExtraTrip,
+            hastusTrip.tripNumber,
+            hastusTrip.turnaroundTime.minutes,
+            hastusTrip.layoverTime.minutes,
+            mapJourneyType(hastusTrip.tripType),
+            hastusTrip.tripDisplayedName,
+            hastusTrip.isVehicleTypeMandatory,
+            hastusTrip.isBackupTrip,
+            hastusTrip.isExtraTrip,
             journeyPatternId,
-            stopIds
-                .mapIndexed { index, stopId ->
+            journeyPatternStopLabels
+                .mapIndexed { index, stopLabel ->
                     mapToJorePassingTimes(
-                        stops.filter { stop -> stop.stopId == stopId },
-                        stopsOnRoute[stopId]!!.id,
+                        hastusStops.filter { hastusStop -> hastusStop.stopId == stopLabel },
+                        journeyPatternStopsIndexedByLabel[stopLabel]!!.id,
                         index == 0,
-                        index == stopIds.size - 1
+                        index == journeyPatternStopLabels.size - 1
                     )
                 }
         )
@@ -193,23 +211,23 @@ object JoreConverter {
     }
 
     private fun mapToJorePassingTimes(
-        stop: List<TripStopRecord>,
+        hastusStop: List<TripStopRecord>,
         stopReferenceId: UUID,
         isFirstStop: Boolean,
         isLastStop: Boolean
     ): JorePassingTime {
-        val passingDefinition = getTime(stop.firstOrNull { it.note == "" }?.passingTime)
+        val passingDefinition = getTime(hastusStop.firstOrNull { it.note == "" }?.passingTime)
 
         val arrivalDefinition = if (isFirstStop) {
             null
         } else {
-            getTime(stop.firstOrNull { it.note == "t" }?.passingTime)
+            getTime(hastusStop.firstOrNull { it.note == "t" }?.passingTime)
                 ?: passingDefinition // Stops with note 't' are arrival times
         }
         val departureDefinition = if (isLastStop) {
             null
         } else {
-            getTime(stop.firstOrNull { it.note == "a" }?.passingTime)
+            getTime(hastusStop.firstOrNull { it.note == "a" }?.passingTime)
                 ?: passingDefinition // Stops with note 'a' are departure times
         }
 
