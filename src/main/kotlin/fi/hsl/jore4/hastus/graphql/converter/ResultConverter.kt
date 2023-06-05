@@ -20,25 +20,25 @@ object ResultConverter {
     private const val LANG_FINNISH = "fi_FI"
     private const val LANG_SWEDISH = "se_SE"
 
-    private fun convertVehicleMode(vehicleMode: String): Int {
-        return if (vehicleMode == "train") 2 else 0
+    private fun convertVehicleMode(vehicleMode: String): Int = when (vehicleMode) {
+        "train" -> 2
+        else -> 0
     }
 
     // 1 = outbound, 2 = inbound
-    private fun convertRouteDirection(routeDirection: route_direction_enum): Int {
-        return when (routeDirection) {
-            route_direction_enum.OUTBOUND -> 1
-            route_direction_enum.INBOUND -> 2
-            else -> throw IllegalArgumentException("Illegal value for route direction: $routeDirection")
-        }
+    private fun convertRouteDirection(routeDirection: route_direction_enum): Int = when (routeDirection) {
+        route_direction_enum.OUTBOUND -> 1
+        route_direction_enum.INBOUND -> 2
+        else -> throw IllegalArgumentException("Unsupported route direction: $routeDirection")
     }
 
     fun mapJoreHastusPlace(timingPlace: timing_pattern_timing_place): JoreHastusPlace {
-        return JoreHastusPlace(
-            timingPlace.label,
-            timingPlace.description?.content?.get(LANG_FINNISH)
-                ?: timingPlace.label // Use label as description if one is not provided
-        )
+        val description: String = timingPlace
+            .description
+            ?.content
+            ?.get(LANG_FINNISH) ?: timingPlace.label // Use label as description if one is not provided
+
+        return JoreHastusPlace(timingPlace.label, description)
     }
 
     fun mapJoreLine(
@@ -54,8 +54,8 @@ object ResultConverter {
         )
     }
 
-    fun mapJoreStop(stop: service_pattern_scheduled_stop_point): JoreScheduledStop {
-        return JoreScheduledStop(
+    fun mapJoreStop(stop: service_pattern_scheduled_stop_point) =
+        JoreScheduledStop(
             stop.label,
             "00", // TODO
             "kuvaus", // TODO
@@ -65,7 +65,6 @@ object ResultConverter {
             stop.timing_place?.label.orEmpty(),
             stop.measured_location
         )
-    }
 
     private fun mapJoreRouteScheduledStop(
         stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
@@ -111,11 +110,10 @@ object ResultConverter {
         )
     }
 
-    fun mapJoreDistance(distance: service_pattern_distance_between_stops_calculation): JoreDistanceBetweenTwoStopPoints {
-        return JoreDistanceBetweenTwoStopPoints(
+    fun mapJoreDistance(distance: service_pattern_distance_between_stops_calculation) =
+        JoreDistanceBetweenTwoStopPoints(
             distance.start_stop_label,
             distance.end_stop_label,
             distance.distance_in_metres.toDouble().roundToInt() // String number in double format -> int
         )
-    }
 }
