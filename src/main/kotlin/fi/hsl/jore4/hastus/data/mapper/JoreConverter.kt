@@ -63,7 +63,7 @@ object JoreConverter {
                 )
             )
         }
-        LocalDate.now().dayOfWeek
+
         return JoreVehicleScheduleFrame(
             bookingRecord.name,
             name,
