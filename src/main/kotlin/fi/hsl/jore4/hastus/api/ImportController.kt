@@ -5,7 +5,7 @@ import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
-import fi.hsl.jore4.hastus.data.mapper.JoreConverter
+import fi.hsl.jore4.hastus.data.mapper.ConversionsFromHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.util.CsvReader
 import mu.KotlinLogging
@@ -57,7 +57,7 @@ class ImportController(
             val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes(filteredHeaders)
             LOGGER.trace { "Importing got day types $dayTypeIndex" }
 
-            val vehicleScheduleFrame: JoreVehicleScheduleFrame = JoreConverter.convertHastusDataToJore(
+            val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
                 hastusBookingRecordName,
                 hastusItems,
                 journeyPatternsIndexedByRouteLabel,
