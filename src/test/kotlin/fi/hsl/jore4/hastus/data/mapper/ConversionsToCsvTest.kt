@@ -1,6 +1,9 @@
 package fi.hsl.jore4.hastus.data.mapper
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
+import fi.hsl.jore4.hastus.data.hastus.IHastusData
+import fi.hsl.jore4.hastus.data.hastus.Place
+import fi.hsl.jore4.hastus.data.hastus.Stop
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
@@ -12,8 +15,12 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-@DisplayName("Test the Hastus converter")
-class HastusConverterTest {
+/**
+ * This class contains integration tests for combined use of
+ * [ConversionsToHastus] and [CsvWriter].
+ */
+@DisplayName("Test conversions to CSV via Hastus types")
+class ConversionsToCsvTest {
 
     @Nested
     @DisplayName("When transforming lines and routes")
@@ -22,7 +29,7 @@ class HastusConverterTest {
         @Test
         @DisplayName("When the first and last stop are timing points")
         fun whenFirstAndLastStopAreTimingPoints() {
-            val expectedResult = """
+            val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
             rvpoint;1AACKT;0.000;1;0;0;H1234;65x1
@@ -38,7 +45,7 @@ class HastusConverterTest {
             rvpoint;1KALA;0.750;1;0;0;H1238;65y2
             """.trimIndent()
 
-            val joreStops = listOf(
+            val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     timingPlaceShortName = "1AACKT",
                     distanceToNextStop = 1234.0,
@@ -80,27 +87,26 @@ class HastusConverterTest {
                     stopLabel = "H1238"
                 )
             )
-            val joreRoutes = listOf(
-                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, joreStops),
-                JoreRoute("65y", "2", "65y2", "Reitti A - B 3 FI", 1, false, joreStops)
+            val routes = listOf(
+                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, stopPoints),
+                JoreRoute("65y", "2", "65y2", "Reitti A - B 3 FI", 1, false, stopPoints)
             )
-            val joreLine = JoreLine(
+            val line = JoreLine(
                 label = "65",
                 "Rautatientori - Veräjälaakso FI",
                 0,
-                joreRoutes
+                routes
             )
-            val testable = HastusConverter.convertJoreLinesToHastus(listOf(joreLine))
 
-            val writer = CsvWriter()
+            val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
 
-            assertEquals(expectedResult, writer.transformToCsv(testable))
+            assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusData))
         }
 
         @Test
         @DisplayName("When the first and last stop are NOT timing points")
         fun whenFirstAndLastStopAreNotTimingPoints() {
-            val expectedResult = """
+            val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
             rvpoint;;;0;0;0;H1234;65x1
@@ -109,7 +115,7 @@ class HastusConverterTest {
             rvpoint;;;0;0;0;H1237;65x1
             """.trimIndent()
 
-            val joreStops = listOf(
+            val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     timingPlaceShortName = "1AACKT",
                     distanceToNextStop = 1234.0,
@@ -143,34 +149,33 @@ class HastusConverterTest {
                     stopLabel = "H1237"
                 )
             )
-            val joreRoutes = listOf(
-                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, joreStops)
+            val routes = listOf(
+                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, stopPoints)
             )
-            val joreLine = JoreLine(
+            val line = JoreLine(
                 label = "65",
                 "Rautatientori - Veräjälaakso FI",
                 0,
-                joreRoutes
+                routes
             )
-            val testable = HastusConverter.convertJoreLinesToHastus(listOf(joreLine))
 
-            val writer = CsvWriter()
+            val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
 
-            assertEquals(expectedResult, writer.transformToCsv(testable))
+            assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusData))
         }
     }
 
     @Test
     @DisplayName("When converting stops")
     fun whenMappingStops() {
-        val expectedResult = """
+        val expectedCsv = """
             stop;H1234;00;kuvaus;beskrivning;katu;gata;1AACKT;24.928327;60.163918;H1234
             stop;H1235;00;kuvaus2;beskrivning2;katu2;gata2;1ELIMK;24.930490;60.164635;H1235
             stop;H1236;00;kuvaus3;beskrivning3;katu3;gata3;;24.931746;60.165123;H1236
             stop;H1237;00;kuvaus4;beskrivning4;katu4;gata4;1AURLA;24.933252;60.165655;H1237
         """.trimIndent()
 
-        val joreStops = listOf(
+        val stopPoints = listOf(
             JoreScheduledStop(
                 label = "H1234",
                 platform = "00",
@@ -212,22 +217,21 @@ class HastusConverterTest {
                 location = Coordinate(24.933252, 60.165655)
             )
         )
-        val testable = HastusConverter.convertJoreStopsToHastus(joreStops)
 
-        val writer = CsvWriter()
+        val hastusStops: List<Stop> = ConversionsToHastus.convertJoreStopsToHastus(stopPoints)
 
-        assertEquals(expectedResult, writer.transformToCsv(testable))
+        assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusStops))
     }
 
     @Test
     @DisplayName("When converting timing places")
     fun whenMappingTimingPlaces() {
-        val expectedResult = """
+        val expectedCsv = """
             place;1AACKT;Aino Ackten tie
             place;1ELIMK;Elimäenkatu
         """.trimIndent()
 
-        val joreTimingPlaces = listOf(
+        val timingPlaces = listOf(
             JoreTimingPlace(
                 label = "1AACKT",
                 description = "Aino Ackten tie"
@@ -237,10 +241,9 @@ class HastusConverterTest {
                 description = "Elimäenkatu"
             )
         )
-        val testable = HastusConverter.convertJoreTimingPlacesToHastus(joreTimingPlaces)
 
-        val writer = CsvWriter()
+        val hastusPlaces: List<Place> = ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces)
 
-        assertEquals(expectedResult, writer.transformToCsv(testable))
+        assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusPlaces))
     }
 }
