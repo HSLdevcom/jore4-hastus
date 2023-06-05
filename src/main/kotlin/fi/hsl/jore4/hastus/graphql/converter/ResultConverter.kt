@@ -31,7 +31,7 @@ object ResultConverter {
         else -> throw IllegalArgumentException("Unsupported route direction: $routeDirection")
     }
 
-    fun mapJoreTimingPlace(timingPlace: timing_pattern_timing_place): JoreTimingPlace {
+    fun mapToJoreTimingPlace(timingPlace: timing_pattern_timing_place): JoreTimingPlace {
         val description: String = timingPlace
             .description
             ?.content
@@ -40,7 +40,7 @@ object ResultConverter {
         return JoreTimingPlace(timingPlace.label, description)
     }
 
-    fun mapJoreLine(
+    fun mapToJoreLineAndRoutes(
         line: route_line,
         routes: List<route_route>,
         distancesBetweenStops: Map<Pair<String, String>, Double>
@@ -49,11 +49,11 @@ object ResultConverter {
             line.label,
             line.name_i18n.content[LANG_FINNISH].orEmpty(),
             convertVehicleMode(line.vehicle_mode.vehicle_mode),
-            routes.map { mapJoreRoute(it, distancesBetweenStops) }
+            routes.map { mapToJoreRoute(it, distancesBetweenStops) }
         )
     }
 
-    fun mapJoreStop(stop: service_pattern_scheduled_stop_point) =
+    fun mapToJoreStop(stop: service_pattern_scheduled_stop_point) =
         JoreScheduledStop(
             stop.label,
             "00", // TODO
@@ -65,7 +65,7 @@ object ResultConverter {
             stop.measured_location
         )
 
-    private fun mapJoreRouteScheduledStop(
+    private fun mapToJoreRouteScheduledStop(
         stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
         distanceToNextStop: Double
     ): JoreRouteScheduledStop {
@@ -82,7 +82,7 @@ object ResultConverter {
         )
     }
 
-    private fun mapJoreRoute(
+    private fun mapToJoreRoute(
         route: route_route,
         distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreRoute {
@@ -101,7 +101,7 @@ object ResultConverter {
             direction = convertRouteDirection(route.direction),
             reversible = false,
             stopsOnRoute = stopsWithNextLabel.map {
-                mapJoreRouteScheduledStop(
+                mapToJoreRouteScheduledStop(
                     it.first,
                     distancesBetweenStops.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0.0)
                 )
@@ -109,7 +109,7 @@ object ResultConverter {
         )
     }
 
-    fun mapJoreDistance(distance: service_pattern_distance_between_stops_calculation) =
+    fun mapToJoreDistance(distance: service_pattern_distance_between_stops_calculation) =
         JoreDistanceBetweenTwoStopPoints(
             distance.start_stop_label,
             distance.end_stop_label,

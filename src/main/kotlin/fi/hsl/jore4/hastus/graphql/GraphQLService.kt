@@ -148,7 +148,7 @@ class GraphQLService(
 
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
             ?.service_pattern_get_distances_between_stop_points_by_routes
-            ?.map(ResultConverter::mapJoreDistance)
+            ?.map(ResultConverter::mapToJoreDistance)
             .orEmpty()
 
         return distancesBetweenStopPoints.distinct()
@@ -198,7 +198,7 @@ class GraphQLService(
             .mapNotNull { it.route_line }
             .distinctBy { it.label } // line label
             .map {
-                ResultConverter.mapJoreLine(
+                ResultConverter.mapToJoreLineAndRoutes(
                     it,
                     routesGQL.filter { r -> r.route_line?.label == it.label },
                     distancesIndexedByStopLabels
@@ -213,12 +213,12 @@ class GraphQLService(
             .flatMap { it.scheduled_stop_points }
             .distinct()
 
-        val stopPoints: List<JoreScheduledStop> = stopPointsGQL.map(ResultConverter::mapJoreStop)
+        val stopPoints: List<JoreScheduledStop> = stopPointsGQL.map(ResultConverter::mapToJoreStop)
 
         val timingPlaces: List<JoreTimingPlace> = stopPointsGQL
             .mapNotNull { it.timing_place }
             .distinct()
-            .map(ResultConverter::mapJoreTimingPlace)
+            .map(ResultConverter::mapToJoreTimingPlace)
 
         return stopPoints to timingPlaces
     }
