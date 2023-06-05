@@ -10,13 +10,13 @@ import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.StopDistance
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
-import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreStopReference
+import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.mapper.GraphQLConverter
 import fi.hsl.jore4.hastus.data.mapper.HastusConverter
@@ -126,14 +126,14 @@ class GraphQLService(
             .distinct()
 
         val joreStops: List<JoreScheduledStop> = stops.map { ResultConverter.mapJoreStop(it) }
-        val jorePlaces: List<JoreHastusPlace> = stops
+        val joreTimingPlaces: List<JoreTimingPlace> = stops
             .mapNotNull { it.timing_place }
             .distinct()
-            .map { ResultConverter.mapJoreHastusPlace(it) }
+            .map { ResultConverter.mapJoreTimingPlace(it) }
 
         return HastusConverter.convertJoreLinesToHastus(joreLines) +
             HastusConverter.convertJoreStopsToHastus(joreStops) +
-            HastusConverter.convertJorePlacesToHastus(jorePlaces)
+            HastusConverter.convertJoreTimingPlacesToHastus(joreTimingPlaces)
     }
 
     private fun convertDistances(distances: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {

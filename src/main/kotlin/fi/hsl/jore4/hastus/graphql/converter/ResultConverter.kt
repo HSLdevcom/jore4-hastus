@@ -1,11 +1,11 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
-import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.generated.distancebetweenstoppoints.service_pattern_distance_between_stops_calculation
 import fi.hsl.jore4.hastus.generated.enums.route_direction_enum
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
@@ -32,13 +32,13 @@ object ResultConverter {
         else -> throw IllegalArgumentException("Unsupported route direction: $routeDirection")
     }
 
-    fun mapJoreHastusPlace(timingPlace: timing_pattern_timing_place): JoreHastusPlace {
+    fun mapJoreTimingPlace(timingPlace: timing_pattern_timing_place): JoreTimingPlace {
         val description: String = timingPlace
             .description
             ?.content
             ?.get(LANG_FINNISH) ?: timingPlace.label // Use label as description if one is not provided
 
-        return JoreHastusPlace(timingPlace.label, description)
+        return JoreTimingPlace(timingPlace.label, description)
     }
 
     fun mapJoreLine(
