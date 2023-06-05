@@ -141,7 +141,7 @@ class GraphQLService(
             StopDistance(
                 stopStart = it.startLabel,
                 stopEnd = it.endLabel,
-                editedDistance = it.distance
+                trimmedDistance = it.distance
             )
         }
     }
