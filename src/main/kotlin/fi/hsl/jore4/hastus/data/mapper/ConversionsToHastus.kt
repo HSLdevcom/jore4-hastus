@@ -13,7 +13,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
-object HastusConverter {
+object ConversionsToHastus {
 
     fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> {
         return lines.flatMap {
