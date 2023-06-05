@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.mapper
+package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
 import fi.hsl.jore4.hastus.data.jore.JoreBlock
@@ -20,11 +20,10 @@ import fi.hsl.jore4.hastus.generated.inputs.timetables_vehicle_service_block_ins
 import fi.hsl.jore4.hastus.generated.inputs.timetables_vehicle_service_vehicle_service_arr_rel_insert_input
 import fi.hsl.jore4.hastus.generated.inputs.timetables_vehicle_service_vehicle_service_insert_input
 import fi.hsl.jore4.hastus.graphql.IJSONB
-import fi.hsl.jore4.hastus.graphql.converter.JsonbScalarConverter
 import java.util.UUID
 import kotlin.time.toJavaDuration
 
-object GraphQLConverter {
+object ConversionsToGraphQL {
 
     const val FI_LANG_KEY = "fi_FI"
     const val PRIORITY_STAGING = 40
@@ -36,7 +35,10 @@ object GraphQLConverter {
         )
     }
 
-    fun mapToGraphQL(vehicleScheduleFrame: JoreVehicleScheduleFrame, journeyPatternRefMap: Map<UUID, JoreJourneyPatternReference>): timetables_vehicle_schedule_vehicle_schedule_frame_insert_input {
+    fun mapToGraphQL(
+        vehicleScheduleFrame: JoreVehicleScheduleFrame,
+        journeyPatternRefIndex: Map<UUID, JoreJourneyPatternReference>
+    ): timetables_vehicle_schedule_vehicle_schedule_frame_insert_input {
         return timetables_vehicle_schedule_vehicle_schedule_frame_insert_input(
             vehicle_schedule_frame_id = OptionalInput.Defined(UUID.randomUUID()),
             label = OptionalInput.Defined(vehicleScheduleFrame.label),
@@ -48,38 +50,47 @@ object GraphQLConverter {
             validity_end = OptionalInput.Defined(vehicleScheduleFrame.validityEnd),
             vehicle_services = OptionalInput.Defined(
                 timetables_vehicle_service_vehicle_service_arr_rel_insert_input(
-                    vehicleScheduleFrame.vehicleServices.map { mapToGraphQL(it, journeyPatternRefMap) }
+                    vehicleScheduleFrame.vehicleServices.map { mapToGraphQL(it, journeyPatternRefIndex) }
                 )
             )
         )
     }
 
-    fun mapToGraphQL(vehicleService: JoreVehicleService, journeyPatternRefMap: Map<UUID, JoreJourneyPatternReference>): timetables_vehicle_service_vehicle_service_insert_input {
+    fun mapToGraphQL(
+        vehicleService: JoreVehicleService,
+        journeyPatternRefIndex: Map<UUID, JoreJourneyPatternReference>
+    ): timetables_vehicle_service_vehicle_service_insert_input {
         return timetables_vehicle_service_vehicle_service_insert_input(
             day_type_id = OptionalInput.Defined(vehicleService.dayType),
             name_i18n = mapToFiJson(vehicleService.name),
             blocks = OptionalInput.Defined(
                 timetables_vehicle_service_block_arr_rel_insert_input(
-                    vehicleService.blocks.map { mapToGraphQL(it, journeyPatternRefMap) }
+                    vehicleService.blocks.map { mapToGraphQL(it, journeyPatternRefIndex) }
                 )
             )
         )
     }
 
-    fun mapToGraphQL(block: JoreBlock, journeyPatternRefMap: Map<UUID, JoreJourneyPatternReference>): timetables_vehicle_service_block_insert_input {
+    fun mapToGraphQL(
+        block: JoreBlock,
+        journeyPatternRefIndex: Map<UUID, JoreJourneyPatternReference>
+    ): timetables_vehicle_service_block_insert_input {
         return timetables_vehicle_service_block_insert_input(
             finishing_time = OptionalInput.Defined(block.finishingTime.toJavaDuration()),
             preparing_time = OptionalInput.Defined(block.preparingTime.toJavaDuration()),
             vehicle_journeys = OptionalInput.Defined(
                 timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input(
-                    block.vehicleJourneys.map { mapToGraphQL(it, journeyPatternRefMap) }
+                    block.vehicleJourneys.map { mapToGraphQL(it, journeyPatternRefIndex) }
                 )
             )
         )
     }
 
-    fun mapToGraphQL(vehicleJourney: JoreVehicleJourney, journeyPatternRefMap: Map<UUID, JoreJourneyPatternReference>): timetables_vehicle_journey_vehicle_journey_insert_input {
-        val associatedJourneyPatternRef = journeyPatternRefMap[vehicleJourney.journeyPatternId]!!
+    fun mapToGraphQL(
+        vehicleJourney: JoreVehicleJourney,
+        journeyPatternRefIndex: Map<UUID, JoreJourneyPatternReference>
+    ): timetables_vehicle_journey_vehicle_journey_insert_input {
+        val associatedJourneyPatternRef = journeyPatternRefIndex[vehicleJourney.journeyPatternId]!!
         return timetables_vehicle_journey_vehicle_journey_insert_input(
             displayed_name = OptionalInput.Defined(vehicleJourney.displayedName),
             is_backup_journey = OptionalInput.Defined(vehicleJourney.isBackupJourney),
