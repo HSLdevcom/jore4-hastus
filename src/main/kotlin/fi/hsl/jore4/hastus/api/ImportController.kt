@@ -48,7 +48,7 @@ class ImportController(
             val hastusBookingRecordName: String = hastusItems.filterIsInstance<BookingRecord>().first().name
 
             val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-                graphQLService.getJourneyPatternsForRoutes(hastusRoutes, filteredHeaders)
+                graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes, filteredHeaders)
             LOGGER.trace { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
 
             val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes(filteredHeaders)
