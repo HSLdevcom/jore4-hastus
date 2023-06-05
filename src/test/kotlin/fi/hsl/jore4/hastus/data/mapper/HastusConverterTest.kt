@@ -1,11 +1,11 @@
 package fi.hsl.jore4.hastus.data.mapper
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
-import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.util.CsvWriter
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -199,24 +199,24 @@ class HastusConverterTest {
     }
 
     @Test
-    @DisplayName("When converting Hastus places")
-    fun whenMappingPlaces() {
+    @DisplayName("When converting timing places")
+    fun whenMappingTimingPlaces() {
         val expectedResult = """
             place;1AACKT;Aino Ackten tie
             place;1ELIMK;Elimäenkatu
         """.trimIndent()
 
-        val jorePlaces = listOf(
-            JoreHastusPlace(
+        val joreTimingPlaces = listOf(
+            JoreTimingPlace(
                 label = "1AACKT",
                 description = "Aino Ackten tie"
             ),
-            JoreHastusPlace(
+            JoreTimingPlace(
                 label = "1ELIMK",
                 description = "Elimäenkatu"
             )
         )
-        val testable = HastusConverter.convertJorePlacesToHastus(jorePlaces)
+        val testable = HastusConverter.convertJoreTimingPlacesToHastus(joreTimingPlaces)
 
         val writer = CsvWriter()
 

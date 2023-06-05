@@ -7,11 +7,11 @@ import fi.hsl.jore4.hastus.data.hastus.Route
 import fi.hsl.jore4.hastus.data.hastus.RouteVariant
 import fi.hsl.jore4.hastus.data.hastus.RouteVariantPoint
 import fi.hsl.jore4.hastus.data.hastus.Stop
-import fi.hsl.jore4.hastus.data.jore.JoreHastusPlace
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object HastusConverter {
 
@@ -107,10 +107,10 @@ object HastusConverter {
             }
     }
 
-    fun convertJorePlacesToHastus(
-        places: List<JoreHastusPlace>
+    fun convertJoreTimingPlacesToHastus(
+        timingPlaces: List<JoreTimingPlace>
     ): List<Place> {
-        return places
+        return timingPlaces
             .map {
                 Place(
                     identifier = it.label,
