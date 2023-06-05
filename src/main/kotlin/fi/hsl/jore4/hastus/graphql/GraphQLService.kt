@@ -8,7 +8,6 @@ import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.StopDistance
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
@@ -115,21 +114,11 @@ class GraphQLService(
             ConversionsToHastus.convertJoreLinesToHastus(lines) +
                 ConversionsToHastus.convertJoreStopsToHastus(stops) +
                 ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces) +
-                convertDistancesToHastus(distancesBetweenStopPoints)
+                ConversionsToHastus.convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints)
 
         return hastusDataItems
             .distinct()
             .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
-    }
-
-    private fun convertDistancesToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
-        return distancesBetweenStopPoints.map {
-            StopDistance(
-                stopStart = it.startLabel,
-                stopEnd = it.endLabel,
-                editedDistance = it.distance.toInt()
-            )
-        }
     }
 
     private fun getStopDistances(
