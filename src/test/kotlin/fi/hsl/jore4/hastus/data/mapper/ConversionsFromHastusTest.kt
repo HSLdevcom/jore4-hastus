@@ -21,10 +21,10 @@ import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
-@DisplayName("Test the Jore converter")
-class JoreConverterTest {
+@DisplayName("Test type conversions from Hastus to Jore")
+class ConversionsFromHastusTest {
 
-    @DisplayName("When converting parsed CSV to jore types")
+    @DisplayName("When converting parsed CSV to Jore types")
     @Test
     fun convertParsedCsvTest() {
         val hastusBookingRecordName = "Testing"
@@ -79,7 +79,7 @@ class JoreConverterTest {
             generateTripStopRecord("trip4", "stop23", "0730", "T", "")
         )
 
-        val vehicleScheduleFrame: JoreVehicleScheduleFrame = JoreConverter.convertHastusDataToJore(
+        val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
             hastusBookingRecordName,
             hastusData,
             journeyPatternsIndexedByRouteLabel,
@@ -205,7 +205,7 @@ class JoreConverterTest {
 
         val exception = assertFailsWith<IllegalStateException>(
             block = {
-                JoreConverter.convertHastusDataToJore(
+                ConversionsFromHastus.convertHastusDataToJore(
                     hastusBookingRecordName,
                     hastusData,
                     journeyPatternsIndexedByRouteLabel,

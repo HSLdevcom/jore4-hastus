@@ -23,7 +23,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
-object JoreConverter {
+object ConversionsFromHastus {
 
     private val LOGGER = KotlinLogging.logger {}
 
