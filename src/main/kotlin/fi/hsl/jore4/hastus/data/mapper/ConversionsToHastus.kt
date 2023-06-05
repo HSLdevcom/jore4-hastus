@@ -7,6 +7,8 @@ import fi.hsl.jore4.hastus.data.hastus.Route
 import fi.hsl.jore4.hastus.data.hastus.RouteVariant
 import fi.hsl.jore4.hastus.data.hastus.RouteVariantPoint
 import fi.hsl.jore4.hastus.data.hastus.Stop
+import fi.hsl.jore4.hastus.data.hastus.StopDistance
+import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
@@ -117,5 +119,17 @@ object ConversionsToHastus {
                     description = it.description
                 )
             }
+    }
+
+    fun convertDistancesBetweenStopPointsToHastus(
+        distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
+    ): List<StopDistance> {
+        return distancesBetweenStopPoints.map {
+            StopDistance(
+                stopStart = it.startLabel,
+                stopEnd = it.endLabel,
+                editedDistance = it.distance.toInt()
+            )
+        }
     }
 }
