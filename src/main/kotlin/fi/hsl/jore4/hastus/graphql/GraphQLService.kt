@@ -18,7 +18,6 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
-import fi.hsl.jore4.hastus.data.mapper.GraphQLConverter
 import fi.hsl.jore4.hastus.generated.DistanceBetweenStopPoints
 import fi.hsl.jore4.hastus.generated.InsertJourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.InsertVehicleScheduleFrame
@@ -31,6 +30,7 @@ import fi.hsl.jore4.hastus.generated.inputs.timetables_service_pattern_scheduled
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.graphql.converter.ConversionsFromGraphQL
+import fi.hsl.jore4.hastus.graphql.converter.ConversionsToGraphQL
 import fi.hsl.jore4.hastus.util.CsvWriter
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
@@ -281,7 +281,7 @@ class GraphQLService(
 
         val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
             variables = InsertVehicleScheduleFrame.Variables(
-                vehicle_schedule_frame = GraphQLConverter.mapToGraphQL(vehicleScheduleFrame, journeyPatternRefMap)
+                vehicle_schedule_frame = ConversionsToGraphQL.mapToGraphQL(vehicleScheduleFrame, journeyPatternRefMap)
             )
         )
 
@@ -310,7 +310,7 @@ class GraphQLService(
                         type_of_line = OptionalInput.Defined(it.typeOfLine),
                         scheduled_stop_point_in_journey_pattern_refs = OptionalInput.Defined(
                             timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input(
-                                it.stops.map { stop -> GraphQLConverter.mapToGraphQL(stop) }
+                                it.stops.map(ConversionsToGraphQL::mapToGraphQL)
                             )
                         )
                     )
