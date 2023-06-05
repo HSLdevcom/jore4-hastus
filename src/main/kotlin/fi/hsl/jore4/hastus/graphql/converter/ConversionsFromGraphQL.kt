@@ -14,7 +14,7 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place
 
-object ResultConverter {
+object ConversionsFromGraphQL {
 
     private const val LANG_FINNISH = "fi_FI"
     private const val LANG_SWEDISH = "se_SE"
@@ -72,6 +72,7 @@ object ResultConverter {
         if (stopInJourneyPattern == null) {
             throw IllegalStateException("Should not be possible to get a null route stop when mapping")
         }
+
         return JoreRouteScheduledStop(
             stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label,
             distanceToNextStop,
