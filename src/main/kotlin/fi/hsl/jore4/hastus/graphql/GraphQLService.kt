@@ -31,7 +31,7 @@ import fi.hsl.jore4.hastus.generated.inputs.timetables_journey_pattern_journey_p
 import fi.hsl.jore4.hastus.generated.inputs.timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
-import fi.hsl.jore4.hastus.graphql.converter.ResultConverter
+import fi.hsl.jore4.hastus.graphql.converter.ConversionsFromGraphQL
 import fi.hsl.jore4.hastus.util.CsvWriter
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
@@ -148,7 +148,7 @@ class GraphQLService(
 
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
             ?.service_pattern_get_distances_between_stop_points_by_routes
-            ?.map(ResultConverter::mapToJoreDistance)
+            ?.map(ConversionsFromGraphQL::mapToJoreDistance)
             .orEmpty()
 
         return distancesBetweenStopPoints.distinct()
@@ -198,7 +198,7 @@ class GraphQLService(
             .mapNotNull { it.route_line }
             .distinctBy { it.label } // line label
             .map {
-                ResultConverter.mapToJoreLineAndRoutes(
+                ConversionsFromGraphQL.mapToJoreLineAndRoutes(
                     it,
                     routesGQL.filter { r -> r.route_line?.label == it.label },
                     distancesIndexedByStopLabels
@@ -213,12 +213,12 @@ class GraphQLService(
             .flatMap { it.scheduled_stop_points }
             .distinct()
 
-        val stopPoints: List<JoreScheduledStop> = stopPointsGQL.map(ResultConverter::mapToJoreStop)
+        val stopPoints: List<JoreScheduledStop> = stopPointsGQL.map(ConversionsFromGraphQL::mapToJoreStop)
 
         val timingPlaces: List<JoreTimingPlace> = stopPointsGQL
             .mapNotNull { it.timing_place }
             .distinct()
-            .map(ResultConverter::mapToJoreTimingPlace)
+            .map(ConversionsFromGraphQL::mapToJoreTimingPlace)
 
         return stopPoints to timingPlaces
     }
