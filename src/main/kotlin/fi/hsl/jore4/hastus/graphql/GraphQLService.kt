@@ -18,8 +18,8 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
+import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
 import fi.hsl.jore4.hastus.data.mapper.GraphQLConverter
-import fi.hsl.jore4.hastus.data.mapper.HastusConverter
 import fi.hsl.jore4.hastus.generated.DistanceBetweenStopPoints
 import fi.hsl.jore4.hastus.generated.InsertJourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.InsertVehicleScheduleFrame
@@ -112,9 +112,9 @@ class GraphQLService(
         distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
     ): String {
         val hastusDataItems: List<IHastusData> =
-            HastusConverter.convertJoreLinesToHastus(lines) +
-                HastusConverter.convertJoreStopsToHastus(stops) +
-                HastusConverter.convertJoreTimingPlacesToHastus(timingPlaces) +
+            ConversionsToHastus.convertJoreLinesToHastus(lines) +
+                ConversionsToHastus.convertJoreStopsToHastus(stops) +
+                ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces) +
                 convertDistancesToHastus(distancesBetweenStopPoints)
 
         return hastusDataItems
