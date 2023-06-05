@@ -106,38 +106,38 @@ class GraphQLService(
         }
     }
 
-    private fun convertRoutes(
-        routes: List<route_route>,
-        distances: Map<Pair<String, String>, Double>
+    private fun convertRoutesToHastus(
+        routesGQL: List<route_route>,
+        distancesIndexedByStopLabels: Map<Pair<String, String>, Double>
     ): List<IHastusData> {
-        val dbLines: List<route_line> = routes.mapNotNull { it.route_line }.distinctBy { it.label }
-        val joreLines: List<JoreLine> = dbLines.map {
+        val linesGQL: List<route_line> = routesGQL.mapNotNull { it.route_line }.distinctBy { it.label }
+        val lines: List<JoreLine> = linesGQL.map {
             ResultConverter.mapJoreLine(
                 it,
-                routes.filter { r -> r.route_line?.label == it.label },
-                distances
+                routesGQL.filter { r -> r.route_line?.label == it.label },
+                distancesIndexedByStopLabels
             )
         }
 
-        val stops: List<service_pattern_scheduled_stop_point> = routes
+        val stopsGQL: List<service_pattern_scheduled_stop_point> = routesGQL
             .flatMap { it.route_journey_patterns }
             .flatMap { it.scheduled_stop_point_in_journey_patterns }
             .flatMap { it.scheduled_stop_points }
             .distinct()
+        val stops: List<JoreScheduledStop> = stopsGQL.map { ResultConverter.mapJoreStop(it) }
 
-        val joreStops: List<JoreScheduledStop> = stops.map { ResultConverter.mapJoreStop(it) }
-        val joreTimingPlaces: List<JoreTimingPlace> = stops
+        val timingPlaces: List<JoreTimingPlace> = stopsGQL
             .mapNotNull { it.timing_place }
             .distinct()
             .map { ResultConverter.mapJoreTimingPlace(it) }
 
-        return HastusConverter.convertJoreLinesToHastus(joreLines) +
-            HastusConverter.convertJoreStopsToHastus(joreStops) +
-            HastusConverter.convertJoreTimingPlacesToHastus(joreTimingPlaces)
+        return HastusConverter.convertJoreLinesToHastus(lines) +
+            HastusConverter.convertJoreStopsToHastus(stops) +
+            HastusConverter.convertJoreTimingPlacesToHastus(timingPlaces)
     }
 
-    private fun convertDistances(distances: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
-        return distances.map {
+    private fun convertDistancesToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
+        return distancesBetweenStopPoints.map {
             StopDistance(
                 stopStart = it.startLabel,
                 stopEnd = it.endLabel,
@@ -158,63 +158,64 @@ class GraphQLService(
             )
         )
 
-        val distancesBetweenStops: DistanceBetweenStopPoints.Result? = sendRequest(distancesQuery, headers)
+        val distancesResult: DistanceBetweenStopPoints.Result? = sendRequest(distancesQuery, headers)
 
-        val transformedDistances = distancesBetweenStops
+        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
             ?.service_pattern_get_distances_between_stop_points_by_routes
             ?.map(ResultConverter::mapJoreDistance)
             .orEmpty()
 
-        return transformedDistances.distinct()
+        return distancesBetweenStopPoints.distinct()
     }
 
-    fun getRoutes(
-        uniqueRoutes: List<String>,
+    fun deepFetchRoutes(
+        uniqueRouteLabels: List<String>,
         priority: Int,
         observationDate: LocalDate,
         headers: Map<String, String>
     ): String {
         val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
-                route_labels = OptionalInput.Defined(uniqueRoutes),
+                route_labels = OptionalInput.Defined(uniqueRouteLabels),
                 route_priority = priority,
                 observation_date = observationDate
             )
         )
 
-        val routes: RoutesWithHastusData.Result? = sendRequest(routesQuery, headers)
+        val routesResult: RoutesWithHastusData.Result? = sendRequest(routesQuery, headers)
 
-        val routeIds: List<UUID> = routes?.route_route?.map { it.route_id }.orEmpty()
-        val distancesBetweenStops: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
+        val routeIds: List<UUID> = routesResult?.route_route?.map { it.route_id }.orEmpty()
+        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
             routeIds,
             observationDate,
             headers
         )
 
-        val distanceMap: Map<Pair<String, String>, Double> = distancesBetweenStops.associate {
+        val distanceMap: Map<Pair<String, String>, Double> = distancesBetweenStopPoints.associate {
             (it.startLabel to it.endLabel) to it.distance
         }
 
-        val routesAndVariants: List<IHastusData> = convertRoutes(routes?.route_route.orEmpty(), distanceMap)
-        val transformedDistances: List<StopDistance> = convertDistances(distancesBetweenStops)
+        val hastusRoutesAndVariants: List<IHastusData> =
+            convertRoutesToHastus(routesResult?.route_route.orEmpty(), distanceMap)
+        val hastusStopDistances: List<StopDistance> = convertDistancesToHastus(distancesBetweenStopPoints)
 
-        return (routesAndVariants + transformedDistances).distinct()
+        return (hastusRoutesAndVariants + hastusStopDistances).distinct()
             .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
     }
 
-    fun getJourneyPatternsForRoutes(
-        uniqueRoutes: List<String>,
+    fun getJourneyPatternsIndexingByRouteLabel(
+        uniqueRouteLabels: List<String>,
         headers: Map<String, String>
     ): Map<String, JoreJourneyPattern> {
         val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
-                route_labels = OptionalInput.Defined(uniqueRoutes)
+                route_labels = OptionalInput.Defined(uniqueRouteLabels)
             )
         )
 
-        val journeyPatterns: JourneyPatternsForRoutes.Result? = sendRequest(journeyPatternsQuery, headers)
+        val journeyPatternsResult: JourneyPatternsForRoutes.Result? = sendRequest(journeyPatternsQuery, headers)
 
-        return journeyPatterns
+        return journeyPatternsResult
             ?.route_route
             ?.associate {
                 it.unique_label.orEmpty() to JoreJourneyPattern(
@@ -236,9 +237,9 @@ class GraphQLService(
     fun getVehicleTypes(
         headers: Map<String, String>
     ): Map<Int, UUID> {
-        val vehicleTypes: ListVehicleTypes.Result? = sendRequest(ListVehicleTypes(), headers)
+        val listVehicleTypesResult: ListVehicleTypes.Result? = sendRequest(ListVehicleTypes(), headers)
 
-        return vehicleTypes
+        return listVehicleTypesResult
             ?.timetables
             ?.timetables_vehicle_type_vehicle_type
             ?.associate {
@@ -250,9 +251,9 @@ class GraphQLService(
     fun getDayTypes(
         headers: Map<String, String>
     ): Map<String, UUID> {
-        val dayTypes: ListDayTypes.Result? = sendRequest(ListDayTypes(), headers)
+        val listDayTypesResult: ListDayTypes.Result? = sendRequest(ListDayTypes(), headers)
 
-        return dayTypes
+        return listDayTypesResult
             ?.timetables
             ?.timetables_service_calendar_day_type
             ?.associate { it.label to it.day_type_id }
@@ -269,15 +270,16 @@ class GraphQLService(
             headers
         )
 
-        val insertVehicleScheduleFrames = InsertVehicleScheduleFrame(
+        val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
             variables = InsertVehicleScheduleFrame.Variables(
                 vehicle_schedule_frame = GraphQLConverter.mapToGraphQL(vehicleScheduleFrame, journeyPatternRefMap)
             )
         )
 
-        val vehicleScheduleFrames: InsertVehicleScheduleFrame.Result? = sendRequest(insertVehicleScheduleFrames, headers)
+        val insertVehicleScheduleFrameResult: InsertVehicleScheduleFrame.Result? =
+            sendRequest(insertVehicleScheduleFrame, headers)
 
-        return vehicleScheduleFrames
+        return insertVehicleScheduleFrameResult
             ?.timetables
             ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
             ?.vehicle_schedule_frame_id.toString()
@@ -307,9 +309,10 @@ class GraphQLService(
             )
         )
 
-        val journeyPatternRefs: InsertJourneyPatternRefs.Result? = sendRequest(insertJourneyPatternRefs, headers)
+        val insertJourneyPatternRefsResult: InsertJourneyPatternRefs.Result? =
+            sendRequest(insertJourneyPatternRefs, headers)
 
-        return journeyPatternRefs
+        return insertJourneyPatternRefsResult
             ?.timetables
             ?.timetables_insert_journey_pattern_journey_pattern_ref
             ?.returning

@@ -43,7 +43,7 @@ class ExportController(
     ): String {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
-            graphQLService.getRoutes(
+            graphQLService.deepFetchRoutes(
                 request.uniqueLabels,
                 request.priority,
                 request.observationDate,
