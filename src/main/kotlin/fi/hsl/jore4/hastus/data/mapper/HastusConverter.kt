@@ -76,7 +76,7 @@ object HastusConverter {
             }
 
             RouteVariantPoint(
-                place = stop.hastusPlace,
+                place = stop.timingPlaceShortName,
                 specTpDistance = specTpDistance,
                 isTimingPoint = stop.isTimingPoint,
                 allowLoadTime = stop.isAllowedLoad,
@@ -99,7 +99,7 @@ object HastusConverter {
                     descriptionSwedish = it.nameSwedish,
                     streetFinnish = it.streetNameFinnish,
                     streetSwedish = it.streetNameSwedish,
-                    place = it.hastusPlace,
+                    place = it.timingPlaceShortName,
                     gpsX = NumberWithAccuracy(it.location.x, 2, 6),
                     gpsY = NumberWithAccuracy(it.location.y, 2, 6),
                     shortIdentifier = it.label
