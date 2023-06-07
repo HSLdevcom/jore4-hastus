@@ -7,7 +7,6 @@ import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
@@ -17,7 +16,6 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
-import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
 import fi.hsl.jore4.hastus.generated.DistanceBetweenStopPoints
 import fi.hsl.jore4.hastus.generated.InsertJourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.InsertVehicleScheduleFrame
@@ -31,7 +29,6 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.graphql.converter.ConversionsFromGraphQL
 import fi.hsl.jore4.hastus.graphql.converter.ConversionsToGraphQL
-import fi.hsl.jore4.hastus.util.CsvWriter
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -69,8 +66,6 @@ class GraphQLService(
         serializer = GraphQLClientJacksonSerializer()
     )
 
-    private val writer = CsvWriter()
-
     private fun <T : Any> sendRequest(
         request: GraphQLClientRequest<T>,
         headers: Map<String, String>
@@ -104,24 +99,7 @@ class GraphQLService(
         }
     }
 
-    private fun convertDeepFetchedRoutesToHastus(
-        lines: List<JoreLine>,
-        stops: List<JoreScheduledStop>,
-        timingPlaces: List<JoreTimingPlace>,
-        distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
-    ): String {
-        val hastusDataItems: List<IHastusData> =
-            ConversionsToHastus.convertJoreLinesToHastus(lines) +
-                ConversionsToHastus.convertJoreStopsToHastus(stops) +
-                ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces) +
-                ConversionsToHastus.convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints)
-
-        return hastusDataItems
-            .distinct()
-            .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
-    }
-
-    private fun getStopDistances(
+    fun getStopDistances(
         routeIds: List<UUID>,
         observationDate: LocalDate,
         headers: Map<String, String>
@@ -143,12 +121,21 @@ class GraphQLService(
         return distancesBetweenStopPoints.distinct()
     }
 
+    /**
+     * Fetch routes via Jore4 GraphQL API. The parameters are used to constrain the set of routes to
+     * be fetched. Returns a deep object hierarchy for routes used in Hastus CSV export.
+     *
+     * @param [uniqueRouteLabels] The labels of the routes to fetch
+     * @param [priority] The priority used to constrain the routes to be fetched
+     * @param [observationDate] The date used to filter active/valid routes
+     * @param [headers] HTTP headers from the request to be used while querying GraphQL API
+     */
     fun deepFetchRoutes(
         uniqueRouteLabels: List<String>,
         priority: Int,
         observationDate: LocalDate,
         headers: Map<String, String>
-    ): String {
+    ): FetchRoutesResult {
         val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
                 route_labels = OptionalInput.Defined(uniqueRouteLabels),
@@ -172,7 +159,7 @@ class GraphQLService(
 
         val (stopPoints, timingPlaces) = extractStopPointsAndTimingPlaces(routesGQL)
 
-        return convertDeepFetchedRoutesToHastus(lines, stopPoints, timingPlaces, distancesBetweenStopPoints)
+        return FetchRoutesResult(lines, stopPoints, timingPlaces, distancesBetweenStopPoints)
     }
 
     private fun convertLinesAndRoutes(
