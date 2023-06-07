@@ -28,12 +28,14 @@ class HastusConverterTest {
             rvpoint;1AACKT;0.000;1;0;0;H1234;65x1
             rvpoint;1ELIMK;;0;0;0;H1235;65x1
             rvpoint;1AURLA;2.234;1;1;1;H1236;65x1
-            rvpoint;1KALA;0.250;1;0;0;H1237;65x1
+            rvpoint;;;0;0;0;H1237;65x1
+            rvpoint;1KALA;0.750;1;0;0;H1238;65x1
             rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
             rvpoint;1AACKT;0.000;1;0;0;H1234;65y2
             rvpoint;1ELIMK;;0;0;0;H1235;65y2
             rvpoint;1AURLA;2.234;1;1;1;H1236;65y2
-            rvpoint;1KALA;0.250;1;0;0;H1237;65y2
+            rvpoint;;;0;0;0;H1237;65y2
+            rvpoint;1KALA;0.750;1;0;0;H1238;65y2
             """.trimIndent()
 
             val joreStops = listOf(
@@ -62,12 +64,20 @@ class HastusConverterTest {
                     stopLabel = "H1236"
                 ),
                 JoreRouteScheduledStop(
+                    timingPlaceShortName = null,
+                    distanceToNextStop = 500.0,
+                    isRegulatedTimingPoint = false,
+                    isAllowedLoad = false,
+                    isTimingPoint = false,
+                    stopLabel = "H1237"
+                ),
+                JoreRouteScheduledStop(
                     timingPlaceShortName = "1KALA",
                     distanceToNextStop = 0.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
                     isTimingPoint = true,
-                    stopLabel = "H1237"
+                    stopLabel = "H1238"
                 )
             )
             val joreRoutes = listOf(
@@ -156,7 +166,8 @@ class HastusConverterTest {
         val expectedResult = """
             stop;H1234;00;kuvaus;beskrivning;katu;gata;1AACKT;24.928327;60.163918;H1234
             stop;H1235;00;kuvaus2;beskrivning2;katu2;gata2;1ELIMK;24.930490;60.164635;H1235
-            stop;H1236;00;kuvaus3;beskrivning3;katu3;gata3;1AURLA;24.933252;60.165655;H1236
+            stop;H1236;00;kuvaus3;beskrivning3;katu3;gata3;;24.931746;60.165123;H1236
+            stop;H1237;00;kuvaus4;beskrivning4;katu4;gata4;1AURLA;24.933252;60.165655;H1237
         """.trimIndent()
 
         val joreStops = listOf(
@@ -187,6 +198,16 @@ class HastusConverterTest {
                 nameSwedish = "beskrivning3",
                 streetNameFinnish = "katu3",
                 streetNameSwedish = "gata3",
+                timingPlaceShortName = null,
+                location = Coordinate(24.931746, 60.165123)
+            ),
+            JoreScheduledStop(
+                label = "H1237",
+                platform = "00",
+                nameFinnish = "kuvaus4",
+                nameSwedish = "beskrivning4",
+                streetNameFinnish = "katu4",
+                streetNameSwedish = "gata4",
                 timingPlaceShortName = "1AURLA",
                 location = Coordinate(24.933252, 60.165655)
             )
