@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.api
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.export.ExportService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,7 +20,7 @@ import kotlin.time.measureTimedValue
 @RestController
 @RequestMapping("export/")
 class ExportController(
-    private val graphQLService: GraphQLService
+    private val exportService: ExportService
 ) {
 
     companion object {
@@ -43,14 +43,17 @@ class ExportController(
     ): String {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
-            graphQLService.deepFetchRoutes(
+
+            exportService.exportRoutes(
                 request.uniqueLabels,
                 request.priority,
                 request.observationDate,
                 HeaderUtils.filterInHasuraHeaders(headers)
             )
         }
+
         LOGGER.info { "Routes request took $elapsed" }
+
         return result
     }
 
