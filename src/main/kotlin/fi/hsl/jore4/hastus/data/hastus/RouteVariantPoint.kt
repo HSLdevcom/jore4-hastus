@@ -26,8 +26,12 @@ data class RouteVariantPoint(
 ) : HastusData() {
 
     init {
-        require(isTimingPoint || specTpDistance == null) {
-            "specTpDistance must be null when isTimingPoint=false"
+        if (isTimingPoint) {
+            require(place != null) { "Hastus place must be given in case of timing point" }
+            require(specTpDistance != null) { "specTpDistance must be given in case of timing point" }
+        } else {
+            require(place == null) { "Hastus place must NOT be given when not timing point" }
+            require(specTpDistance == null) { "specTpDistance must NOT be given when not timing point" }
         }
     }
 
