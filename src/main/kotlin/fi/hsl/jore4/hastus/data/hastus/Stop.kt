@@ -24,7 +24,7 @@ data class Stop(
     private val descriptionSwedish: String,
     private val streetFinnish: String,
     private val streetSwedish: String,
-    private val place: String,
+    private val place: String?,
     private val gpsX: NumberWithAccuracy,
     private val gpsY: NumberWithAccuracy,
     private val shortIdentifier: String
@@ -38,7 +38,7 @@ data class Stop(
             descriptionSwedish,
             streetFinnish,
             streetSwedish,
-            place,
+            place ?: "",
             gpsX,
             gpsY,
             shortIdentifier

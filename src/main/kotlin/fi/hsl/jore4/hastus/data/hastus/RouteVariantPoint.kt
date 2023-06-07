@@ -16,7 +16,7 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
  * @constructor Create empty Route variant point
  */
 data class RouteVariantPoint(
-    private val place: String,
+    private val place: String?,
     private val specTpDistance: NumberWithAccuracy?,
     private val isTimingPoint: Boolean,
     private val allowLoadTime: Boolean,
@@ -33,7 +33,7 @@ data class RouteVariantPoint(
 
     override fun getFields(): List<Any> {
         return listOf(
-            place,
+            place ?: "", // null to empty string
             specTpDistance ?: "", // empty string instead of decimal number if distance not given
             isTimingPoint,
             allowLoadTime,

@@ -62,7 +62,7 @@ object ResultConverter {
             "beskrivning", // TODO
             "katu", // TODO
             "gata", // TODO
-            stop.timing_place?.label.orEmpty(),
+            stop.timing_place?.label,
             stop.measured_location
         )
 
@@ -74,7 +74,7 @@ object ResultConverter {
             throw IllegalStateException("Should not be possible to get a null route stop when mapping")
         }
         return JoreRouteScheduledStop(
-            stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label.orEmpty(),
+            stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label,
             distance.toDouble(),
             stopInJourneyPattern.is_regulated_timing_point,
             stopInJourneyPattern.is_loading_time_allowed,

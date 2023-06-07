@@ -9,6 +9,6 @@ data class JoreScheduledStop(
     val nameSwedish: String,
     val streetNameFinnish: String,
     val streetNameSwedish: String,
-    val timingPlaceShortName: String,
+    val timingPlaceShortName: String?,
     val location: Coordinate
 )
