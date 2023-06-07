@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
+
+private val LOGGER = KotlinLogging.logger {}
 
 @OptIn(ExperimentalTime::class)
 @RestController
@@ -25,8 +28,6 @@ class ExportController(
 
     companion object {
         const val CSV_TYPE = "text/csv"
-
-        private val LOGGER = KotlinLogging.logger {}
     }
 
     data class Routes(
@@ -40,7 +41,7 @@ class ExportController(
     fun exportForRoutes(
         @RequestBody request: Routes,
         @RequestHeader headers: Map<String, String>
-    ): String {
+    ): ResponseEntity<String> {
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "Routes export request" }
 
@@ -54,13 +55,22 @@ class ExportController(
 
         LOGGER.info { "Routes request took $elapsed" }
 
-        return result
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(result)
     }
 
     @ExceptionHandler
     fun handleExportException(ex: Exception): ResponseEntity<String> {
-        LOGGER.error { "Exception during request:$ex" }
-        LOGGER.error(ex.stackTraceToString())
-        return ResponseEntity("status", HttpStatus.INTERNAL_SERVER_ERROR)
+        return when (ex) {
+            is ResponseStatusException -> ResponseEntity.status(ex.status).body(ex.reason)
+
+            else -> {
+                LOGGER.error { "Exception during request:$ex" }
+                LOGGER.error(ex.stackTraceToString())
+
+                ResponseEntity("status", HttpStatus.INTERNAL_SERVER_ERROR)
+            }
+        }
     }
 }
