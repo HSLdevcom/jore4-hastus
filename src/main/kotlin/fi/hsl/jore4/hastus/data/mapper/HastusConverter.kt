@@ -76,7 +76,7 @@ object HastusConverter {
             }
 
             RouteVariantPoint(
-                place = stop.timingPlaceShortName,
+                place = stop.timingPlaceShortName?.takeIf { stop.isTimingPoint },
                 specTpDistance = specTpDistance,
                 isTimingPoint = stop.isTimingPoint,
                 allowLoadTime = stop.isAllowedLoad,

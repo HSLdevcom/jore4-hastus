@@ -26,13 +26,13 @@ class HastusConverterTest {
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
             rvpoint;1AACKT;0.000;1;0;0;H1234;65x1
-            rvpoint;1ELIMK;;0;0;0;H1235;65x1
+            rvpoint;;;0;0;0;H1235;65x1
             rvpoint;1AURLA;2.234;1;1;1;H1236;65x1
             rvpoint;;;0;0;0;H1237;65x1
             rvpoint;1KALA;0.750;1;0;0;H1238;65x1
             rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
             rvpoint;1AACKT;0.000;1;0;0;H1234;65y2
-            rvpoint;1ELIMK;;0;0;0;H1235;65y2
+            rvpoint;;;0;0;0;H1235;65y2
             rvpoint;1AURLA;2.234;1;1;1;H1236;65y2
             rvpoint;;;0;0;0;H1237;65y2
             rvpoint;1KALA;0.750;1;0;0;H1238;65y2
@@ -103,10 +103,10 @@ class HastusConverterTest {
             val expectedResult = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
-            rvpoint;1AACKT;;0;0;0;H1234;65x1
+            rvpoint;;;0;0;0;H1234;65x1
             rvpoint;1ELIMK;0.000;1;0;0;H1235;65x1
             rvpoint;1AURLA;1.000;1;0;1;H1236;65x1
-            rvpoint;1KALA;;0;0;0;H1237;65x1
+            rvpoint;;;0;0;0;H1237;65x1
             """.trimIndent()
 
             val joreStops = listOf(
