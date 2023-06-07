@@ -38,7 +38,7 @@ class HastusConverterTest {
 
             val joreStops = listOf(
                 JoreRouteScheduledStop(
-                    hastusPlace = "1AACKT",
+                    timingPlaceShortName = "1AACKT",
                     distanceToNextStop = 1234.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -46,7 +46,7 @@ class HastusConverterTest {
                     stopLabel = "H1234"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1ELIMK",
+                    timingPlaceShortName = "1ELIMK",
                     distanceToNextStop = 1000.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -54,7 +54,7 @@ class HastusConverterTest {
                     stopLabel = "H1235"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1AURLA",
+                    timingPlaceShortName = "1AURLA",
                     distanceToNextStop = 250.0,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = true,
@@ -62,7 +62,7 @@ class HastusConverterTest {
                     stopLabel = "H1236"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1KALA",
+                    timingPlaceShortName = "1KALA",
                     distanceToNextStop = 0.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -101,7 +101,7 @@ class HastusConverterTest {
 
             val joreStops = listOf(
                 JoreRouteScheduledStop(
-                    hastusPlace = "1AACKT",
+                    timingPlaceShortName = "1AACKT",
                     distanceToNextStop = 1234.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -109,7 +109,7 @@ class HastusConverterTest {
                     stopLabel = "H1234"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1ELIMK",
+                    timingPlaceShortName = "1ELIMK",
                     distanceToNextStop = 1000.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -117,7 +117,7 @@ class HastusConverterTest {
                     stopLabel = "H1235"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1AURLA",
+                    timingPlaceShortName = "1AURLA",
                     distanceToNextStop = 2500.0,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = false,
@@ -125,7 +125,7 @@ class HastusConverterTest {
                     stopLabel = "H1236"
                 ),
                 JoreRouteScheduledStop(
-                    hastusPlace = "1KALA",
+                    timingPlaceShortName = "1KALA",
                     distanceToNextStop = 0.0,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -167,7 +167,7 @@ class HastusConverterTest {
                 nameSwedish = "beskrivning",
                 streetNameFinnish = "katu",
                 streetNameSwedish = "gata",
-                hastusPlace = "1AACKT",
+                timingPlaceShortName = "1AACKT",
                 location = Coordinate(24.928327, 60.163918)
             ),
             JoreScheduledStop(
@@ -177,7 +177,7 @@ class HastusConverterTest {
                 nameSwedish = "beskrivning2",
                 streetNameFinnish = "katu2",
                 streetNameSwedish = "gata2",
-                hastusPlace = "1ELIMK",
+                timingPlaceShortName = "1ELIMK",
                 location = Coordinate(24.930490, 60.164635)
             ),
             JoreScheduledStop(
@@ -187,7 +187,7 @@ class HastusConverterTest {
                 nameSwedish = "beskrivning3",
                 streetNameFinnish = "katu3",
                 streetNameSwedish = "gata3",
-                hastusPlace = "1AURLA",
+                timingPlaceShortName = "1AURLA",
                 location = Coordinate(24.933252, 60.165655)
             )
         )
