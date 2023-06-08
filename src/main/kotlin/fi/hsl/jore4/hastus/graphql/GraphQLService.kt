@@ -108,7 +108,7 @@ class GraphQLService(
 
     private fun convertRoutes(
         routes: List<route_route>,
-        distances: Map<Pair<String, String>, Int>
+        distances: Map<Pair<String, String>, Double>
     ): List<IHastusData> {
         val dbLines: List<route_line> = routes.mapNotNull { it.route_line }.distinctBy { it.label }
         val joreLines: List<JoreLine> = dbLines.map {
@@ -141,7 +141,7 @@ class GraphQLService(
             StopDistance(
                 stopStart = it.startLabel,
                 stopEnd = it.endLabel,
-                trimmedDistance = it.distance
+                trimmedDistance = it.distance.toInt()
             )
         }
     }
@@ -191,7 +191,7 @@ class GraphQLService(
             headers
         )
 
-        val distanceMap: Map<Pair<String, String>, Int> = distancesBetweenStops.associate {
+        val distanceMap: Map<Pair<String, String>, Double> = distancesBetweenStops.associate {
             (it.startLabel to it.endLabel) to it.distance
         }
 
