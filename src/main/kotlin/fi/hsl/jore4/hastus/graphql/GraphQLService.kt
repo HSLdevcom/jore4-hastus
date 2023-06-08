@@ -184,7 +184,9 @@ class GraphQLService(
 
         val routesResult: RoutesWithHastusData.Result? = sendRequest(routesQuery, headers)
 
-        val routeIds: List<UUID> = routesResult?.route_route?.map { it.route_id }.orEmpty()
+        val routesGQL: List<route_route> = routesResult?.route_route.orEmpty()
+
+        val routeIds: List<UUID> = routesGQL.map { it.route_id }
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
             routeIds,
             observationDate,
@@ -195,8 +197,7 @@ class GraphQLService(
             (it.startLabel to it.endLabel) to it.distance
         }
 
-        val hastusRoutesAndVariants: List<IHastusData> =
-            convertRoutesToHastus(routesResult?.route_route.orEmpty(), distanceMap)
+        val hastusRoutesAndVariants: List<IHastusData> = convertRoutesToHastus(routesGQL, distanceMap)
         val hastusStopDistances: List<StopDistance> = convertDistancesToHastus(distancesBetweenStopPoints)
 
         return (hastusRoutesAndVariants + hastusStopDistances).distinct()
