@@ -29,7 +29,6 @@ import fi.hsl.jore4.hastus.generated.ListVehicleTypes
 import fi.hsl.jore4.hastus.generated.RoutesWithHastusData
 import fi.hsl.jore4.hastus.generated.inputs.timetables_journey_pattern_journey_pattern_ref_insert_input
 import fi.hsl.jore4.hastus.generated.inputs.timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input
-import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.graphql.converter.ResultConverter
@@ -106,34 +105,21 @@ class GraphQLService(
         }
     }
 
-    private fun convertRoutesToHastus(
-        routesGQL: List<route_route>,
-        distancesIndexedByStopLabels: Map<Pair<String, String>, Double>
-    ): List<IHastusData> {
-        val linesGQL: List<route_line> = routesGQL.mapNotNull { it.route_line }.distinctBy { it.label }
-        val lines: List<JoreLine> = linesGQL.map {
-            ResultConverter.mapJoreLine(
-                it,
-                routesGQL.filter { r -> r.route_line?.label == it.label },
-                distancesIndexedByStopLabels
-            )
-        }
+    private fun convertDeepFetchedRoutesToHastus(
+        lines: List<JoreLine>,
+        stops: List<JoreScheduledStop>,
+        timingPlaces: List<JoreTimingPlace>,
+        distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
+    ): String {
+        val hastusDataItems: List<IHastusData> =
+            HastusConverter.convertJoreLinesToHastus(lines) +
+                HastusConverter.convertJoreStopsToHastus(stops) +
+                HastusConverter.convertJoreTimingPlacesToHastus(timingPlaces) +
+                convertDistancesToHastus(distancesBetweenStopPoints)
 
-        val stopsGQL: List<service_pattern_scheduled_stop_point> = routesGQL
-            .flatMap { it.route_journey_patterns }
-            .flatMap { it.scheduled_stop_point_in_journey_patterns }
-            .flatMap { it.scheduled_stop_points }
+        return hastusDataItems
             .distinct()
-        val stops: List<JoreScheduledStop> = stopsGQL.map { ResultConverter.mapJoreStop(it) }
-
-        val timingPlaces: List<JoreTimingPlace> = stopsGQL
-            .mapNotNull { it.timing_place }
-            .distinct()
-            .map { ResultConverter.mapJoreTimingPlace(it) }
-
-        return HastusConverter.convertJoreLinesToHastus(lines) +
-            HastusConverter.convertJoreStopsToHastus(stops) +
-            HastusConverter.convertJoreTimingPlacesToHastus(timingPlaces)
+            .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
     }
 
     private fun convertDistancesToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
@@ -193,15 +179,48 @@ class GraphQLService(
             headers
         )
 
-        val distanceMap: Map<Pair<String, String>, Double> = distancesBetweenStopPoints.associate {
+        val lines: List<JoreLine> = convertLinesAndRoutes(routesGQL, distancesBetweenStopPoints)
+
+        val (stopPoints, timingPlaces) = extractStopPointsAndTimingPlaces(routesGQL)
+
+        return convertDeepFetchedRoutesToHastus(lines, stopPoints, timingPlaces, distancesBetweenStopPoints)
+    }
+
+    private fun convertLinesAndRoutes(
+        routesGQL: List<route_route>,
+        distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
+    ): List<JoreLine> {
+        val distancesIndexedByStopLabels: Map<Pair<String, String>, Double> = distancesBetweenStopPoints.associate {
             (it.startLabel to it.endLabel) to it.distance
         }
 
-        val hastusRoutesAndVariants: List<IHastusData> = convertRoutesToHastus(routesGQL, distanceMap)
-        val hastusStopDistances: List<StopDistance> = convertDistancesToHastus(distancesBetweenStopPoints)
+        return routesGQL
+            .mapNotNull { it.route_line }
+            .distinctBy { it.label } // line label
+            .map {
+                ResultConverter.mapJoreLine(
+                    it,
+                    routesGQL.filter { r -> r.route_line?.label == it.label },
+                    distancesIndexedByStopLabels
+                )
+            }
+    }
 
-        return (hastusRoutesAndVariants + hastusStopDistances).distinct()
-            .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
+    private fun extractStopPointsAndTimingPlaces(routesGQL: List<route_route>): Pair<List<JoreScheduledStop>, List<JoreTimingPlace>> {
+        val stopPointsGQL: List<service_pattern_scheduled_stop_point> = routesGQL
+            .flatMap { it.route_journey_patterns }
+            .flatMap { it.scheduled_stop_point_in_journey_patterns }
+            .flatMap { it.scheduled_stop_points }
+            .distinct()
+
+        val stopPoints: List<JoreScheduledStop> = stopPointsGQL.map(ResultConverter::mapJoreStop)
+
+        val timingPlaces: List<JoreTimingPlace> = stopPointsGQL
+            .mapNotNull { it.timing_place }
+            .distinct()
+            .map(ResultConverter::mapJoreTimingPlace)
+
+        return stopPoints to timingPlaces
     }
 
     fun getJourneyPatternsIndexingByRouteLabel(
