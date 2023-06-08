@@ -9,13 +9,18 @@ import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.util.CsvWriter
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 private val LOGGER = KotlinLogging.logger {}
 
 @Service
-class ExportService(val graphQLService: GraphQLService) {
+class ExportService @Autowired constructor(
+    val graphQLService: GraphQLService,
+    @Value("\${failOnTimingPointValidation}") val failOnTimingPointValidation: Boolean
+) {
 
     private val writer = CsvWriter()
 
@@ -26,8 +31,6 @@ class ExportService(val graphQLService: GraphQLService) {
      * @param [priority] The priority used to constrain the routes to be exported
      * @param [observationDate] The date used to filter active/valid routes
      * @param [headers] HTTP headers from the request to be passed
-     * @param [failOnTimingPointValidation] A boolean value indicating whether exception is thrown
-     * in case timing point validation fails
      *
      * @throws TooFewStopPointsException if there are less than two stop points on some journey
      * pattern belonging to the lines
@@ -38,8 +41,7 @@ class ExportService(val graphQLService: GraphQLService) {
         uniqueRouteLabels: List<String>,
         priority: Int,
         observationDate: LocalDate,
-        headers: Map<String, String>,
-        failOnTimingPointValidation: Boolean = true // can be switched to false for development purposes
+        headers: Map<String, String>
     ): String {
         val (
             lines: List<JoreLine>,
