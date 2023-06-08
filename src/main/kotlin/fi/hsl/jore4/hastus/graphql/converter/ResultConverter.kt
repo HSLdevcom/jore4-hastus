@@ -13,7 +13,6 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place
-import kotlin.math.roundToInt
 
 object ResultConverter {
 
@@ -44,7 +43,7 @@ object ResultConverter {
     fun mapJoreLine(
         line: route_line,
         routes: List<route_route>,
-        distancesBetweenStops: Map<Pair<String, String>, Int>
+        distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreLine {
         return JoreLine(
             line.label,
@@ -68,14 +67,14 @@ object ResultConverter {
 
     private fun mapJoreRouteScheduledStop(
         stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
-        distance: Int
+        distanceToNextStop: Double
     ): JoreRouteScheduledStop {
         if (stopInJourneyPattern == null) {
             throw IllegalStateException("Should not be possible to get a null route stop when mapping")
         }
         return JoreRouteScheduledStop(
             stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label,
-            distance.toDouble(),
+            distanceToNextStop,
             stopInJourneyPattern.is_regulated_timing_point,
             stopInJourneyPattern.is_loading_time_allowed,
             stopInJourneyPattern.is_used_as_timing_point,
@@ -85,7 +84,7 @@ object ResultConverter {
 
     private fun mapJoreRoute(
         route: route_route,
-        distancesBetweenStops: Map<Pair<String, String>, Int>
+        distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreRoute {
         val stops = route.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
 
@@ -104,7 +103,7 @@ object ResultConverter {
             stopsOnRoute = stopsWithNextLabel.map {
                 mapJoreRouteScheduledStop(
                     it.first,
-                    distancesBetweenStops.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0)
+                    distancesBetweenStops.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0.0)
                 )
             }
         )
@@ -114,6 +113,6 @@ object ResultConverter {
         JoreDistanceBetweenTwoStopPoints(
             distance.start_stop_label,
             distance.end_stop_label,
-            distance.distance_in_metres.toDouble().roundToInt() // String number in double format -> int
+            distance.distance_in_metres.toDouble() // transform decimal number from String format to Double
         )
 }
