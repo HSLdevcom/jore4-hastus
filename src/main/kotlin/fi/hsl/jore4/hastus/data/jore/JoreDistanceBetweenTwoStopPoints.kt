@@ -10,5 +10,5 @@ package fi.hsl.jore4.hastus.data.jore
 data class JoreDistanceBetweenTwoStopPoints(
     val startLabel: String,
     val endLabel: String,
-    val distance: Int
+    val distance: Double
 )
