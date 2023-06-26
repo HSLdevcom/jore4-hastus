@@ -3,6 +3,7 @@ package fi.hsl.jore4.hastus.export
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
+import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
@@ -80,20 +81,24 @@ class ExportService @Autowired constructor(
                         }
                     }
 
-                    if (route.stopsOnRoute.first().timingPlaceShortName == null) {
+                    val firstStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.first()
+
+                    if (!firstStopOnRoute.isTimingPoint || firstStopOnRoute.timingPlaceShortName == null) {
                         LOGGER.warn {
-                            "The first stop point of the journey pattern for route ${route.label} is not a timing " +
-                                "point as mandated by Hastus"
+                            "The first stop point of the journey pattern for route ${route.label} is not a valid " +
+                                "timing point as mandated by Hastus"
                         }
                         if (failOnTimingPointValidation) {
                             throw FirstStopNotTimingPointException(route.label)
                         }
                     }
 
-                    if (route.stopsOnRoute.last().timingPlaceShortName == null) {
+                    val lastStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.last()
+
+                    if (!lastStopOnRoute.isTimingPoint || lastStopOnRoute.timingPlaceShortName == null) {
                         LOGGER.warn {
-                            "The last stop point of the journey pattern for route ${route.label} is not a timing " +
-                                "point as mandated by Hastus"
+                            "The last stop point of the journey pattern for route ${route.label} is not a valid " +
+                                "timing point as mandated by Hastus"
                         }
                         if (failOnTimingPointValidation) {
                             throw LastStopNotTimingPointException(route.label)

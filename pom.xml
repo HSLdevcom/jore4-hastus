@@ -32,6 +32,7 @@
         <graphql-kotlin.version>6.4.1</graphql-kotlin.version>
         <ktor.version>2.0.3</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
         <jackson-datatype.version>2.15.1</jackson-datatype.version>
+        <mockk.version>1.12.4</mockk.version>
 
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
@@ -533,6 +534,13 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.mockk</groupId>
+            <artifactId>mockk</artifactId>
+            <version>${mockk.version}</version>
             <scope>test</scope>
         </dependency>
 
