@@ -7,6 +7,7 @@ import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
+import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
@@ -16,6 +17,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
 import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
+import fi.hsl.jore4.hastus.data.mapper.ConversionsFromHastus
 import fi.hsl.jore4.hastus.generated.DistanceBetweenStopPoints
 import fi.hsl.jore4.hastus.generated.InsertJourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.InsertVehicleScheduleFrame
@@ -99,7 +101,7 @@ class GraphQLService(
         }
     }
 
-    fun getStopDistances(
+    private fun getStopDistances(
         routeIds: List<UUID>,
         observationDate: LocalDate,
         headers: Map<String, String>
@@ -256,7 +258,39 @@ class GraphQLService(
             .orEmpty()
     }
 
-    fun persistVehicleScheduleFrame(
+    @Synchronized
+    fun persistTimetable(
+        filteredHeaders: Map<String, String>,
+        hastusRoutes: List<String>,
+        hastusBookingRecordName: String,
+        hastusItems: List<IHastusData>
+    ) {
+        val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
+            getJourneyPatternsIndexingByRouteLabel(hastusRoutes, filteredHeaders)
+        LOGGER.trace { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
+
+        val vehicleTypeIndex: Map<Int, UUID> = getVehicleTypes(filteredHeaders)
+        LOGGER.trace { "Importing got vehicle types $vehicleTypeIndex" }
+
+        val dayTypeIndex: Map<String, UUID> = getDayTypes(filteredHeaders)
+        LOGGER.trace { "Importing got day types $dayTypeIndex" }
+
+        val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
+            hastusBookingRecordName,
+            hastusItems,
+            journeyPatternsIndexedByRouteLabel,
+            vehicleTypeIndex,
+            dayTypeIndex
+        )
+
+        persistVehicleScheduleFrame(
+            journeyPatternsIndexedByRouteLabel.values,
+            vehicleScheduleFrame,
+            filteredHeaders
+        )
+    }
+
+    private fun persistVehicleScheduleFrame(
         journeyPatterns: Collection<JoreJourneyPattern>,
         vehicleScheduleFrame: JoreVehicleScheduleFrame,
         headers: Map<String, String>
@@ -281,7 +315,7 @@ class GraphQLService(
             ?.vehicle_schedule_frame_id.toString()
     }
 
-    fun createJourneyPatternReferences(
+    private fun createJourneyPatternReferences(
         journeyPatterns: Collection<JoreJourneyPattern>,
         headers: Map<String, String>
     ): Map<UUID, JoreJourneyPatternReference> {
