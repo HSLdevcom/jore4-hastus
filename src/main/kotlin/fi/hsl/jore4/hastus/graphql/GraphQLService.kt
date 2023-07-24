@@ -256,6 +256,10 @@ class GraphQLService(
             .orEmpty()
     }
 
+    /* Use synchronized when persisting data to graphQL, since there is no transaction support for it.
+    *  Multiple simultaneous modifications of the same table will fail.
+    */
+    @Synchronized
     fun persistVehicleScheduleFrame(
         journeyPatterns: Collection<JoreJourneyPattern>,
         vehicleScheduleFrame: JoreVehicleScheduleFrame,
