@@ -14,7 +14,7 @@ COPY ./profiles/prod /build/profiles/prod
 RUN mvn -Pprod clean package spring-boot:repackage
 
 
-FROM eclipse-temurin:17.0.7_7-jre
+FROM eclipse-temurin:17.0.8_7-jre
 
 # expose server port
 EXPOSE 8080
