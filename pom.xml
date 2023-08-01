@@ -28,7 +28,7 @@
         <!-- Library versions -->
         <kotlin-logging-jvm.version>3.0.2</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
-        <spring-boot.version>2.7.13</spring-boot.version>
+        <spring-boot.version>2.7.14</spring-boot.version>
         <graphql-kotlin.version>6.4.1</graphql-kotlin.version>
         <ktor.version>2.0.3</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
         <jackson-datatype.version>2.15.1</jackson-datatype.version>
