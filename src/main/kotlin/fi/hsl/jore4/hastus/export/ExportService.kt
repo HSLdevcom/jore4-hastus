@@ -3,24 +3,20 @@ package fi.hsl.jore4.hastus.export
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
+import fi.hsl.jore4.hastus.export.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.util.CsvWriter
-import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-
-private val LOGGER = KotlinLogging.logger {}
 
 @Service
 class ExportService @Autowired constructor(
     val graphQLService: GraphQLService,
-    @Value("\${failOnTimingPointValidation}") val failOnTimingPointValidation: Boolean
+    val lineValidator: IExportLineValidator
 ) {
 
     private val writer = CsvWriter()
@@ -33,10 +29,7 @@ class ExportService @Autowired constructor(
      * @param [observationDate] The date used to filter active/valid routes
      * @param [headers] HTTP headers from the request to be passed
      *
-     * @throws TooFewStopPointsException if there are less than two stop points on some journey
-     * pattern belonging to the lines
-     * @throws FirstStopNotTimingPointException if the first stop point is not a timing point
-     * @throws LastStopNotTimingPointException if the last stop point is not a timing point
+     * @throws RuntimeException if any validation errors are present.
      */
     fun exportRoutes(
         uniqueRouteLabels: List<String>,
@@ -52,8 +45,8 @@ class ExportService @Autowired constructor(
         ) =
             graphQLService.deepFetchRoutes(uniqueRouteLabels, priority, observationDate, headers)
 
-        // validate stop points
-        validateStopPoints(lines, failOnTimingPointValidation)
+        // validate lines
+        lines.forEach { lineValidator.validateLine(it) }
 
         val hastusData: List<IHastusData> =
             ConversionsToHastus.convertJoreLinesToHastus(lines) +
@@ -64,48 +57,5 @@ class ExportService @Autowired constructor(
         return hastusData
             .distinct()
             .joinToString(System.lineSeparator()) { writer.transformToCsvLine(it) }
-    }
-
-    companion object {
-
-        private fun validateStopPoints(lines: List<JoreLine>, failOnTimingPointValidation: Boolean) {
-            lines.forEach { line ->
-                line.routes.forEach { route ->
-
-                    if (route.stopsOnRoute.size < 2) {
-                        LOGGER.warn {
-                            "Journey pattern for route ${route.label} contains less than two stop points"
-                        }
-                        if (failOnTimingPointValidation) {
-                            throw TooFewStopPointsException(route.label)
-                        }
-                    }
-
-                    val firstStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.first()
-
-                    if (!firstStopOnRoute.isTimingPoint || firstStopOnRoute.timingPlaceShortName == null) {
-                        LOGGER.warn {
-                            "The first stop point of the journey pattern for route ${route.label} is not a valid " +
-                                "timing point as mandated by Hastus"
-                        }
-                        if (failOnTimingPointValidation) {
-                            throw FirstStopNotTimingPointException(route.label)
-                        }
-                    }
-
-                    val lastStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.last()
-
-                    if (!lastStopOnRoute.isTimingPoint || lastStopOnRoute.timingPlaceShortName == null) {
-                        LOGGER.warn {
-                            "The last stop point of the journey pattern for route ${route.label} is not a valid " +
-                                "timing point as mandated by Hastus"
-                        }
-                        if (failOnTimingPointValidation) {
-                            throw LastStopNotTimingPointException(route.label)
-                        }
-                    }
-                }
-            }
-        }
     }
 }

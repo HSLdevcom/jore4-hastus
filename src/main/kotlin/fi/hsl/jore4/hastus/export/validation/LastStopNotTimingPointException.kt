@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.export
+package fi.hsl.jore4.hastus.export.validation
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
