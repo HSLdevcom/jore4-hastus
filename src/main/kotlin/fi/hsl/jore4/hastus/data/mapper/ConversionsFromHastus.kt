@@ -1,7 +1,6 @@
 package fi.hsl.jore4.hastus.data.mapper
 
 import fi.hsl.jore4.hastus.data.format.JoreJourneyType
-import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
 import fi.hsl.jore4.hastus.data.hastus.BlockRecord
 import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
@@ -34,7 +33,6 @@ object ConversionsFromHastus {
         vehicleTypeIndex: Map<Int, UUID>,
         dayTypeIndex: Map<String, UUID>
     ): JoreVehicleScheduleFrame {
-        val hastusApplicationRecord: ApplicationRecord = hastusData.filterIsInstance<ApplicationRecord>().first()
         val hastusBookingRecord: BookingRecord = hastusData.filterIsInstance<BookingRecord>().first()
         val hastusVehicleScheduleRecord: VehicleScheduleRecord =
             hastusData.filterIsInstance<VehicleScheduleRecord>().first()
