@@ -27,6 +27,7 @@ query RoutesWithHastusData(
     route_line {
       label
       name_i18n
+      type_of_line
       vehicle_mode {
         vehicle_mode
       }
@@ -37,9 +38,13 @@ query RoutesWithHastusData(
     unique_label
     name_i18n
     direction
+    validity_start
+    validity_end
     route_journey_patterns {
+      journey_pattern_id
       scheduled_stop_point_in_journey_patterns(order_by: {scheduled_stop_point_sequence: asc}) {
         scheduled_stop_point_label
+        scheduled_stop_point_sequence
         is_used_as_timing_point
         is_regulated_timing_point
         is_loading_time_allowed

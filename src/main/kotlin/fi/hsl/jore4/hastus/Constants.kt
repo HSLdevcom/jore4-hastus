@@ -5,6 +5,8 @@ object Constants {
     const val LANG_FINNISH = "fi_FI"
     const val LANG_SWEDISH = "sv_SE"
 
+    const val DEFAULT_TIMEZONE = "Europe/Helsinki"
+
     const val DEFAULT_HASTUS_DATE_FORMAT = "yyyyMMdd"
     const val DEFAULT_HASTUS_TIME_FORMAT = "HHmmss"
 
