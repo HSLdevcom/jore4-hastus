@@ -2,20 +2,17 @@ package fi.hsl.jore4.hastus.graphql
 
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
 import fi.hsl.jore4.hastus.Constants
-import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
-import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
-import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
+import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreLine
+import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
-import fi.hsl.jore4.hastus.data.jore.JoreStopPoint
-import fi.hsl.jore4.hastus.data.jore.JoreStopReference
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.generated.DistanceBetweenStopPoints
 import fi.hsl.jore4.hastus.generated.InsertJourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.InsertVehicleScheduleFrame
-import fi.hsl.jore4.hastus.generated.JourneyPatternsForRoutes
+import fi.hsl.jore4.hastus.generated.JourneyPatternRefs
 import fi.hsl.jore4.hastus.generated.ListDayTypes
 import fi.hsl.jore4.hastus.generated.ListVehicleTypes
 import fi.hsl.jore4.hastus.generated.RoutesWithHastusData
@@ -145,41 +142,6 @@ class GraphQLService(
         return stopPoints to timingPlaces
     }
 
-    fun getJourneyPatterns(
-        uniqueRouteLabels: Collection<String>,
-        validityPeriodStart: LocalDate,
-        validityPeriodEnd: LocalDate
-    ): List<JoreJourneyPattern> {
-        val journeyPatternsQuery = JourneyPatternsForRoutes(
-            variables = JourneyPatternsForRoutes.Variables(
-                route_labels = uniqueRouteLabels.toList(),
-                validity_start = validityPeriodStart,
-                validity_end = validityPeriodEnd
-            )
-        )
-
-        val journeyPatternsResult: JourneyPatternsForRoutes.Result =
-            client.sendRequest(journeyPatternsQuery, sessionHeaders)
-
-        return journeyPatternsResult
-            .route_route
-            .map {
-                JoreJourneyPattern(
-                    id = it.route_journey_patterns[0].journey_pattern_id,
-                    routeUniqueLabel = it.unique_label!!,
-                    routeDirection = JoreRouteDirection.from(it.direction),
-                    typeOfLine = it.route_line?.type_of_line.toString().lowercase(),
-                    stops = it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
-                        JoreStopPoint(
-                            stop.scheduled_stop_points.first().scheduled_stop_point_id,
-                            stop.scheduled_stop_point_label,
-                            stop.scheduled_stop_point_sequence + 1
-                        )
-                    }
-                )
-            }
-    }
-
     fun getVehicleTypes(): Map<Int, UUID> {
         val listVehicleTypesResult: ListVehicleTypes.Result = client.sendRequest(ListVehicleTypes(), sessionHeaders)
 
@@ -204,19 +166,16 @@ class GraphQLService(
 
     fun persistVehicleScheduleFrame(
         vehicleScheduleFrame: JoreVehicleScheduleFrame,
-        journeyPatterns: Collection<JoreJourneyPattern>
+        journeyPatternRefs: Collection<JoreJourneyPatternRef>
     ): UUID? {
         // Use synchronized block when persisting data via GraphQL, since there is no transaction
         // support for it. Multiple simultaneous modifications of the same table will fail.
         synchronized(SYNC_LOCK_OBJECT) {
-            val journeyPatternReferencesIndexedByJourneyPatternId: Map<UUID, JoreJourneyPatternReference> =
-                createJourneyPatternReferences(journeyPatterns)
-
             val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
                 variables = InsertVehicleScheduleFrame.Variables(
                     vehicle_schedule_frame = ConversionsToGraphQL.mapToGraphQL(
                         vehicleScheduleFrame,
-                        journeyPatternReferencesIndexedByJourneyPatternId
+                        journeyPatternRefs
                     )
                 )
             )
@@ -231,22 +190,26 @@ class GraphQLService(
         }
     }
 
-    private fun createJourneyPatternReferences(
-        journeyPatterns: Collection<JoreJourneyPattern>
-    ): Map<UUID, JoreJourneyPatternReference> {
-        val timestamp = OffsetDateTime.now()
-
+    fun createJourneyPatternReferences(
+        routes: Collection<JoreRoute>,
+        observationTime: OffsetDateTime,
+        snapshotTime: OffsetDateTime
+    ): List<JoreJourneyPatternRef> {
         val insertJourneyPatternRefs = InsertJourneyPatternRefs(
             variables = InsertJourneyPatternRefs.Variables(
-                journey_pattern_refs = journeyPatterns.map { jp ->
+                journey_pattern_refs = routes.map { route ->
                     timetables_journey_pattern_journey_pattern_ref_insert_input(
-                        journey_pattern_id = OptionalInput.Defined(jp.id),
-                        observation_timestamp = OptionalInput.Defined(timestamp),
-                        snapshot_timestamp = OptionalInput.Defined(timestamp),
-                        type_of_line = OptionalInput.Defined(jp.typeOfLine),
+                        journey_pattern_id = OptionalInput.Defined(route.journeyPatternId),
+                        observation_timestamp = OptionalInput.Defined(observationTime),
+                        snapshot_timestamp = OptionalInput.Defined(snapshotTime),
+                        type_of_line = OptionalInput.Defined(route.typeOfLine),
+                        route_label = OptionalInput.Defined(route.uniqueLabel),
+                        route_direction = OptionalInput.Defined(route.direction.toGraphQLInNetworkScope()),
+                        route_validity_start = OptionalInput.Defined(route.validityStart),
+                        route_validity_end = OptionalInput.Defined(route.validityEnd),
                         scheduled_stop_point_in_journey_pattern_refs = OptionalInput.Defined(
                             timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input(
-                                jp.stops.map(ConversionsToGraphQL::mapToGraphQL)
+                                route.stopsOnRoute.map(ConversionsToGraphQL::mapToGraphQL)
                             )
                         )
                     )
@@ -261,19 +224,30 @@ class GraphQLService(
             .timetables
             ?.timetables_insert_journey_pattern_journey_pattern_ref
             ?.returning
-            ?.associate {
-                it.journey_pattern_id to JoreJourneyPatternReference(
-                    it.journey_pattern_ref_id,
-                    it.journey_pattern_id,
-                    it.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
-                        JoreStopReference(
-                            stop.scheduled_stop_point_in_journey_pattern_ref_id,
-                            stop.scheduled_stop_point_label,
-                            stop.scheduled_stop_point_sequence
-                        )
-                    }
-                )
-            }
+            ?.map(JoreJourneyPatternRef::from)
+            .orEmpty()
+    }
+
+    fun getJourneyPatternReferences(
+        routeLabels: Collection<String>,
+        validityStart: LocalDate,
+        validityEnd: LocalDate
+    ): List<JoreJourneyPatternRef> {
+        val journeyPatternRefsQuery = JourneyPatternRefs(
+            variables = JourneyPatternRefs.Variables(
+                route_labels = routeLabels.toList(),
+                validity_start = validityStart,
+                validity_end = validityEnd
+            )
+        )
+
+        val journeyPatternRefsResult: JourneyPatternRefs.Result =
+            client.sendRequest(journeyPatternRefsQuery, sessionHeaders)
+
+        return journeyPatternRefsResult
+            .timetables
+            ?.timetables_journey_pattern_journey_pattern_ref
+            ?.map(JoreJourneyPatternRef::from)
             .orEmpty()
     }
 

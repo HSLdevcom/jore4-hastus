@@ -2,6 +2,7 @@ package fi.hsl.jore4.hastus.data.jore
 
 data class JoreRouteScheduledStop(
     val stopLabel: String,
+    val stopSequenceNumber: Int,
     val timingPlaceCode: String?,
     val isUsedAsTimingPoint: Boolean,
     val isRegulatedTimingPoint: Boolean,
