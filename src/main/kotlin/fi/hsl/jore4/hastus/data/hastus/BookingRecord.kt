@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.data.hastus
 
+import fi.hsl.jore4.hastus.Constants
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,8 +41,6 @@ data class BookingRecord(
     }
 
     companion object {
-        private const val DATE_FORMAT = "yyyyMMdd"
-
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)
     }
 }

@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.data.hastus
 
+import fi.hsl.jore4.hastus.Constants
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -44,10 +45,7 @@ data class VehicleScheduleRecord(
     }
 
     companion object {
-        private const val DATE_FORMAT = "yyyyMMdd"
-        private const val TIME_FORMAT = "HHmmss"
-
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
-        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT)
+        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)
+        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_TIME_FORMAT)
     }
 }
