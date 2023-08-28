@@ -1,8 +1,6 @@
 package fi.hsl.jore4.hastus.data.hastus
 
-import fi.hsl.jore4.hastus.Constants
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * Booking record
@@ -31,16 +29,12 @@ data class BookingRecord(
         bookingDescription = elements[2],
         name = elements[3],
         scheduleDayType = parseToInt(elements[4]),
-        startDate = LocalDate.parse(elements[5], BookingRecord.dateFormatter),
-        endDate = LocalDate.parse(elements[6], BookingRecord.dateFormatter),
+        startDate = LocalDate.parse(elements[5], dateFormatter()),
+        endDate = LocalDate.parse(elements[6], dateFormatter()),
         contract = elements[7]
     )
 
     override fun getFields(): List<Any> {
         return listOf()
-    }
-
-    companion object {
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)
     }
 }
