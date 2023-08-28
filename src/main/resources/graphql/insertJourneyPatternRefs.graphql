@@ -6,12 +6,20 @@ mutation InsertJourneyPatternRefs(
       objects: $journey_pattern_refs
     ) {
       returning {
-        journey_pattern_id
         journey_pattern_ref_id
-        scheduled_stop_point_in_journey_pattern_refs {
+        journey_pattern_id
+        observation_timestamp
+        snapshot_timestamp
+        route_label
+        route_direction
+        route_validity_start
+        route_validity_end
+        type_of_line
+        scheduled_stop_point_in_journey_pattern_refs(order_by: {scheduled_stop_point_sequence: asc}) {
           scheduled_stop_point_in_journey_pattern_ref_id
           scheduled_stop_point_label
           scheduled_stop_point_sequence
+          timing_place_label
         }
       }
     }

@@ -5,7 +5,7 @@ import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
+import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
@@ -36,54 +36,54 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
             .map(ConversionsFromHastus::extractRouteLabel)
             .distinct() // TODO: is distinct operation really required?
 
-        val journeyPatterns: List<JoreJourneyPattern> = graphQLService.getJourneyPatterns(
+        val journeyPatternRefs: List<JoreJourneyPatternRef> = graphQLService.getJourneyPatternReferences(
             uniqueRouteLabels,
             hastusBookingRecord.startDate,
             hastusBookingRecord.endDate
         )
-        LOGGER.debug { "Fetched journey patterns: $journeyPatterns" }
+        LOGGER.debug { "Fetched journey pattern references: $journeyPatternRefs" }
 
         val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes()
-        LOGGER.debug { "Using vehicle types $vehicleTypeIndex" }
+        LOGGER.debug { "Using vehicle types: $vehicleTypeIndex" }
 
         val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes()
-        LOGGER.debug { "Using day types $dayTypeIndex" }
+        LOGGER.debug { "Using day types: $dayTypeIndex" }
 
-        val journeyPatternIndex: Map<RouteLabelAndDirection, JoreJourneyPattern> =
-            findMatchingJourneyPatternForEachHastusTrip(journeyPatterns, hastusTrips, hastusTripStops)
+        val journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef> =
+            findMatchingJourneyPatternRefForEachHastusTrip(journeyPatternRefs, hastusTrips, hastusTripStops)
 
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
             hastusItems,
             vehicleTypeIndex,
             dayTypeIndex,
-            journeyPatternIndex
+            journeyPatternRefIndex
         )
 
-        val selectedJourneyPatterns: Collection<JoreJourneyPattern> = journeyPatternIndex.values
+        val selectedJourneyPatternRefs: Collection<JoreJourneyPatternRef> = journeyPatternRefIndex.values
 
-        return graphQLService.persistVehicleScheduleFrame(vehicleScheduleFrame, selectedJourneyPatterns)
+        return graphQLService.persistVehicleScheduleFrame(vehicleScheduleFrame, selectedJourneyPatternRefs)
     }
 
     companion object {
 
         private val READER = CsvReader(";")
 
-        internal fun findMatchingJourneyPatternForEachHastusTrip(
-            journeyPatterns: List<JoreJourneyPattern>,
+        internal fun findMatchingJourneyPatternRefForEachHastusTrip(
+            journeyPatternsRefs: List<JoreJourneyPatternRef>,
             hastusTripRecords: List<TripRecord>,
             hastusTripStopRecords: List<TripStopRecord>
-        ): Map<RouteLabelAndDirection, JoreJourneyPattern> {
-            val results: MutableMap<RouteLabelAndDirection, JoreJourneyPattern> = mutableMapOf()
+        ): Map<RouteLabelAndDirection, JoreJourneyPatternRef> {
+            val results: MutableMap<RouteLabelAndDirection, JoreJourneyPatternRef> = mutableMapOf()
 
             val hastusRouteLabelsAndDirections: Set<RouteLabelAndDirection> =
                 hastusTripRecords.map(ConversionsFromHastus::extractRouteLabelAndDirection).toSet()
 
-            val journeyPatternsGroupedByRouteLabelAndDirection: Map<RouteLabelAndDirection, List<JoreJourneyPattern>> =
-                journeyPatterns.groupBy { it.routeLabelAndDirection }
+            val journeyPatternRefsGroupedByRouteLabelAndDirection: Map<RouteLabelAndDirection, List<JoreJourneyPatternRef>> =
+                journeyPatternsRefs.groupBy { it.routeLabelAndDirection }
 
             verifyRouteLabelsAndDirectionsAreMatched(
                 hastusRouteLabelsAndDirections,
-                journeyPatternsGroupedByRouteLabelAndDirection.keys
+                journeyPatternRefsGroupedByRouteLabelAndDirection.keys
             )
 
             val hastusTripStopRecordsIndexedByInternalNumber: Map<String, List<TripStopRecord>> =
@@ -102,40 +102,45 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                             throw InvalidHastusDataException(errorMessage)
                         }
 
-                // Consecutive stop points having same label are removed.
-                val hastusStopLabels: List<String> = filterOutConsecutiveDuplicates(hastusTripStops.map { it.stopId })
+                // Consecutive pairs of stop points and Hastus codes (with same labels) are removed.
+                val hastusStopAndTimingPlaces: List<Pair<String, String?>> =
+                    filterOutConsecutiveDuplicates(
+                        hastusTripStops.map { it.stopId to it.timingPlace }
+                    )
 
-                val firstMatchingJourneyPattern: JoreJourneyPattern =
-                    journeyPatternsGroupedByRouteLabelAndDirection[hastusRouteLabelAndDirection]
+                val firstMatchingJourneyPatternRef: JoreJourneyPatternRef =
+                    journeyPatternRefsGroupedByRouteLabelAndDirection[hastusRouteLabelAndDirection]
                         .orEmpty() // not really empty because of previously done label-direction matching
-                        .firstOrNull { journeyPattern ->
-                            // TODO The sorting order is currently non-deterministic and it is very
-                            //  difficult to refine the intended sorting order based on the current
-                            //  import logic. The situation will improve soon, when the export and
-                            //  import flows are reflected again.
+                        .sortedByDescending {
+                            // TODO Make sure that this is the appropriate ordering criteria when
+                            //  finding JourneyPatternRef match.
+                            it.snapshotTime
+                        }
+                        .firstOrNull { journeyPatternRef ->
+                            val joreStopAndTimingPlaces: List<Pair<String, String?>> =
+                                journeyPatternRef.stops.map { it.stopLabel to it.timingPlaceLabel }
 
-                            val joreStopLabels: List<String> = journeyPattern.stops.map { it.label }
-
-                            joreStopLabels == hastusStopLabels
+                            joreStopAndTimingPlaces == hastusStopAndTimingPlaces
                         }
                         ?: run {
-                            val exception = NoJourneyPatternMatchesHastusTripStopsException(hastusRouteLabelAndDirection)
+                            val exception =
+                                NoJourneyPatternRefMatchesHastusTripStopsException(hastusRouteLabelAndDirection)
                             LOGGER.warn(exception.message)
                             throw exception
                         }
 
-                results[hastusRouteLabelAndDirection] = firstMatchingJourneyPattern
+                results[hastusRouteLabelAndDirection] = firstMatchingJourneyPatternRef
             }
 
             return results
         }
 
         private fun verifyRouteLabelsAndDirectionsAreMatched(
-            labelsAndDirectionsFromHastus: Set<RouteLabelAndDirection>,
-            labelsAndDirectionsFromJore: Set<RouteLabelAndDirection>
+            hastusTrips: Set<RouteLabelAndDirection>,
+            routesFromJourneyPatternRefs: Set<RouteLabelAndDirection>
         ) {
-            val missingRouteLabelsAndDirections: List<RouteLabelAndDirection> = labelsAndDirectionsFromHastus
-                .subtract(labelsAndDirectionsFromJore)
+            val missingRouteLabelsAndDirections: List<RouteLabelAndDirection> = hastusTrips
+                .subtract(routesFromJourneyPatternRefs)
                 .sorted()
 
             if (missingRouteLabelsAndDirections.isNotEmpty()) {

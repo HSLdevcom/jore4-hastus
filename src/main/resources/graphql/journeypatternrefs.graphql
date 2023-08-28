@@ -1,0 +1,47 @@
+query JourneyPatternRefs(
+  $route_labels: [String!]!,
+  $validity_start: date!,
+  $validity_end: date!
+) {
+  timetables {
+    timetables_journey_pattern_journey_pattern_ref(
+      where: {
+        _and: [
+          { route_label: { _in: $route_labels } }
+          {
+            _or: [
+              { route_validity_start: { _is_null: true } }
+              { route_validity_start: { _lte: $validity_start } }
+            ]
+          }
+          {
+            _or: [
+              { route_validity_end: { _is_null: true } }
+              { route_validity_end: { _gte: $validity_end } }
+            ]
+          }
+        ]
+      }
+      order_by: {
+        route_label: asc,
+        snapshot_timestamp: desc
+      }
+    ) {
+      journey_pattern_ref_id
+      journey_pattern_id
+      observation_timestamp
+      snapshot_timestamp
+      route_label
+      route_direction
+      route_validity_start
+      route_validity_end
+      type_of_line
+      scheduled_stop_point_in_journey_pattern_refs(order_by: {scheduled_stop_point_sequence: asc}) {
+        scheduled_stop_point_in_journey_pattern_ref_id
+        scheduled_stop_point_sequence
+        scheduled_stop_point_label
+        timing_place_label
+      }
+    }
+  }
+}
