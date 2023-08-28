@@ -40,8 +40,8 @@ data class BookingRecord(
     }
 
     companion object {
-        private const val dateFormat = "yyyyMMdd"
+        private const val DATE_FORMAT = "yyyyMMdd"
 
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat)
+        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
     }
 }
