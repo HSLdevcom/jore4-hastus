@@ -44,18 +44,19 @@ class ImportController(
             val hastusItems: List<IHastusData> = reader.parseCsv(request)
             val filteredHeaders = HeaderUtils.filterInHasuraHeaders(headers)
 
-            val hastusRoutes: List<String> = hastusItems.filterIsInstance<TripRecord>().map { it.tripRoute }
-            val hastusBookingRecordName: String = hastusItems.filterIsInstance<BookingRecord>().first().name
+            val routeLabels: List<String> = hastusItems.filterIsInstance<TripRecord>().map { it.tripRoute }
 
             val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-                graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes, filteredHeaders)
-            LOGGER.trace { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
+                graphQLService.getJourneyPatternsIndexingByRouteLabel(routeLabels, filteredHeaders)
+            LOGGER.debug { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
 
             val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes(filteredHeaders)
-            LOGGER.trace { "Importing got vehicle types $vehicleTypeIndex" }
+            LOGGER.debug { "Importing got vehicle types $vehicleTypeIndex" }
 
             val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes(filteredHeaders)
-            LOGGER.trace { "Importing got day types $dayTypeIndex" }
+            LOGGER.debug { "Importing got day types $dayTypeIndex" }
+
+            val hastusBookingRecordName: String = hastusItems.filterIsInstance<BookingRecord>().first().name
 
             val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
                 hastusBookingRecordName,
@@ -70,6 +71,7 @@ class ImportController(
                 vehicleScheduleFrame,
                 filteredHeaders
             )
+
             "200"
         }
 
