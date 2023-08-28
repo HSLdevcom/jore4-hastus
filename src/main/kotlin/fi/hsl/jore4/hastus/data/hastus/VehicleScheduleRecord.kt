@@ -44,10 +44,10 @@ data class VehicleScheduleRecord(
     }
 
     companion object {
-        private const val dateFormat = "yyyyMMdd"
-        private const val timeFormat = "HHmmss"
+        private const val DATE_FORMAT = "yyyyMMdd"
+        private const val TIME_FORMAT = "HHmmss"
 
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat)
-        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(timeFormat)
+        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(TIME_FORMAT)
     }
 }
