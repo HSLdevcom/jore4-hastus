@@ -90,7 +90,8 @@ object ConversionsToGraphQL {
         vehicleJourney: JoreVehicleJourney,
         journeyPatternRefIndex: Map<UUID, JoreJourneyPatternReference>
     ): timetables_vehicle_journey_vehicle_journey_insert_input {
-        val associatedJourneyPatternRef = journeyPatternRefIndex[vehicleJourney.journeyPatternId]!!
+        val associatedJourneyPatternRef = journeyPatternRefIndex[vehicleJourney.journeyPatternRefId]!!
+
         return timetables_vehicle_journey_vehicle_journey_insert_input(
             displayed_name = OptionalInput.Defined(vehicleJourney.displayedName),
             is_backup_journey = OptionalInput.Defined(vehicleJourney.isBackupJourney),
