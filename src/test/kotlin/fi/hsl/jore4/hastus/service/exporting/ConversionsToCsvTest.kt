@@ -14,6 +14,8 @@ import fi.hsl.jore4.hastus.util.CsvWriter
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.time.LocalDate
+import java.util.UUID
 import kotlin.test.assertEquals
 
 /**
@@ -47,6 +49,7 @@ class ConversionsToCsvTest {
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     stopLabel = "H1234",
+                    stopSequenceNumber = 1,
                     timingPlaceCode = "1AACKT",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
@@ -55,6 +58,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1235",
+                    stopSequenceNumber = 2,
                     timingPlaceCode = "1ELIMK",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
@@ -63,6 +67,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1236",
+                    stopSequenceNumber = 3,
                     timingPlaceCode = "1AURLA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
@@ -71,6 +76,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1237",
+                    stopSequenceNumber = 4,
                     timingPlaceCode = null,
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
@@ -79,6 +85,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1238",
+                    stopSequenceNumber = 5,
                     timingPlaceCode = "1KALA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
@@ -87,9 +94,12 @@ class ConversionsToCsvTest {
                 )
             )
 
+            val typeOfLine = "stopping_bus_service"
+
             val line = JoreLine(
                 label = "65",
                 name = "Rautatientori - Veräjälaakso FI",
+                typeOfLine = typeOfLine,
                 vehicleMode = 0,
                 routes = listOf(
                     JoreRoute(
@@ -98,6 +108,10 @@ class ConversionsToCsvTest {
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
+                        validityStart = LocalDate.of(2023, 1, 1),
+                        validityEnd = LocalDate.of(2050, 12, 31),
+                        typeOfLine = typeOfLine,
+                        journeyPatternId = UUID.randomUUID(),
                         stopsOnRoute = stopPoints
                     ),
                     JoreRoute(
@@ -106,6 +120,10 @@ class ConversionsToCsvTest {
                         name = "Reitti A - B 3 FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
+                        validityStart = LocalDate.of(2023, 1, 1),
+                        validityEnd = LocalDate.of(2050, 12, 31),
+                        typeOfLine = typeOfLine,
+                        journeyPatternId = UUID.randomUUID(),
                         stopsOnRoute = stopPoints
                     )
                 )
@@ -130,6 +148,7 @@ class ConversionsToCsvTest {
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     stopLabel = "H1234",
+                    stopSequenceNumber = 1,
                     timingPlaceCode = "1AACKT",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
@@ -138,6 +157,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1235",
+                    stopSequenceNumber = 2,
                     timingPlaceCode = "1ELIMK",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
@@ -146,6 +166,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1236",
+                    stopSequenceNumber = 3,
                     timingPlaceCode = "1AURLA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
@@ -154,6 +175,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1237",
+                    stopSequenceNumber = 4,
                     timingPlaceCode = "1KALA",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
@@ -162,9 +184,12 @@ class ConversionsToCsvTest {
                 )
             )
 
+            val typeOfLine = "stopping_bus_service"
+
             val line = JoreLine(
                 label = "65",
                 name = "Rautatientori - Veräjälaakso FI",
+                typeOfLine = typeOfLine,
                 vehicleMode = 0,
                 routes = listOf(
                     JoreRoute(
@@ -173,6 +198,10 @@ class ConversionsToCsvTest {
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
+                        validityStart = LocalDate.of(2023, 1, 1),
+                        validityEnd = LocalDate.of(2050, 12, 31),
+                        typeOfLine = typeOfLine,
+                        journeyPatternId = UUID.randomUUID(),
                         stopsOnRoute = stopPoints
                     )
                 )
