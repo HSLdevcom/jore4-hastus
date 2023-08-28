@@ -1,9 +1,7 @@
 package fi.hsl.jore4.hastus.data.hastus
 
-import fi.hsl.jore4.hastus.Constants
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 /**
  * Application record
@@ -27,16 +25,11 @@ data class ApplicationRecord(
         hastus = elements[1],
         companyName = elements[2],
         vscVersion = parseToDouble(elements[3]),
-        jobDate = LocalDate.parse(elements[4], dateFormatter),
-        jobTime = LocalTime.parse(elements[5].substring(0, 6), timeFormatter)
+        jobDate = LocalDate.parse(elements[4], dateFormatter()),
+        jobTime = LocalTime.parse(elements[5].substring(0, 6), timeFormatter())
     )
 
     override fun getFields(): List<Any> {
         return listOf()
-    }
-
-    companion object {
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)
-        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_TIME_FORMAT)
     }
 }

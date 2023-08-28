@@ -1,9 +1,7 @@
 package fi.hsl.jore4.hastus.data.hastus
 
-import fi.hsl.jore4.hastus.Constants
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 /**
  * Vehicle schedule record
@@ -34,18 +32,13 @@ data class VehicleScheduleRecord(
         scheduleType = parseToInt(elements[2]),
         scenario = parseToInt(elements[3]),
         owner = elements[4],
-        startDate = LocalDate.parse(elements[5], dateFormatter),
-        endDate = LocalDate.parse(elements[6], dateFormatter),
-        editDate = LocalDate.parse(elements[7], dateFormatter),
-        editTime = LocalTime.parse(elements[8], timeFormatter)
+        startDate = LocalDate.parse(elements[5], dateFormatter()),
+        endDate = LocalDate.parse(elements[6], dateFormatter()),
+        editDate = LocalDate.parse(elements[7], dateFormatter()),
+        editTime = LocalTime.parse(elements[8], timeFormatter())
     )
 
     override fun getFields(): List<Any> {
         return listOf()
-    }
-
-    companion object {
-        val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)
-        val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_TIME_FORMAT)
     }
 }
