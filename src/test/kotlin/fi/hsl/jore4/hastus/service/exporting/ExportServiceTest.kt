@@ -54,6 +54,11 @@ class ExportServiceTest : ExportTestDataCreator {
             every {
                 graphQLService.deepFetchRoutes(any(), any(), any())
             } /* then */ returns fetchRoutesResult
+
+            // given
+            every {
+                graphQLService.createJourneyPatternReferences(any(), any(), any())
+            } /* then */ returns emptyList()
         }
 
         private fun invokeExportRoutes() {
@@ -66,7 +71,7 @@ class ExportServiceTest : ExportTestDataCreator {
         fun `validation should succeed when the first and the last stop points are timing points`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA"),
-                createLastStopPoint("1ELIEL")
+                createLastStopPoint(2, "1ELIEL")
             )
             val line: JoreLine = createLine(stopPoints)
 
@@ -81,7 +86,7 @@ class ExportServiceTest : ExportTestDataCreator {
         fun `validation should fail when the first or the last stop point is not a timing point`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint(null, false),
-                createLastStopPoint("1ELIEL", true)
+                createLastStopPoint(2, "1ELIEL", true)
             )
             val line: JoreLine = createLine(stopPoints)
 

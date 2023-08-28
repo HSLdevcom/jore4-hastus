@@ -5,6 +5,7 @@ import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_journey_pattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
@@ -24,12 +25,18 @@ object ConversionsFromGraphQL {
     ): JoreLine {
         val lineName: String = line.name_i18n.content[LANG_FINNISH].orEmpty()
 
+        // Currently, `typeOfLine` is modeled as an enumeration in the GraphQL API for the network
+        // database but as a plain string in case of the timetables database. Therefore, we use
+        // String type here to be compatible with the timetables API.
+        val typeOfLine: String = line.type_of_line.name
+
         return JoreLine(
             line.label,
             lineName,
+            typeOfLine,
             convertVehicleMode(line.vehicle_mode.vehicle_mode),
             routesBelongingToLine.map {
-                mapToJoreRoute(it, distancesBetweenStops)
+                mapToJoreRoute(it, typeOfLine, distancesBetweenStops)
             }
         )
     }
@@ -57,6 +64,7 @@ object ConversionsFromGraphQL {
 
         return JoreRouteScheduledStop(
             stopLabel,
+            stopInJourneyPattern.scheduled_stop_point_sequence,
             maxPriorityStopPoint.timing_place?.label,
             stopInJourneyPattern.is_used_as_timing_point,
             stopInJourneyPattern.is_regulated_timing_point,
@@ -67,11 +75,16 @@ object ConversionsFromGraphQL {
 
     private fun mapToJoreRoute(
         route: route_route,
+        typeOfLine: String,
         distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreRoute {
         val routeName: String = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label)
 
-        val journeyPatternStops = route.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
+        // There is only one journey pattern per route in Jore4.
+        val journeyPattern: journey_pattern_journey_pattern = route.route_journey_patterns.first()
+
+        val journeyPatternStops: List<journey_pattern_scheduled_stop_point_in_journey_pattern> =
+            journeyPattern.scheduled_stop_point_in_journey_patterns
 
         // Add a null value to end so zipWithNext includes the last element as the last .first() element
         val journeyPatternStopsWithNextLabel: List<Pair<journey_pattern_scheduled_stop_point_in_journey_pattern, String?>> =
@@ -89,6 +102,10 @@ object ConversionsFromGraphQL {
             name = routeName,
             direction = JoreRouteDirection.from(route.direction),
             reversible = false,
+            validityStart = route.validity_start,
+            validityEnd = route.validity_end,
+            typeOfLine = typeOfLine.lowercase(),
+            journeyPatternId = journeyPattern.journey_pattern_id,
             stopsOnRoute = journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
                 val currentStopLabel = journeyPatternStop.scheduled_stop_point_label
                 val getDistanceKey = Pair(currentStopLabel, nextStopLabel)

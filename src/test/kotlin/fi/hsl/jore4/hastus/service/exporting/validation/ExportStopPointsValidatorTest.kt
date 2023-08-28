@@ -54,7 +54,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         private fun createLineWithFirstStopPointNotAsTimingPoint(): JoreLine = createLine(
             listOf(
                 createFirstStopPoint(null, false),
-                createLastStopPoint("1ELIEL")
+                createLastStopPoint(2, "1ELIEL")
             )
         )
 
@@ -69,7 +69,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         fun `when the first stop point is a timing point but does not have timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint(null, true),
-                createLastStopPoint("1ELIEL")
+                createLastStopPoint(2, "1ELIEL")
             )
             val line: JoreLine = createLine(stopPoints)
 
@@ -82,7 +82,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         fun `when the first stop point is not a timing point but has timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA", false),
-                createLastStopPoint("1ELIEL")
+                createLastStopPoint(2, "1ELIEL")
             )
             val line: JoreLine = createLine(stopPoints)
 
@@ -105,7 +105,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         private fun createLineWithLastStopPointNotAsTimingPoint(): JoreLine = createLine(
             listOf(
                 createFirstStopPoint("1KALA"),
-                createLastStopPoint(null, false)
+                createLastStopPoint(2, null, false)
             )
         )
 
@@ -120,7 +120,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         fun `when the last stop point is a timing point but does not have timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1ELIEL"),
-                createLastStopPoint(null, true)
+                createLastStopPoint(2, null, true)
             )
             val line: JoreLine = createLine(stopPoints)
 
@@ -133,7 +133,7 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
         fun `when the last stop point is not a timing point but has timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA"),
-                createLastStopPoint("1ELIEL", false)
+                createLastStopPoint(2, "1ELIEL", false)
             )
             val line: JoreLine = createLine(stopPoints)
 
