@@ -7,7 +7,7 @@ A spring boot server application which acts as a converter between jore4 and Has
 ### Necessary tools
 
 - Maven
-- JDK11+
+- JDK17+
 
 Uses maven to build the project, use `mvn install` to build the server. You can also run the generated .jar file locally to test the server on port 8080.
 
