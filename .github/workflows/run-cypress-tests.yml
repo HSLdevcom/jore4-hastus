@@ -8,7 +8,7 @@ on:
 jobs:
   run_cypress_tests:
     name: Run cypress e2e tests from docker
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Collect Workflow Telemetry
