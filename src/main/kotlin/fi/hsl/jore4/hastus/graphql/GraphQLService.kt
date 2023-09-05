@@ -215,8 +215,8 @@ class GraphQLService(
             ?.route_route
             ?.associate {
                 it.unique_label.orEmpty() to JoreJourneyPattern(
-                    it.unique_label,
                     it.route_journey_patterns[0].journey_pattern_id,
+                    it.unique_label,
                     it.route_line?.type_of_line.toString().lowercase(),
                     it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
                         JoreStopPoint(

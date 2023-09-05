@@ -36,18 +36,18 @@ class ConversionsFromHastusTest {
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val journeyPattern1 = JoreJourneyPattern("ROUTE-1", UUID.randomUUID(), "stopping_bus_service", stopList1)
+        val journeyPattern1 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-1", "stopping_bus_service", stopList1)
 
         val stopList2 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop21", 0),
             JoreStopPoint(UUID.randomUUID(), "stop22", 1),
             JoreStopPoint(UUID.randomUUID(), "stop23", 2)
         )
-        val journeyPattern2 = JoreJourneyPattern("ROUTE-2", UUID.randomUUID(), "regional_bus_service", stopList2)
+        val journeyPattern2 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-2", "regional_bus_service", stopList2)
 
         val journeyPatternsIndexedByRouteLabel = mapOf(
-            journeyPattern1.uniqueLabel!! to journeyPattern1,
-            journeyPattern2.uniqueLabel!! to journeyPattern2
+            journeyPattern1.routeUniqueLabel!! to journeyPattern1,
+            journeyPattern2.routeUniqueLabel!! to journeyPattern2
         )
 
         val hastusData: List<IHastusData> = listOf(
@@ -183,10 +183,10 @@ class ConversionsFromHastusTest {
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val journeyPattern1 = JoreJourneyPattern("ROUTE-1", UUID.randomUUID(), "stopping_bus_service", stopList1)
+        val journeyPattern1 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-1", "stopping_bus_service", stopList1)
 
         val journeyPatternsIndexedByRouteLabel = mapOf(
-            journeyPattern1.uniqueLabel!! to journeyPattern1
+            journeyPattern1.routeUniqueLabel!! to journeyPattern1
         )
 
         val hastusData: List<IHastusData> = listOf(
