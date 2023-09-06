@@ -273,6 +273,8 @@
                     <args>
                         <!-- Enable strict mode for JSR-305 annotations. -->
                         <arg>-Xjsr305=strict</arg>
+                        <!-- Because we are using @OptIn annotation. -->
+                        <arg>-opt-in=kotlin.RequiresOptIn</arg>
                     </args>
                 </configuration>
                 <executions>
