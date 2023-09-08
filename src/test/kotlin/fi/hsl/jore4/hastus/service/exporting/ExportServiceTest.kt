@@ -1,11 +1,11 @@
-package fi.hsl.jore4.hastus.export
+package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
-import fi.hsl.jore4.hastus.export.validation.ExportStopPointsValidator
-import fi.hsl.jore4.hastus.export.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.graphql.FetchRoutesResult
 import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.service.exporting.validation.ExportStopPointsValidator
+import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension

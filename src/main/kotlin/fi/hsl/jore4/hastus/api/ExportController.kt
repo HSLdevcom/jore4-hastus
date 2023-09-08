@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.api
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import fi.hsl.jore4.hastus.export.ExportService
+import fi.hsl.jore4.hastus.service.exporting.ExportService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
