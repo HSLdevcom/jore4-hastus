@@ -24,9 +24,8 @@ import kotlin.time.Duration.Companion.minutes
 @DisplayName("Test type conversions from Hastus to Jore")
 class ConversionsFromHastusTest {
 
-    @DisplayName("When converting parsed CSV to Jore types")
     @Test
-    fun convertParsedCsvTest() {
+    fun `when converting parsed CSV to Jore types`() {
         val hastusBookingRecordName = "Testing"
 
         val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID, VEHICLE_TYPE_2_KEY to VEHICLE_TYPE_2_ID)
@@ -172,9 +171,8 @@ class ConversionsFromHastusTest {
         )
     }
 
-    @DisplayName("When journey pattern does not have a stop defined in Hastus")
     @Test
-    fun missingStopOnJourneyPatternTest() {
+    fun `when journey pattern does not have a stop defined in Hastus`() {
         val hastusBookingRecordName = "Testing"
 
         val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)

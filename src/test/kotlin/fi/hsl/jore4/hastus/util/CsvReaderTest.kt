@@ -16,8 +16,7 @@ import kotlin.test.assertEquals
 class CsvReaderTest {
 
     @Test
-    @DisplayName("When reading CSV")
-    fun readCsvTest() {
+    fun `when reading CSV`() {
         val csv = """
             1;HASTUS;HSL;1.04;20190502;212157
             2;19SYK;Syksy 2019 - Kevät 2020;4571;05;20190812;20200614;CONTRACT
