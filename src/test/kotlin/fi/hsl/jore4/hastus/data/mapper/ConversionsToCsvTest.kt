@@ -27,8 +27,7 @@ class ConversionsToCsvTest {
     inner class WhenTransformingLinesAndRoutes {
 
         @Test
-        @DisplayName("When the first and last stop are timing points")
-        fun whenFirstAndLastStopAreTimingPoints() {
+        fun `when the first and last stop are timing points`() {
             val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
@@ -104,8 +103,7 @@ class ConversionsToCsvTest {
         }
 
         @Test
-        @DisplayName("When the first and last stop are NOT timing points")
-        fun whenFirstAndLastStopAreNotTimingPoints() {
+        fun `when the first and last stop are NOT timing points`() {
             val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
             rvariant;1;Reitti A - B FI;0;0;65x1;65
@@ -166,8 +164,7 @@ class ConversionsToCsvTest {
     }
 
     @Test
-    @DisplayName("When converting stops")
-    fun whenMappingStops() {
+    fun `when converting stops`() {
         val expectedCsv = """
             stop;H1234;00;kuvaus;beskrivning;katu;gata;1AACKT;24.928327;60.163918;H1234
             stop;H1235;00;kuvaus2;beskrivning2;katu2;gata2;1ELIMK;24.930490;60.164635;H1235
@@ -224,8 +221,7 @@ class ConversionsToCsvTest {
     }
 
     @Test
-    @DisplayName("When converting timing places")
-    fun whenMappingTimingPlaces() {
+    fun `when converting timing places`() {
         val expectedCsv = """
             place;1AACKT;Aino Ackten tie
             place;1ELIMK;Elimäenkatu

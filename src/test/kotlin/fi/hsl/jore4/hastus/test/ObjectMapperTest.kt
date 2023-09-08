@@ -106,8 +106,7 @@ class ObjectMapperTest {
     inner class MappingToJson() {
 
         @Test
-        @DisplayName("Test UUID mapping")
-        fun testUUIDMapping() {
+        fun `test UUID mapping`() {
             val value = UUID.randomUUID()
             val formatted = objectMapper.writeValueAsString(UUIDFormat(value))
             val expected = """
@@ -117,8 +116,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test UUIDList mapping")
-        fun testUUIDListMapping() {
+        fun `test UUIDList mapping`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
             val expected = """
             {"uuidList":"{${value[0]},${value[1]}}"}
@@ -128,8 +126,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test date mapping")
-        fun testDateMapping() {
+        fun `test date mapping`() {
             val value = LocalDate.of(2022, 2, 2)
             val expected = """
             {"date":"2022-02-02"}
@@ -139,8 +136,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test offset time mapping")
-        fun testOffsetTimeMapping() {
+        fun `test offset time mapping`() {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val expected = """
             {"offsetTime":"2022-02-02 01:02:03.004 +0000"}
@@ -150,8 +146,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test IJSONB mapping")
-        fun testIJSONBMapping() {
+        fun `test IJSONB mapping`() {
             val value = IJSONB(mapOf("first" to "value", "second" to "other"))
             val expected = """
             {"ijsonb":{"first":"value","second":"other"}}
@@ -161,8 +156,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test coordinate mapping")
-        fun testCoordinateMapping() {
+        fun `test coordinate mapping`() {
             val value = Coordinate(1.0, 2.0)
             val expected = """
             {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.x},${value.y},0.0]}}
@@ -172,8 +166,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test duration mapping")
-        fun testDurationMapping() {
+        fun `test duration mapping`() {
             val value: Duration = 4.hours
             val expected = """
             {"duration":"${value.toIsoString()}"}
@@ -188,8 +181,7 @@ class ObjectMapperTest {
     inner class MappingFromJson() {
 
         @Test
-        @DisplayName("Test UUID mapping")
-        fun testUUIDMapping() {
+        fun `test UUID mapping`() {
             val value = UUID.randomUUID()
             val jsonString = """
             {
@@ -201,8 +193,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test UUIDList mapping")
-        fun testUUIDListMapping() {
+        fun `test UUIDList mapping`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
             val jsonString = """
             {
@@ -214,8 +205,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test date mapping")
-        fun testDateMapping() {
+        fun `test date mapping`() {
             val value = LocalDate.of(2022, 2, 2)
             val jsonString = """
             {
@@ -227,8 +217,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test offset time mapping")
-        fun testOffsetTimeMapping() {
+        fun `test offset time mapping`() {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val jsonString = """
             {
@@ -240,8 +229,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test IJSONB mapping")
-        fun testIJSONBMapping() {
+        fun `test IJSONB mapping`() {
             val value = mapOf("first" to "value", "second" to "other")
             val jsonString = """
             {
@@ -256,8 +244,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test coordinate mapping")
-        fun testCoordinateMapping() {
+        fun `test coordinate mapping`() {
             val value = Coordinate(1.0, 2.0)
             val jsonString = """
              {
@@ -282,8 +269,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        @DisplayName("Test duration mapping")
-        fun testDurationMapping() {
+        fun `test duration mapping`() {
             val value: Duration = 4.hours
             val jsonString = """
             {

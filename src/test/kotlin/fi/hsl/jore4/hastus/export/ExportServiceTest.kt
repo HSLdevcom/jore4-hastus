@@ -54,9 +54,8 @@ class ExportServiceTest : ExportTestDataCreator {
             exportService.exportRoutes(listOf(), 10, LocalDate.now(), emptyMap())
         }
 
-        @DisplayName("Validation should succeed when the first and the last stop points are timing points")
         @Test
-        fun whenValidationErrorsAreNotPresent() {
+        fun `validation should succeed when the first and the last stop points are timing points`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA"),
                 createFirstStopPoint("1ELIEL")
@@ -70,9 +69,8 @@ class ExportServiceTest : ExportTestDataCreator {
             verify(exactly = 1) { lineValidator.validateLine(line) }
         }
 
-        @DisplayName("Validation should fail when the first or the last stop point is not a timing point")
         @Test
-        fun whenValidationErrorsArePresent() {
+        fun `validation should fail when the first or the last stop point is not a timing point`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint(null, false),
                 createFirstStopPoint("1ELIEL", true)

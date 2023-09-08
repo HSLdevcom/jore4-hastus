@@ -10,9 +10,8 @@ import kotlin.test.assertFailsWith
 
 class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
-    @DisplayName("Validation should succeed when the first and the last stop points are timing points")
     @Test
-    fun whenNoValidationErrorsPresent() {
+    fun `validation should succeed when the first and the last stop points are timing points`() {
         val stopPoints: List<JoreRouteScheduledStop> = listOf(
             createFirstStopPoint("1KALA"),
             createFirstStopPoint("1ELIEL")
@@ -34,17 +33,15 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             )
         )
 
-        @DisplayName("When there is only one stop point in journey pattern")
         @Test
-        fun whenFirstStopPointIsNotTimingPointAndDoesNotHaveTimingPlaceAssociation() {
+        fun `when there is only one stop point in journey pattern`() {
             assertFailsWith<TooFewStopPointsException> {
                 validateLine(createLineToTest())
             }
         }
 
-        @DisplayName("When boolean flag for throwing exception is not set")
         @Test
-        fun whenBooleanFlagForThrowingExceptionIsNotSet() {
+        fun `when boolean flag for throwing exception is not set`() {
             // should not throw exception
             validateSingleLineAndNeverExpectException(createLineToTest())
         }
@@ -61,17 +58,15 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             )
         )
 
-        @DisplayName("When the first stop point is not a timing point and does not have timing place name")
         @Test
-        fun whenFirstStopPointIsNotTimingPointAndDoesNotHaveTimingPlaceName() {
+        fun `when the first stop point is not a timing point and does not have timing place name`() {
             assertFailsWith<FirstStopNotTimingPointException> {
                 validateLine(createLineWithFirstStopPointNotAsTimingPoint())
             }
         }
 
-        @DisplayName("When the first stop point is a timing point but does not have timing place name")
         @Test
-        fun whenFirstStopPointIsTimingPointButDoesNotHaveTimingPlaceName() {
+        fun `when the first stop point is a timing point but does not have timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint(null, true),
                 createLastStopPoint("1ELIEL")
@@ -83,9 +78,8 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             }
         }
 
-        @DisplayName("When the first stop point is not a timing point but has timing place name")
         @Test
-        fun whenFirstStopPointIsNotTimingPointButHasTimingPlaceName() {
+        fun `when the first stop point is not a timing point but has timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA", false),
                 createLastStopPoint("1ELIEL")
@@ -97,9 +91,8 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             }
         }
 
-        @DisplayName("When boolean flag for throwing exception is not set")
         @Test
-        fun whenBooleanFlagForThrowingExceptionIsNotSet() {
+        fun `when boolean flag for throwing exception is not set`() {
             // should not throw exception
             validateSingleLineAndNeverExpectException(createLineWithFirstStopPointNotAsTimingPoint())
         }
@@ -116,17 +109,15 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             )
         )
 
-        @DisplayName("When the last stop point is not a timing point and does not have timing place name")
         @Test
-        fun whenLastStopPointIsNotTimingPointAndDoesNotHaveTimingPlaceName() {
+        fun `when the last stop point is not a timing point and does not have timing place name`() {
             assertFailsWith<LastStopNotTimingPointException> {
                 validateLine(createLineWithLastStopPointNotAsTimingPoint())
             }
         }
 
-        @DisplayName("When the last stop point is a timing point but does not have timing place name")
         @Test
-        fun whenLastStopPointIsTimingPointButDoesNotHaveTimingPlaceName() {
+        fun `when the last stop point is a timing point but does not have timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1ELIEL"),
                 createLastStopPoint(null, true)
@@ -138,9 +129,8 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             }
         }
 
-        @DisplayName("When the last stop point is not a timing point but has timing place name")
         @Test
-        fun whenLastStopPointIsNotTimingPointButHasTimingPlaceName() {
+        fun `when the last stop point is not a timing point but has timing place name`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA"),
                 createLastStopPoint("1ELIEL", false)
@@ -152,9 +142,8 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
             }
         }
 
-        @DisplayName("When boolean flag for throwing exception is not set")
         @Test
-        fun whenBooleanFlagForThrowingExceptionIsNotSet() {
+        fun `when boolean flag for throwing exception is not set`() {
             // should not throw exception
             validateSingleLineAndNeverExpectException(createLineWithLastStopPointNotAsTimingPoint())
         }
