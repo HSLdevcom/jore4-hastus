@@ -6,14 +6,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.15</version>
+        <version>3.1.3</version>
         <relativePath/>
     </parent>
 
     <groupId>fi.hsl.jore4</groupId>
     <artifactId>hastus</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>Jore4 Hastus Server</name>
     <description>Jore4 hastus import/export server</description>
 
@@ -356,7 +356,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <fork>true</fork>
                     <mainClass>${start.class}</mainClass>
                 </configuration>
                 <executions>

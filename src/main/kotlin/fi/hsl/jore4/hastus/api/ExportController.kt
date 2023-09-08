@@ -63,7 +63,7 @@ class ExportController(
     @ExceptionHandler
     fun handleExportException(ex: Exception): ResponseEntity<String> {
         return when (ex) {
-            is ResponseStatusException -> ResponseEntity.status(ex.status).body(ex.reason)
+            is ResponseStatusException -> ResponseEntity.status(ex.statusCode).body(ex.reason)
 
             else -> {
                 LOGGER.error { "Exception during request:$ex" }
