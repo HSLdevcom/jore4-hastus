@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.export
+package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
@@ -6,8 +6,8 @@ import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
-import fi.hsl.jore4.hastus.export.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.util.CsvWriter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
