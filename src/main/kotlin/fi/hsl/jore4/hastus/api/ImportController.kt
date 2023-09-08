@@ -1,20 +1,12 @@
 package fi.hsl.jore4.hastus.api
 
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
-import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
-import fi.hsl.jore4.hastus.data.mapper.ConversionsFromHastus
-import fi.hsl.jore4.hastus.graphql.GraphQLService
-import fi.hsl.jore4.hastus.util.CsvReader
+import fi.hsl.jore4.hastus.service.importing.ImportService
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.UUID
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
@@ -24,7 +16,7 @@ private val LOGGER = KotlinLogging.logger {}
 @RestController
 @RequestMapping("import")
 class ImportController(
-    private val graphQLService: GraphQLService
+    private val importService: ImportService
 ) {
 
     companion object {
@@ -33,44 +25,15 @@ class ImportController(
 
     @PostMapping("", consumes = [CSV_TYPE])
     fun importCsvFile(
-        @RequestBody request: String,
+        @RequestBody csv: String,
         @RequestHeader headers: Map<String, String>
     ): String {
-        val reader = CsvReader(";")
-
         val (result, elapsed) = measureTimedValue {
             LOGGER.debug { "CSV import request" }
 
-            val hastusItems: List<IHastusData> = reader.parseCsv(request)
-            val filteredHeaders = HeaderUtils.filterInHasuraHeaders(headers)
+            val hasuraHeaders = HeaderUtils.filterInHasuraHeaders(headers)
 
-            val hastusRoutes: List<String> = hastusItems.filterIsInstance<TripRecord>().map { it.tripRoute }
-
-            val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-                graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes, filteredHeaders)
-            LOGGER.debug { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
-
-            val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes(filteredHeaders)
-            LOGGER.debug { "Importing got vehicle types $vehicleTypeIndex" }
-
-            val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes(filteredHeaders)
-            LOGGER.debug { "Importing got day types $dayTypeIndex" }
-
-            val hastusBookingRecordName: String = hastusItems.filterIsInstance<BookingRecord>().first().name
-
-            val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
-                hastusBookingRecordName,
-                hastusItems,
-                journeyPatternsIndexedByRouteLabel,
-                vehicleTypeIndex,
-                dayTypeIndex
-            )
-
-            graphQLService.persistVehicleScheduleFrame(
-                journeyPatternsIndexedByRouteLabel.values,
-                vehicleScheduleFrame,
-                filteredHeaders
-            )
+            importService.importTimetablesFromCsv(csv, hasuraHeaders)
 
             "200"
         }
