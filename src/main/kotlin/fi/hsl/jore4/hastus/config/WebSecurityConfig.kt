@@ -22,12 +22,12 @@ class WebSecurityConfig {
             .authorizeHttpRequests {
                 it
                     // GET
-                    .antMatchers(
+                    .requestMatchers(
                         HttpMethod.GET,
                         "/actuator/health"
                     ).permitAll()
                     // POST
-                    .antMatchers(
+                    .requestMatchers(
                         HttpMethod.POST,
                         "/import",
                         "/export/routes"
