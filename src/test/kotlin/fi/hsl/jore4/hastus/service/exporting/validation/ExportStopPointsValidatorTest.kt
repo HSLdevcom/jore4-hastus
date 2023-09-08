@@ -1,8 +1,8 @@
-package fi.hsl.jore4.hastus.export.validation
+package fi.hsl.jore4.hastus.service.exporting.validation
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
-import fi.hsl.jore4.hastus.export.ExportTestDataCreator
+import fi.hsl.jore4.hastus.service.exporting.ExportTestDataCreator
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

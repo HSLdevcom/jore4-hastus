@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.export
+package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute

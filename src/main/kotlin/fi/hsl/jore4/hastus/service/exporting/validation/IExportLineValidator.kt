@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.export.validation
+package fi.hsl.jore4.hastus.service.exporting.validation
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 
