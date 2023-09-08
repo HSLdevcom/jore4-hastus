@@ -36,14 +36,14 @@ class ConversionsFromHastusTest {
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val journeyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", stopList1)
+        val journeyPattern1 = JoreJourneyPattern("ROUTE-1", UUID.randomUUID(), "stopping_bus_service", stopList1)
 
         val stopList2 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop21", 0),
             JoreStopPoint(UUID.randomUUID(), "stop22", 1),
             JoreStopPoint(UUID.randomUUID(), "stop23", 2)
         )
-        val journeyPattern2 = JoreJourneyPattern("PATTERN2", UUID.randomUUID(), "regional_bus_service", stopList2)
+        val journeyPattern2 = JoreJourneyPattern("ROUTE-2", UUID.randomUUID(), "regional_bus_service", stopList2)
 
         val journeyPatternsIndexedByRouteLabel = mapOf(
             journeyPattern1.uniqueLabel!! to journeyPattern1,
@@ -55,24 +55,24 @@ class ConversionsFromHastusTest {
             generateBookingRecord("name", "booking", "description"),
             generateVehicleScheduleRecord(13),
             generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-            generateTripRecord("block1", "trip1", "PATTERN1"),
+            generateTripRecord("block1", "trip1", "ROUTE-1"),
             generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
             generateTripStopRecord("trip1", "stop2", "0510", "", "t"),
             generateTripStopRecord("trip1", "stop2", "0520", "", ""),
             generateTripStopRecord("trip1", "stop3", "0530", "T", ""),
             generateBlockRecord("block2", "service1", VEHICLE_TYPE_1_KEY),
-            generateTripRecord("block2", "trip2", "PATTERN1"),
+            generateTripRecord("block2", "trip2", "ROUTE-1"),
             generateTripStopRecord("trip2", "stop1", "0655", "T", ""),
             generateTripStopRecord("trip2", "stop2", "0710", "", ""),
             generateTripStopRecord("trip2", "stop2", "0720", "", "a"),
             generateTripStopRecord("trip2", "stop3", "0730", "T", ""),
             generateBlockRecord("block20", "service2", VEHICLE_TYPE_2_KEY),
-            generateTripRecord("block20", "trip3", "PATTERN2"),
+            generateTripRecord("block20", "trip3", "ROUTE-2"),
             generateTripStopRecord("trip3", "stop21", "0455", "T", ""),
             generateTripStopRecord("trip3", "stop22", "0520", "", ""),
             generateTripStopRecord("trip3", "stop23", "0530", "T", ""),
             generateBlockRecord("block21", "service2", VEHICLE_TYPE_2_KEY),
-            generateTripRecord("block21", "trip4", "PATTERN2"),
+            generateTripRecord("block21", "trip4", "ROUTE-2"),
             generateTripStopRecord("trip4", "stop21", "0655", "T", ""),
             generateTripStopRecord("trip4", "stop22", "0720", "", ""),
             generateTripStopRecord("trip4", "stop23", "0730", "T", "")
@@ -183,7 +183,7 @@ class ConversionsFromHastusTest {
             JoreStopPoint(UUID.randomUUID(), "stop2", 1),
             JoreStopPoint(UUID.randomUUID(), "stop3", 2)
         )
-        val journeyPattern1 = JoreJourneyPattern("PATTERN1", UUID.randomUUID(), "stopping_bus_service", stopList1)
+        val journeyPattern1 = JoreJourneyPattern("ROUTE-1", UUID.randomUUID(), "stopping_bus_service", stopList1)
 
         val journeyPatternsIndexedByRouteLabel = mapOf(
             journeyPattern1.uniqueLabel!! to journeyPattern1
@@ -194,7 +194,7 @@ class ConversionsFromHastusTest {
             generateBookingRecord("name", "booking", "description"),
             generateVehicleScheduleRecord(13),
             generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-            generateTripRecord("block1", "trip1", "PATTERN1"),
+            generateTripRecord("block1", "trip1", "ROUTE-1"),
             generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
             generateTripStopRecord("trip1", "stop4", "0510", "", "t"),
             generateTripStopRecord("trip1", "stop4", "0520", "", ""),
@@ -213,7 +213,7 @@ class ConversionsFromHastusTest {
             }
         )
 
-        assertEquals("Trip PATTERN1 contains unknown stop along the route: [stop4]", exception.message)
+        assertEquals("Trip ROUTE-1 contains unknown stop along the route: [stop4]", exception.message)
     }
 
     companion object {
