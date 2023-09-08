@@ -260,7 +260,7 @@ class GraphQLService(
         journeyPatterns: Collection<JoreJourneyPattern>,
         vehicleScheduleFrame: JoreVehicleScheduleFrame,
         headers: Map<String, String>
-    ): String {
+    ): UUID? {
         val journeyPatternRefMap = createJourneyPatternReferences(
             journeyPatterns,
             headers
@@ -278,7 +278,7 @@ class GraphQLService(
         return insertVehicleScheduleFrameResult
             ?.timetables
             ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
-            ?.vehicle_schedule_frame_id.toString()
+            ?.vehicle_schedule_frame_id
     }
 
     fun createJourneyPatternReferences(
