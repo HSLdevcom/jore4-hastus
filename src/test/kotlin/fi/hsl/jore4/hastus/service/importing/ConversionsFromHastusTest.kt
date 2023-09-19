@@ -66,24 +66,24 @@ class ConversionsFromHastusTest {
                 generateBookingRecord(hastusBookingRecordName, "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1"),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1"),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop2", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop2", "0520", "", ""),
                 generateTripStopRecord("trip1", "stop3", "0530", "T", ""),
                 generateBlockRecord("block2", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block2", "trip2", "ROUTE-1"),
+                generateTripRecord("block2", "trip2", "ROUTE-1", "2"),
                 generateTripStopRecord("trip2", "stop1", "0655", "T", ""),
                 generateTripStopRecord("trip2", "stop2", "0710", "", ""),
                 generateTripStopRecord("trip2", "stop2", "0720", "", "a"),
                 generateTripStopRecord("trip2", "stop3", "0730", "T", ""),
                 generateBlockRecord("block20", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block20", "trip3", "ROUTE-2"),
+                generateTripRecord("block20", "trip3", "ROUTE-2", "1"),
                 generateTripStopRecord("trip3", "stop21", "0455", "T", ""),
                 generateTripStopRecord("trip3", "stop22", "0520", "", ""),
                 generateTripStopRecord("trip3", "stop23", "0530", "T", ""),
                 generateBlockRecord("block21", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block21", "trip4", "ROUTE-2"),
+                generateTripRecord("block21", "trip4", "ROUTE-2", "2"),
                 generateTripStopRecord("trip4", "stop21", "0655", "T", ""),
                 generateTripStopRecord("trip4", "stop22", "0720", "", ""),
                 generateTripStopRecord("trip4", "stop23", "0730", "T", "")
@@ -206,7 +206,7 @@ class ConversionsFromHastusTest {
                 generateBookingRecord("name", "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1"),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1"),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop4", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop4", "0520", "", ""),
@@ -223,6 +223,65 @@ class ConversionsFromHastusTest {
             }
 
             assertEquals("Trip ROUTE-1 contains unknown stop along the route: [stop4]", exception.message)
+        }
+    }
+
+    @DisplayName("Test method: extractRouteLabel")
+    @Nested
+    inner class TestExtractRouteLabel {
+
+        private fun convertLabelAndVariant(tripRoute: String, variant: String) =
+            ConversionsFromHastus.extractRouteLabel(generateTripRecord(tripRoute, variant))
+
+        @Test
+        fun `test empty variant`() {
+            assertEquals("1", convertLabelAndVariant("1", ""))
+        }
+
+        @Test
+        fun `test variants that end with '1'`() {
+            assertEquals("1", convertLabelAndVariant("1", "1"))
+            assertEquals("1A", convertLabelAndVariant("1", "A1"))
+            assertEquals("1BC", convertLabelAndVariant("1", "BC1"))
+        }
+
+        @Test
+        fun `test variants that end with '2'`() {
+            assertEquals("1", convertLabelAndVariant("1", "2"))
+            assertEquals("1D", convertLabelAndVariant("1", "D2"))
+            assertEquals("1EF", convertLabelAndVariant("1", "EF2"))
+        }
+
+        @Test
+        fun `test single digit variants other than '1' or '2'`() {
+            assertEquals("1_3", convertLabelAndVariant("1", "3"))
+            assertEquals("1_4", convertLabelAndVariant("1", "4"))
+            assertEquals("1_5", convertLabelAndVariant("1", "5"))
+            assertEquals("1_6", convertLabelAndVariant("1", "6"))
+            assertEquals("1_7", convertLabelAndVariant("1", "7"))
+            assertEquals("1_8", convertLabelAndVariant("1", "8"))
+            assertEquals("1_9", convertLabelAndVariant("1", "9"))
+
+            // not defined in specs but tested anyway
+            assertEquals("1_0", convertLabelAndVariant("1", "0"))
+        }
+
+        @Test
+        fun `test single char variants`() {
+            assertEquals("2A", convertLabelAndVariant("2", "A"))
+            assertEquals("2b", convertLabelAndVariant("2", "b"))
+        }
+
+        @Test
+        fun `test double char variants`() {
+            assertEquals("2CD", convertLabelAndVariant("2", "CD"))
+            assertEquals("2ef", convertLabelAndVariant("2", "ef"))
+        }
+
+        @Test
+        fun `test multi-char variants ending with a digit other than '1' or '2'`() {
+            assertEquals("3A_3", convertLabelAndVariant("3", "A3"))
+            assertEquals("4BC_4", convertLabelAndVariant("4", "BC4"))
         }
     }
 
@@ -278,7 +337,10 @@ class ConversionsFromHastusTest {
             vehicleType
         )
 
-        fun generateTripRecord(block: String, trip: String, relation: String) = TripRecord(
+        fun generateTripRecord(lineLabel: String, variant: String) =
+            generateTripRecord("BLOCK-1", "TRIP-1", lineLabel, variant)
+
+        fun generateTripRecord(block: String, trip: String, relation: String, variant: String) = TripRecord(
             "CONTRACT",
             block,
             trip,
@@ -286,7 +348,7 @@ class ConversionsFromHastusTest {
             0,
             relation,
             "4571",
-            "2",
+            variant,
             "05:04",
             "05:55",
             60,
