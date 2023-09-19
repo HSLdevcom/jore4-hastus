@@ -27,7 +27,6 @@ object ConversionsFromHastus {
     private val LOGGER = KotlinLogging.logger {}
 
     fun convertHastusDataToJore(
-        hastusBookingRecordName: String,
         hastusData: List<IHastusData>,
         journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
         vehicleTypeIndex: Map<Int, UUID>,
@@ -70,7 +69,7 @@ object ConversionsFromHastus {
 
         return JoreVehicleScheduleFrame(
             hastusBookingRecord.name,
-            hastusBookingRecordName,
+            hastusBookingRecord.name,
             hastusBookingRecord.booking,
             hastusBookingRecord.bookingDescription,
             hastusBookingRecord.startDate,
