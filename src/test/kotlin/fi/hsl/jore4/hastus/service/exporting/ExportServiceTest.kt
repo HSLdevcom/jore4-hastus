@@ -4,6 +4,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.graphql.FetchRoutesResult
 import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
 import fi.hsl.jore4.hastus.service.exporting.validation.ExportStopPointsValidator
 import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import io.mockk.every
@@ -28,11 +29,18 @@ class ExportServiceTest : ExportTestDataCreator {
     @MockK
     lateinit var graphQLService: GraphQLService
 
+    @MockK
+    lateinit var graphQLServiceFactory: GraphQLServiceFactory
+
     lateinit var exportService: ExportService
 
     @BeforeEach
     fun setupServiceUnderTest() {
-        exportService = ExportService(graphQLService, lineValidator)
+        every {
+            graphQLServiceFactory.createForSession(any())
+        } /* then */ returns graphQLService
+
+        exportService = ExportService(graphQLServiceFactory, lineValidator)
     }
 
     @DisplayName("Validate deep-fetched routes got from GraphQLService.deepFetchRoutes(...)")
@@ -44,7 +52,7 @@ class ExportServiceTest : ExportTestDataCreator {
 
             // given
             every {
-                graphQLService.deepFetchRoutes(any(), any(), any(), any())
+                graphQLService.deepFetchRoutes(any(), any(), any())
             } /* then */ returns fetchRoutesResult
         }
 

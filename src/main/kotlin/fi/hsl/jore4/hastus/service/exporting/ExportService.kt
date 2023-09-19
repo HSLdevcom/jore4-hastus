@@ -7,6 +7,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
 import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.util.CsvWriter
 import org.springframework.stereotype.Service
@@ -14,7 +15,7 @@ import java.time.LocalDate
 
 @Service
 class ExportService(
-    val graphQLService: GraphQLService,
+    val graphQLServiceFactory: GraphQLServiceFactory,
     val lineValidator: IExportLineValidator
 ) {
 
@@ -26,7 +27,7 @@ class ExportService(
      * @param [uniqueRouteLabels] The labels of the routes to export
      * @param [priority] The priority used to constrain the routes to be exported
      * @param [observationDate] The date used to filter active/valid routes
-     * @param [headers] HTTP headers from the request to be passed
+     * @param [hasuraHeaders] Filtered HTTP headers from the request to pass to GraphQL client
      *
      * @throws RuntimeException if any validation errors are present.
      */
@@ -34,15 +35,17 @@ class ExportService(
         uniqueRouteLabels: List<String>,
         priority: Int,
         observationDate: LocalDate,
-        headers: Map<String, String>
+        hasuraHeaders: Map<String, String>
     ): String {
+        val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
+
         val (
             lines: List<JoreLine>,
             stopPoints: List<JoreScheduledStop>,
             timingPlaces: List<JoreTimingPlace>,
             distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
         ) =
-            graphQLService.deepFetchRoutes(uniqueRouteLabels, priority, observationDate, headers)
+            graphQLService.deepFetchRoutes(uniqueRouteLabels, priority, observationDate)
 
         // validate lines
         lines.forEach { lineValidator.validateLine(it) }
