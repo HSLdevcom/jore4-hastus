@@ -248,4 +248,46 @@ object ConversionsFromHastus {
         }
         return null
     }
+
+    /**
+     * Extracts Jore4 unique route label containing variant info from Hastus trip record.
+     *
+     * In Hastus trip record, the label is split between two fields:
+     * (1) tripRoute, which is basically the same as the Jore4 line number
+     * (2) variant, which can be empty or contain both letters and numbers
+     *
+     * The current specs are:
+     * (i) the variant part is appended directly to the line number (the tripRoute field) except
+     * for the last character, if it is a number. If the last character is a number, it is
+     * separated by an underscore ('_').
+     * (ii) if the variant part ends with a '1' or '2' the last character of the variant is
+     * omitted.
+     */
+    fun extractRouteLabel(trip: TripRecord): String {
+        val lineLabel = trip.tripRoute
+        val variant = trip.variant
+
+        if (variant.isEmpty() || variant == "1" || variant == "2") {
+            // plain line label
+            return lineLabel
+        }
+
+        val lastChar: Char = variant.last()
+
+        val trimmedVariant: String =
+            if (lastChar.isDigit()) {
+                // last char stripped away
+                val head: String = variant.substring(0, variant.length - 1)
+
+                if (lastChar == '1' || lastChar == '2') {
+                    head
+                } else {
+                    "${head}_$lastChar"
+                }
+            } else {
+                variant
+            }
+
+        return "$lineLabel$trimmedVariant"
+    }
 }
