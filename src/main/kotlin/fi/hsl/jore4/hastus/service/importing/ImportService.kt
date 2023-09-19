@@ -6,6 +6,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.mapper.ConversionsFromHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
+import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
 import fi.hsl.jore4.hastus.util.CsvReader
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
@@ -14,23 +15,25 @@ import java.util.UUID
 private val LOGGER = KotlinLogging.logger {}
 
 @Service
-class ImportService(private val graphQLService: GraphQLService) {
+class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
 
     fun importTimetablesFromCsv(
         csv: String,
         hasuraHeaders: Map<String, String>
     ): UUID? {
+        val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
+
         val hastusItems: List<IHastusData> = READER.parseCsv(csv)
         val hastusRoutes: List<String> = hastusItems.filterIsInstance<TripRecord>().map { it.tripRoute }
 
         val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-            graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes, hasuraHeaders)
+            graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes)
         LOGGER.debug { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
 
-        val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes(hasuraHeaders)
+        val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes()
         LOGGER.debug { "Importing got vehicle types $vehicleTypeIndex" }
 
-        val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes(hasuraHeaders)
+        val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes()
         LOGGER.debug { "Importing got day types $dayTypeIndex" }
 
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
@@ -42,8 +45,7 @@ class ImportService(private val graphQLService: GraphQLService) {
 
         return graphQLService.persistVehicleScheduleFrame(
             journeyPatternsIndexedByRouteLabel.values,
-            vehicleScheduleFrame,
-            hasuraHeaders
+            vehicleScheduleFrame
         )
     }
 

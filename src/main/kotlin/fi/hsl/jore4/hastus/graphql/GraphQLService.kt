@@ -1,12 +1,6 @@
 package fi.hsl.jore4.hastus.graphql
 
-import com.expediagroup.graphql.client.jackson.GraphQLClientJacksonSerializer
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
-import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
-import com.expediagroup.graphql.client.types.GraphQLClientRequest
-import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import com.fasterxml.jackson.databind.ObjectMapper
-import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
@@ -29,83 +23,26 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 import fi.hsl.jore4.hastus.graphql.converter.ConversionsFromGraphQL
 import fi.hsl.jore4.hastus.graphql.converter.ConversionsToGraphQL
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.header
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
-import kotlinx.coroutines.runBlocking
-import mu.KotlinLogging
-import org.springframework.stereotype.Service
-import java.net.URL
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.util.UUID
 
-private val LOGGER = KotlinLogging.logger {}
-
-@Service
+/**
+ * This service performs GraphQL queries and mutations to Hasura service. An instance of this class
+ * is meant to be created separately for each HTTP(S) session, i.e. single request-response cycle.
+ * The same HTTP headers are added to each GraphQL request.
+ *
+ * @param[client] Hasura client instance
+ * @param[sessionHeaders] HTTP headers to add to GraphQL requests
+ */
 class GraphQLService(
-    config: HasuraConfiguration,
-    val objectMapper: ObjectMapper
+    private val client: HasuraClient,
+    private val sessionHeaders: Map<String, String>
 ) {
-
-    private val client = GraphQLKtorClient(
-        url = URL(config.url),
-        httpClient = HttpClient {
-            defaultRequest {
-                contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
-            }
-            install(Logging) {
-                // Can be changed to HEADERS for debugging purposes
-                level = LogLevel.INFO
-            }
-        },
-        serializer = GraphQLClientJacksonSerializer()
-    )
-
-    private fun <T : Any> sendRequest(
-        request: GraphQLClientRequest<T>,
-        headers: Map<String, String>
-    ): T {
-        return runBlocking {
-            LOGGER.debug {
-                "GraphQL request:\n${request.query},\nvariables: ${
-                    objectMapper
-                        .writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(request.variables)
-                }"
-            }
-
-            val queryResponse: GraphQLClientResponse<T> = client.execute(request) {
-                headers.map { header(it.key, it.value) }
-            }
-
-            LOGGER.debug {
-                "GraphQL ${request.operationName} response: ${
-                    objectMapper
-                        // .writerWithDefaultPrettyPrinter() // disable commenting to get pretty-printed output
-                        .writeValueAsString(queryResponse)
-                }"
-            }
-
-            queryResponse.errors?.let { errorList ->
-                if (errorList.isNotEmpty()) {
-                    throw IllegalStateException(errorList.toString())
-                }
-            }
-
-            queryResponse.data
-                ?: throw IllegalStateException("GraphQL response did not contain data even when no errors were present")
-        }
-    }
 
     fun getStopDistances(
         routeIds: List<UUID>,
-        observationDate: LocalDate,
-        headers: Map<String, String>
+        observationDate: LocalDate
     ): List<JoreDistanceBetweenTwoStopPoints> {
         val distancesQuery = DistanceBetweenStopPoints(
             variables = DistanceBetweenStopPoints.Variables(
@@ -114,7 +51,7 @@ class GraphQLService(
             )
         )
 
-        val distancesResult: DistanceBetweenStopPoints.Result = sendRequest(distancesQuery, headers)
+        val distancesResult: DistanceBetweenStopPoints.Result = client.sendRequest(distancesQuery, sessionHeaders)
 
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
             .service_pattern_get_distances_between_stop_points_by_routes
@@ -130,13 +67,11 @@ class GraphQLService(
      * @param [uniqueRouteLabels] The labels of the routes to fetch
      * @param [priority] The priority used to constrain the routes to be fetched
      * @param [observationDate] The date used to filter active/valid routes
-     * @param [headers] HTTP headers from the request to be used while querying GraphQL API
      */
     fun deepFetchRoutes(
         uniqueRouteLabels: List<String>,
         priority: Int,
-        observationDate: LocalDate,
-        headers: Map<String, String>
+        observationDate: LocalDate
     ): FetchRoutesResult {
         val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
@@ -146,15 +81,14 @@ class GraphQLService(
             )
         )
 
-        val routesResult: RoutesWithHastusData.Result = sendRequest(routesQuery, headers)
+        val routesResult: RoutesWithHastusData.Result = client.sendRequest(routesQuery, sessionHeaders)
 
         val routesGQL: List<route_route> = routesResult.route_route
 
         val routeIds: List<UUID> = routesGQL.map { it.route_id }
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
             routeIds,
-            observationDate,
-            headers
+            observationDate
         )
 
         val lines: List<JoreLine> = convertLinesAndRoutes(routesGQL, distancesBetweenStopPoints)
@@ -202,8 +136,7 @@ class GraphQLService(
     }
 
     fun getJourneyPatternsIndexingByRouteLabel(
-        uniqueRouteLabels: List<String>,
-        headers: Map<String, String>
+        uniqueRouteLabels: List<String>
     ): Map<String, JoreJourneyPattern> {
         val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
@@ -211,7 +144,8 @@ class GraphQLService(
             )
         )
 
-        val journeyPatternsResult: JourneyPatternsForRoutes.Result = sendRequest(journeyPatternsQuery, headers)
+        val journeyPatternsResult: JourneyPatternsForRoutes.Result =
+            client.sendRequest(journeyPatternsQuery, sessionHeaders)
 
         return journeyPatternsResult
             .route_route
@@ -231,10 +165,8 @@ class GraphQLService(
             }
     }
 
-    fun getVehicleTypes(
-        headers: Map<String, String>
-    ): Map<Int, UUID> {
-        val listVehicleTypesResult: ListVehicleTypes.Result = sendRequest(ListVehicleTypes(), headers)
+    fun getVehicleTypes(): Map<Int, UUID> {
+        val listVehicleTypesResult: ListVehicleTypes.Result = client.sendRequest(ListVehicleTypes(), sessionHeaders)
 
         return listVehicleTypesResult
             .timetables
@@ -245,10 +177,8 @@ class GraphQLService(
             .orEmpty()
     }
 
-    fun getDayTypes(
-        headers: Map<String, String>
-    ): Map<String, UUID> {
-        val listDayTypesResult: ListDayTypes.Result = sendRequest(ListDayTypes(), headers)
+    fun getDayTypes(): Map<String, UUID> {
+        val listDayTypesResult: ListDayTypes.Result = client.sendRequest(ListDayTypes(), sessionHeaders)
 
         return listDayTypesResult
             .timetables
@@ -257,38 +187,36 @@ class GraphQLService(
             .orEmpty()
     }
 
-    /* Use synchronized when persisting data to graphQL, since there is no transaction support for it.
-    *  Multiple simultaneous modifications of the same table will fail.
-    */
-    @Synchronized
     fun persistVehicleScheduleFrame(
         journeyPatterns: Collection<JoreJourneyPattern>,
-        vehicleScheduleFrame: JoreVehicleScheduleFrame,
-        headers: Map<String, String>
+        vehicleScheduleFrame: JoreVehicleScheduleFrame
     ): UUID? {
-        val journeyPatternRefMap = createJourneyPatternReferences(
-            journeyPatterns,
-            headers
-        )
+        // Use synchronized block when persisting data via GraphQL, since there is no transaction
+        // support for it. Multiple simultaneous modifications of the same table will fail.
+        synchronized(SYNC_LOCK_OBJECT) {
+            val journeyPatternRefMap = createJourneyPatternReferences(journeyPatterns)
 
-        val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
-            variables = InsertVehicleScheduleFrame.Variables(
-                vehicle_schedule_frame = ConversionsToGraphQL.mapToGraphQL(vehicleScheduleFrame, journeyPatternRefMap)
+            val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
+                variables = InsertVehicleScheduleFrame.Variables(
+                    vehicle_schedule_frame = ConversionsToGraphQL.mapToGraphQL(
+                        vehicleScheduleFrame,
+                        journeyPatternRefMap
+                    )
+                )
             )
-        )
 
-        val insertVehicleScheduleFrameResult: InsertVehicleScheduleFrame.Result =
-            sendRequest(insertVehicleScheduleFrame, headers)
+            val insertVehicleScheduleFrameResult: InsertVehicleScheduleFrame.Result =
+                client.sendRequest(insertVehicleScheduleFrame, sessionHeaders)
 
-        return insertVehicleScheduleFrameResult
-            .timetables
-            ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
-            ?.vehicle_schedule_frame_id
+            return insertVehicleScheduleFrameResult
+                .timetables
+                ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
+                ?.vehicle_schedule_frame_id
+        }
     }
 
     fun createJourneyPatternReferences(
-        journeyPatterns: Collection<JoreJourneyPattern>,
-        headers: Map<String, String>
+        journeyPatterns: Collection<JoreJourneyPattern>
     ): Map<UUID, JoreJourneyPatternReference> {
         val timestamp = OffsetDateTime.now()
 
@@ -311,7 +239,7 @@ class GraphQLService(
         )
 
         val insertJourneyPatternRefsResult: InsertJourneyPatternRefs.Result =
-            sendRequest(insertJourneyPatternRefs, headers)
+            client.sendRequest(insertJourneyPatternRefs, sessionHeaders)
 
         return insertJourneyPatternRefsResult
             .timetables
@@ -331,5 +259,11 @@ class GraphQLService(
                 )
             }
             .orEmpty()
+    }
+
+    companion object {
+
+        // used for synchronized block
+        private val SYNC_LOCK_OBJECT = Object()
     }
 }
