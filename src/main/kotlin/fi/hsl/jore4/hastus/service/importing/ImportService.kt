@@ -23,10 +23,13 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
 
         val hastusItems: List<IHastusData> = READER.parseCsv(csv)
-        val hastusRoutes: List<String> = hastusItems.filterIsInstance<TripRecord>().map { it.tripRoute }
+        val hastusTrips: List<TripRecord> = hastusItems.filterIsInstance<TripRecord>()
+        val uniqueRouteLabels: List<String> = hastusTrips
+            .map(ConversionsFromHastus::extractRouteLabel)
+            .distinct() // TODO: is distinct operation really required?
 
         val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-            graphQLService.getJourneyPatternsIndexingByRouteLabel(hastusRoutes)
+            graphQLService.getJourneyPatternsIndexingByRouteLabel(uniqueRouteLabels)
         LOGGER.debug { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
 
         val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes()

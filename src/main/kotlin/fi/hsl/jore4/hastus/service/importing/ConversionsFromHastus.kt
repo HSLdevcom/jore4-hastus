@@ -248,4 +248,32 @@ object ConversionsFromHastus {
         }
         return null
     }
+
+    fun extractRouteLabel(trip: TripRecord): String {
+        val lineLabel = trip.tripRoute
+        val variant = trip.variant
+
+        if (variant.isEmpty() || variant == "1" || variant == "2") {
+            // plain line label
+            return lineLabel
+        }
+
+        val lastChar: Char = variant.last()
+
+        val trimmedVariant: String =
+            if (lastChar.isDigit()) {
+                // last char stripped away
+                val head: String = variant.substring(0, variant.length - 1)
+
+                if (lastChar == '1' || lastChar == '2') {
+                    head
+                } else {
+                    "${head}_$lastChar"
+                }
+            } else {
+                variant
+            }
+
+        return "$lineLabel$trimmedVariant"
+    }
 }
