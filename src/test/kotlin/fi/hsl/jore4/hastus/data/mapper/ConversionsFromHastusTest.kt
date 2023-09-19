@@ -28,8 +28,14 @@ class ConversionsFromHastusTest {
     fun `when converting parsed CSV to Jore types`() {
         val hastusBookingRecordName = "Testing"
 
-        val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID, VEHICLE_TYPE_2_KEY to VEHICLE_TYPE_2_ID)
-        val dayTypeIndex = mapOf("MA" to MONDAY_DAY_TYPE_ID, "PE" to FRIDAY_DAY_TYPE_ID)
+        val vehicleTypeIndex = mapOf(
+            VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID,
+            VEHICLE_TYPE_2_KEY to VEHICLE_TYPE_2_ID
+        )
+        val dayTypeIndex = mapOf(
+            "MA" to MONDAY_DAY_TYPE_ID,
+            "PE" to FRIDAY_DAY_TYPE_ID
+        )
 
         val stopList1 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop1", 0),
@@ -175,8 +181,12 @@ class ConversionsFromHastusTest {
     fun `when journey pattern does not have a stop defined in Hastus`() {
         val hastusBookingRecordName = "Testing"
 
-        val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)
-        val dayTypeIndex = mapOf("MA" to MONDAY_DAY_TYPE_ID)
+        val vehicleTypeIndex = mapOf(
+            VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID
+        )
+        val dayTypeIndex = mapOf(
+            "MA" to MONDAY_DAY_TYPE_ID
+        )
 
         val stopList1 = listOf(
             JoreStopPoint(UUID.randomUUID(), "stop1", 0),
@@ -201,17 +211,15 @@ class ConversionsFromHastusTest {
             generateTripStopRecord("trip1", "stop3", "0530", "T", "")
         )
 
-        val exception = assertFailsWith<IllegalStateException>(
-            block = {
-                ConversionsFromHastus.convertHastusDataToJore(
-                    hastusBookingRecordName,
-                    hastusData,
-                    journeyPatternsIndexedByRouteLabel,
-                    vehicleTypeIndex,
-                    dayTypeIndex
-                )
-            }
-        )
+        val exception = assertFailsWith<IllegalStateException> {
+            ConversionsFromHastus.convertHastusDataToJore(
+                hastusBookingRecordName,
+                hastusData,
+                journeyPatternsIndexedByRouteLabel,
+                vehicleTypeIndex,
+                dayTypeIndex
+            )
+        }
 
         assertEquals("Trip ROUTE-1 contains unknown stop along the route: [stop4]", exception.message)
     }
@@ -227,95 +235,89 @@ class ConversionsFromHastusTest {
         private val MONDAY_DAY_TYPE_ID = UUID.randomUUID()
         private val FRIDAY_DAY_TYPE_ID = UUID.randomUUID()
 
-        fun generateApplicationRecord(): ApplicationRecord {
-            return ApplicationRecord(
-                "HASTUS",
-                "HSL",
-                1.04,
-                LocalDate.of(2019, 5, 2),
-                LocalTime.of(21, 21, 57)
-            )
-        }
+        fun generateApplicationRecord() = ApplicationRecord(
+            "HASTUS",
+            "HSL",
+            1.04,
+            LocalDate.of(2019, 5, 2),
+            LocalTime.of(21, 21, 57)
+        )
 
-        fun generateBookingRecord(name: String, booking: String, description: String): BookingRecord {
-            return BookingRecord(
-                booking,
-                description,
-                name,
-                5,
-                LocalDate.of(2019, 8, 12),
-                LocalDate.of(2020, 6, 14),
-                "CONTRACT"
-            )
-        }
+        fun generateBookingRecord(name: String, booking: String, description: String) = BookingRecord(
+            booking,
+            description,
+            name,
+            5,
+            LocalDate.of(2019, 8, 12),
+            LocalDate.of(2020, 6, 14),
+            "CONTRACT"
+        )
 
-        fun generateVehicleScheduleRecord(dayType: Int): VehicleScheduleRecord {
-            return VehicleScheduleRecord(
-                "4571",
-                dayType,
-                0,
-                "HSL",
-                LocalDate.of(2019, 8, 12),
-                LocalDate.of(2020, 6, 14),
-                LocalDate.of(2019, 4, 30),
-                LocalTime.of(11, 38, 55)
-            )
-        }
+        fun generateVehicleScheduleRecord(dayType: Int) = VehicleScheduleRecord(
+            "4571",
+            dayType,
+            0,
+            "HSL",
+            LocalDate.of(2019, 8, 12),
+            LocalDate.of(2020, 6, 14),
+            LocalDate.of(2019, 4, 30),
+            LocalTime.of(11, 38, 55)
+        )
 
-        fun generateBlockRecord(block: String, vehicleService: String, vehicleType: Int): BlockRecord {
-            return BlockRecord(
-                block,
-                vehicleService,
-                1,
-                "4VARIS",
-                "4VARIS",
-                "4571",
-                3,
-                0,
-                vehicleType
-            )
-        }
+        fun generateBlockRecord(block: String, vehicleService: String, vehicleType: Int) = BlockRecord(
+            block,
+            vehicleService,
+            1,
+            "4VARIS",
+            "4VARIS",
+            "4571",
+            3,
+            0,
+            vehicleType
+        )
 
-        fun generateTripRecord(block: String, trip: String, relation: String): TripRecord {
-            return TripRecord(
-                "CONTRACT",
-                block,
-                trip,
-                "1595",
-                0,
-                relation,
-                "4571",
-                "2",
-                "05:04",
-                "05:55",
-                60,
-                0,
-                4,
-                25.200,
-                "0",
-                "",
-                1,
-                2,
-                isVehicleTypeMandatory = false,
-                isBackupTrip = false,
-                isExtraTrip = false
-            )
-        }
+        fun generateTripRecord(block: String, trip: String, relation: String) = TripRecord(
+            "CONTRACT",
+            block,
+            trip,
+            "1595",
+            0,
+            relation,
+            "4571",
+            "2",
+            "05:04",
+            "05:55",
+            60,
+            0,
+            4,
+            25.200,
+            "0",
+            "",
+            1,
+            2,
+            isVehicleTypeMandatory = false,
+            isBackupTrip = false,
+            isExtraTrip = false
+        )
 
-        fun generateTripStopRecord(trip: String, stop: String, time: String, type: String, note: String): TripStopRecord {
-            return TripStopRecord(
-                trip,
-                "PLACE",
-                stop,
-                "",
-                "",
-                "",
-                "",
-                time,
-                0.0,
-                type,
-                note
-            )
-        }
+        fun generateTripStopRecord(
+            trip: String,
+            stop: String,
+            time: String,
+            type: String,
+            note: String
+        ) = TripStopRecord(
+            trip,
+            "PLACE",
+            stop,
+            "",
+            "",
+            "",
+            "",
+            time,
+            0.0,
+            type,
+            note
+        )
     }
 }
