@@ -199,13 +199,10 @@ object ConversionsFromHastus {
         )
     }
 
-    private fun mapJourneyType(type: Int): JoreJourneyType {
-        return when (type) {
-            1 -> JoreJourneyType.SERVICE_JOURNEY
-            2 -> JoreJourneyType.SERVICE_JOURNEY
-            3 -> JoreJourneyType.DRY_RUN
-            else -> JoreJourneyType.STANDARD
-        }
+    private fun mapJourneyType(type: Int) = when (type) {
+        1, 2 -> JoreJourneyType.SERVICE_JOURNEY
+        3 -> JoreJourneyType.DRY_RUN
+        else -> JoreJourneyType.STANDARD
     }
 
     private fun mapToJorePassingTimes(
@@ -222,6 +219,7 @@ object ConversionsFromHastus {
             getTime(hastusStop.firstOrNull { it.note == "t" }?.passingTime)
                 ?: passingDefinition // Stops with note 't' are arrival times
         }
+
         val departureDefinition = if (isLastStop) {
             null
         } else {
