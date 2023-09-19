@@ -69,7 +69,7 @@ class GraphQLService(
     private fun <T : Any> sendRequest(
         request: GraphQLClientRequest<T>,
         headers: Map<String, String>
-    ): T? {
+    ): T {
         return runBlocking {
             LOGGER.debug {
                 "GraphQL request:\n${request.query},\nvariables: ${
@@ -91,11 +91,14 @@ class GraphQLService(
                 }"
             }
 
-            if (queryResponse.errors?.isNotEmpty() == true) {
-                throw IllegalStateException(queryResponse.errors?.toString())
+            queryResponse.errors?.let { errorList ->
+                if (errorList.isNotEmpty()) {
+                    throw IllegalStateException(errorList.toString())
+                }
             }
 
             queryResponse.data
+                ?: throw IllegalStateException("GraphQL response did not contain data even when no errors were present")
         }
     }
 
@@ -111,12 +114,11 @@ class GraphQLService(
             )
         )
 
-        val distancesResult: DistanceBetweenStopPoints.Result? = sendRequest(distancesQuery, headers)
+        val distancesResult: DistanceBetweenStopPoints.Result = sendRequest(distancesQuery, headers)
 
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
-            ?.service_pattern_get_distances_between_stop_points_by_routes
-            ?.map(ConversionsFromGraphQL::mapToJoreDistance)
-            .orEmpty()
+            .service_pattern_get_distances_between_stop_points_by_routes
+            .map(ConversionsFromGraphQL::mapToJoreDistance)
 
         return distancesBetweenStopPoints.distinct()
     }
@@ -144,9 +146,9 @@ class GraphQLService(
             )
         )
 
-        val routesResult: RoutesWithHastusData.Result? = sendRequest(routesQuery, headers)
+        val routesResult: RoutesWithHastusData.Result = sendRequest(routesQuery, headers)
 
-        val routesGQL: List<route_route> = routesResult?.route_route.orEmpty()
+        val routesGQL: List<route_route> = routesResult.route_route
 
         val routeIds: List<UUID> = routesGQL.map { it.route_id }
         val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
@@ -209,11 +211,11 @@ class GraphQLService(
             )
         )
 
-        val journeyPatternsResult: JourneyPatternsForRoutes.Result? = sendRequest(journeyPatternsQuery, headers)
+        val journeyPatternsResult: JourneyPatternsForRoutes.Result = sendRequest(journeyPatternsQuery, headers)
 
         return journeyPatternsResult
-            ?.route_route
-            ?.associate {
+            .route_route
+            .associate {
                 it.unique_label.orEmpty() to JoreJourneyPattern(
                     it.route_journey_patterns[0].journey_pattern_id,
                     it.unique_label,
@@ -227,16 +229,15 @@ class GraphQLService(
                     }
                 )
             }
-            .orEmpty()
     }
 
     fun getVehicleTypes(
         headers: Map<String, String>
     ): Map<Int, UUID> {
-        val listVehicleTypesResult: ListVehicleTypes.Result? = sendRequest(ListVehicleTypes(), headers)
+        val listVehicleTypesResult: ListVehicleTypes.Result = sendRequest(ListVehicleTypes(), headers)
 
         return listVehicleTypesResult
-            ?.timetables
+            .timetables
             ?.timetables_vehicle_type_vehicle_type
             ?.associate {
                 it.hsl_id.toInt() to it.vehicle_type_id
@@ -247,10 +248,10 @@ class GraphQLService(
     fun getDayTypes(
         headers: Map<String, String>
     ): Map<String, UUID> {
-        val listDayTypesResult: ListDayTypes.Result? = sendRequest(ListDayTypes(), headers)
+        val listDayTypesResult: ListDayTypes.Result = sendRequest(ListDayTypes(), headers)
 
         return listDayTypesResult
-            ?.timetables
+            .timetables
             ?.timetables_service_calendar_day_type
             ?.associate { it.label to it.day_type_id }
             .orEmpty()
@@ -276,11 +277,11 @@ class GraphQLService(
             )
         )
 
-        val insertVehicleScheduleFrameResult: InsertVehicleScheduleFrame.Result? =
+        val insertVehicleScheduleFrameResult: InsertVehicleScheduleFrame.Result =
             sendRequest(insertVehicleScheduleFrame, headers)
 
         return insertVehicleScheduleFrameResult
-            ?.timetables
+            .timetables
             ?.timetables_insert_vehicle_schedule_vehicle_schedule_frame_one
             ?.vehicle_schedule_frame_id
     }
@@ -309,11 +310,11 @@ class GraphQLService(
             )
         )
 
-        val insertJourneyPatternRefsResult: InsertJourneyPatternRefs.Result? =
+        val insertJourneyPatternRefsResult: InsertJourneyPatternRefs.Result =
             sendRequest(insertJourneyPatternRefs, headers)
 
         return insertJourneyPatternRefsResult
-            ?.timetables
+            .timetables
             ?.timetables_insert_journey_pattern_journey_pattern_ref
             ?.returning
             ?.associate {
