@@ -52,7 +52,7 @@ class ConversionsFromHastusTest {
 
         val hastusData: List<IHastusData> = listOf(
             generateApplicationRecord(),
-            generateBookingRecord("name", "booking", "description"),
+            generateBookingRecord(hastusBookingRecordName, "booking", "description"),
             generateVehicleScheduleRecord(13),
             generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
             generateTripRecord("block1", "trip1", "ROUTE-1"),
@@ -79,7 +79,6 @@ class ConversionsFromHastusTest {
         )
 
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
-            hastusBookingRecordName,
             hastusData,
             journeyPatternsIndexedByRouteLabel,
             vehicleTypeIndex,
@@ -87,7 +86,7 @@ class ConversionsFromHastusTest {
         )
 
         assertEquals(hastusBookingRecordName, vehicleScheduleFrame.label)
-        assertEquals("name", vehicleScheduleFrame.name)
+        assertEquals(hastusBookingRecordName, vehicleScheduleFrame.name)
         assertEquals("booking", vehicleScheduleFrame.bookingLabel)
         assertEquals("description", vehicleScheduleFrame.bookingDescription)
 
@@ -173,8 +172,6 @@ class ConversionsFromHastusTest {
 
     @Test
     fun `when journey pattern does not have a stop defined in Hastus`() {
-        val hastusBookingRecordName = "Testing"
-
         val vehicleTypeIndex = mapOf(VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID)
         val dayTypeIndex = mapOf("MA" to MONDAY_DAY_TYPE_ID)
 
@@ -203,7 +200,6 @@ class ConversionsFromHastusTest {
 
         val exception = assertFailsWith<IllegalStateException> {
             ConversionsFromHastus.convertHastusDataToJore(
-                hastusBookingRecordName,
                 hastusData,
                 journeyPatternsIndexedByRouteLabel,
                 vehicleTypeIndex,

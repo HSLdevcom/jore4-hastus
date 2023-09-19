@@ -1,6 +1,5 @@
 package fi.hsl.jore4.hastus.service.importing
 
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
@@ -34,10 +33,7 @@ class ImportService(private val graphQLService: GraphQLService) {
         val dayTypeIndex: Map<String, UUID> = graphQLService.getDayTypes(hasuraHeaders)
         LOGGER.debug { "Importing got day types $dayTypeIndex" }
 
-        val hastusBookingRecordName: String = hastusItems.filterIsInstance<BookingRecord>().first().name
-
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
-            hastusBookingRecordName,
             hastusItems,
             journeyPatternsIndexedByRouteLabel,
             vehicleTypeIndex,
