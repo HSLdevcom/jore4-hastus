@@ -66,7 +66,7 @@ class ExportServiceTest : ExportTestDataCreator {
         fun `validation should succeed when the first and the last stop points are timing points`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint("1KALA"),
-                createFirstStopPoint("1ELIEL")
+                createLastStopPoint("1ELIEL")
             )
             val line: JoreLine = createLine(stopPoints)
 
@@ -81,7 +81,7 @@ class ExportServiceTest : ExportTestDataCreator {
         fun `validation should fail when the first or the last stop point is not a timing point`() {
             val stopPoints: List<JoreRouteScheduledStop> = listOf(
                 createFirstStopPoint(null, false),
-                createFirstStopPoint("1ELIEL", true)
+                createLastStopPoint("1ELIEL", true)
             )
             val line: JoreLine = createLine(stopPoints)
 
