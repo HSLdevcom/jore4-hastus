@@ -16,8 +16,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 /**
- * This class contains integration tests for combined use of
- * [ConversionsToHastus] and [CsvWriter].
+ * This class contains integration tests for combined use of [ConversionsToHastus] and [CsvWriter].
  */
 @DisplayName("Test conversions to CSV via Hastus types")
 class ConversionsToCsvTest {
@@ -86,15 +85,31 @@ class ConversionsToCsvTest {
                     distanceToNextStop = 0.0
                 )
             )
-            val routes = listOf(
-                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, stopPoints),
-                JoreRoute("65y", "2", "65y2", "Reitti A - B 3 FI", 1, false, stopPoints)
-            )
+
             val line = JoreLine(
                 label = "65",
-                "Rautatientori - Veräjälaakso FI",
-                0,
-                routes
+                name = "Rautatientori - Veräjälaakso FI",
+                vehicleMode = 0,
+                routes = listOf(
+                    JoreRoute(
+                        label = "65x",
+                        variant = "",
+                        uniqueLabel = "65x",
+                        name = "Reitti A - B FI",
+                        direction = 1,
+                        reversible = false,
+                        stopsOnRoute = stopPoints
+                    ),
+                    JoreRoute(
+                        label = "65y",
+                        variant = "2",
+                        uniqueLabel = "65y2",
+                        name = "Reitti A - B 3 FI",
+                        direction = 1,
+                        reversible = false,
+                        stopsOnRoute = stopPoints
+                    )
+                )
             )
 
             val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
@@ -147,14 +162,22 @@ class ConversionsToCsvTest {
                     distanceToNextStop = 0.0
                 )
             )
-            val routes = listOf(
-                JoreRoute("65x", "", "65x", "Reitti A - B FI", 1, false, stopPoints)
-            )
+
             val line = JoreLine(
                 label = "65",
-                "Rautatientori - Veräjälaakso FI",
-                0,
-                routes
+                name = "Rautatientori - Veräjälaakso FI",
+                vehicleMode = 0,
+                routes = listOf(
+                    JoreRoute(
+                        label = "65x",
+                        variant = "",
+                        uniqueLabel = "65x",
+                        name = "Reitti A - B FI",
+                        direction = 1,
+                        reversible = false,
+                        stopsOnRoute = stopPoints
+                    )
+                )
             )
 
             val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
