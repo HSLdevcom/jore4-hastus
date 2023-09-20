@@ -42,26 +42,6 @@ class GraphQLService(
     private val sessionHeaders: Map<String, String>
 ) {
 
-    private fun getDistancesBetweenRouteStopPoints(
-        routeIds: List<UUID>,
-        observationDate: LocalDate
-    ): List<JoreDistanceBetweenTwoStopPoints> {
-        val distancesQuery = DistanceBetweenStopPoints(
-            variables = DistanceBetweenStopPoints.Variables(
-                routes = OptionalInput.Defined(UUIDList(routeIds)),
-                observation_date = observationDate
-            )
-        )
-
-        val distancesResult: DistanceBetweenStopPoints.Result = client.sendRequest(distancesQuery, sessionHeaders)
-
-        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
-            .service_pattern_get_distances_between_stop_points_by_routes
-            .map(ConversionsFromGraphQL::mapToJoreDistance)
-
-        return distancesBetweenStopPoints.distinct()
-    }
-
     /**
      * Fetch routes via Jore4 GraphQL API. The parameters are used to constrain the set of routes to
      * be fetched. Returns a deep object hierarchy for routes used in Hastus CSV export.
@@ -103,6 +83,26 @@ class GraphQLService(
         val (stopPoints, timingPlaces) = extractStopPointsAndTimingPlaces(routesGQL)
 
         return FetchRoutesResult(lines, stopPoints, timingPlaces, distancesBetweenStopPoints)
+    }
+
+    private fun getDistancesBetweenRouteStopPoints(
+        routeIds: List<UUID>,
+        observationDate: LocalDate
+    ): List<JoreDistanceBetweenTwoStopPoints> {
+        val distancesQuery = DistanceBetweenStopPoints(
+            variables = DistanceBetweenStopPoints.Variables(
+                routes = OptionalInput.Defined(UUIDList(routeIds)),
+                observation_date = observationDate
+            )
+        )
+
+        val distancesResult: DistanceBetweenStopPoints.Result = client.sendRequest(distancesQuery, sessionHeaders)
+
+        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = distancesResult
+            .service_pattern_get_distances_between_stop_points_by_routes
+            .map(ConversionsFromGraphQL::mapToJoreDistance)
+
+        return distancesBetweenStopPoints.distinct()
     }
 
     private fun convertLinesAndRoutes(
