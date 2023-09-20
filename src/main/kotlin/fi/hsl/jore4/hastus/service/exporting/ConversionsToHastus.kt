@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.service.exporting
 
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.Place
@@ -35,12 +36,13 @@ object ConversionsToHastus {
 
     private fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
         return routes.flatMap {
-            val variant = it.variant.ifEmpty { it.direction.toString() }
+            val routeDirection: Int = convertRouteDirection(it.direction)
+            val variant = it.variant.ifEmpty { routeDirection.toString() }
 
             val routeVariant = RouteVariant(
                 identifier = variant,
                 description = it.name,
-                direction = it.direction - 1,
+                direction = routeDirection - 1,
                 reversible = it.reversible,
                 routeIdAndVariantId = it.label + variant,
                 routeId = routeLabel
@@ -53,6 +55,12 @@ object ConversionsToHastus {
 
             listOf(routeVariant) + routeVariantPoints
         }
+    }
+
+    private fun convertRouteDirection(routeDirection: JoreRouteDirection): Int = when (routeDirection) {
+        JoreRouteDirection.OUTBOUND -> 1
+        JoreRouteDirection.INBOUND -> 2
+        else -> throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
     }
 
     private fun convertJoreRouteScheduledStopsToRouteVariantPoints(
