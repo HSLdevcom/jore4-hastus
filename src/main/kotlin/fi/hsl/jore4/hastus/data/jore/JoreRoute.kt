@@ -1,6 +1,6 @@
 package fi.hsl.jore4.hastus.data.jore
 
-class JoreRoute(
+data class JoreRoute(
     val label: String,
     val variant: String,
     val uniqueLabel: String,
