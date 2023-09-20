@@ -3,7 +3,6 @@ package fi.hsl.jore4.hastus.service.exporting.validation
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
@@ -17,7 +16,7 @@ private val LOGGER = KotlinLogging.logger {}
  * thrown on a failed timing point validation
  */
 @Service
-class ExportStopPointsValidator @Autowired constructor(
+class ExportStopPointsValidator(
     @Value("\${failOnTimingPointValidation}") val failOnTimingPointValidation: Boolean
 ) : IExportLineValidator {
 
