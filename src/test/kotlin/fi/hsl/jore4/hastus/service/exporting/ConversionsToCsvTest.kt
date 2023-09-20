@@ -1,6 +1,7 @@
 package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.Place
 import fi.hsl.jore4.hastus.data.hastus.Stop
@@ -96,7 +97,7 @@ class ConversionsToCsvTest {
                         variant = "",
                         uniqueLabel = "65x",
                         name = "Reitti A - B FI",
-                        direction = 1,
+                        direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
                         stopsOnRoute = stopPoints
                     ),
@@ -105,7 +106,7 @@ class ConversionsToCsvTest {
                         variant = "2",
                         uniqueLabel = "65y2",
                         name = "Reitti A - B 3 FI",
-                        direction = 1,
+                        direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
                         stopsOnRoute = stopPoints
                     )
@@ -173,7 +174,7 @@ class ConversionsToCsvTest {
                         variant = "",
                         uniqueLabel = "65x",
                         name = "Reitti A - B FI",
-                        direction = 1,
+                        direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
                         stopsOnRoute = stopPoints
                     )
