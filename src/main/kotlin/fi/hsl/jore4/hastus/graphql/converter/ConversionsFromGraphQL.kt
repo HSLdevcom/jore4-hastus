@@ -42,14 +42,18 @@ object ConversionsFromGraphQL {
 
     fun mapToJoreLineAndRoutes(
         line: route_line,
-        routes: List<route_route>,
+        routesBelongingToLine: List<route_route>,
         distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreLine {
+        val lineName: String = line.name_i18n.content[LANG_FINNISH].orEmpty()
+
         return JoreLine(
             line.label,
-            line.name_i18n.content[LANG_FINNISH].orEmpty(),
+            lineName,
             convertVehicleMode(line.vehicle_mode.vehicle_mode),
-            routes.map { mapToJoreRoute(it, distancesBetweenStops) }
+            routesBelongingToLine.map {
+                mapToJoreRoute(it, distancesBetweenStops)
+            }
         )
     }
 
@@ -94,11 +98,13 @@ object ConversionsFromGraphQL {
             Pair(it.first, it.second?.scheduled_stop_point_label.orEmpty())
         }
 
+        val routeName: String = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label)
+
         return JoreRoute(
             label = route.label,
             variant = route.variant.orEmpty(),
             uniqueLabel = route.unique_label.orEmpty(),
-            name = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label),
+            name = routeName,
             direction = convertRouteDirection(route.direction),
             reversible = false,
             stopsOnRoute = stopsWithNextLabel.map {
