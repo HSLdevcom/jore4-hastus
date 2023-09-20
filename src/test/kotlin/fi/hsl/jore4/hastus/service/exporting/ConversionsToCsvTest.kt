@@ -95,7 +95,6 @@ class ConversionsToCsvTest {
                     JoreRoute(
                         label = "65x",
                         variant = null,
-                        uniqueLabel = "65x",
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
@@ -104,7 +103,6 @@ class ConversionsToCsvTest {
                     JoreRoute(
                         label = "65y",
                         variant = "2",
-                        uniqueLabel = "65y2",
                         name = "Reitti A - B 3 FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
@@ -172,7 +170,6 @@ class ConversionsToCsvTest {
                     JoreRoute(
                         label = "65x",
                         variant = null,
-                        uniqueLabel = "65x",
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,
                         reversible = false,
