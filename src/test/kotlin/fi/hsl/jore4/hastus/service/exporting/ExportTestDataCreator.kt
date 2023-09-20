@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.service.exporting
 
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
@@ -17,7 +18,7 @@ interface ExportTestDataCreator {
                     variant = "",
                     uniqueLabel = "65x",
                     name = "Reitti A - B FI",
-                    direction = 1,
+                    direction = JoreRouteDirection.OUTBOUND,
                     reversible = false,
                     stopsOnRoute = stopsOnRoute
                 )
