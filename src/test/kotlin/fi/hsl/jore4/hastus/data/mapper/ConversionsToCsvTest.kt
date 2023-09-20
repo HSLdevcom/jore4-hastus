@@ -46,44 +46,44 @@ class ConversionsToCsvTest {
 
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
+                    stopLabel = "H1234",
                     timingPlaceShortName = "1AACKT",
-                    distanceToNextStop = 1234.0,
+                    isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = true,
-                    stopLabel = "H1234"
+                    distanceToNextStop = 1234.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1235",
                     timingPlaceShortName = "1ELIMK",
-                    distanceToNextStop = 1000.0,
+                    isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = false,
-                    stopLabel = "H1235"
+                    distanceToNextStop = 1000.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1236",
                     timingPlaceShortName = "1AURLA",
-                    distanceToNextStop = 250.0,
+                    isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = true,
-                    isTimingPoint = true,
-                    stopLabel = "H1236"
+                    distanceToNextStop = 250.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1237",
                     timingPlaceShortName = null,
-                    distanceToNextStop = 500.0,
+                    isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = false,
-                    stopLabel = "H1237"
+                    distanceToNextStop = 500.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1238",
                     timingPlaceShortName = "1KALA",
-                    distanceToNextStop = 0.0,
+                    isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = true,
-                    stopLabel = "H1238"
+                    distanceToNextStop = 0.0
                 )
             )
             val routes = listOf(
@@ -115,36 +115,36 @@ class ConversionsToCsvTest {
 
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
+                    stopLabel = "H1234",
                     timingPlaceShortName = "1AACKT",
-                    distanceToNextStop = 1234.0,
+                    isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = false,
-                    stopLabel = "H1234"
+                    distanceToNextStop = 1234.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1235",
                     timingPlaceShortName = "1ELIMK",
-                    distanceToNextStop = 1000.0,
+                    isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = true,
-                    stopLabel = "H1235"
+                    distanceToNextStop = 1000.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1236",
                     timingPlaceShortName = "1AURLA",
-                    distanceToNextStop = 2500.0,
+                    isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = false,
-                    isTimingPoint = true,
-                    stopLabel = "H1236"
+                    distanceToNextStop = 2500.0
                 ),
                 JoreRouteScheduledStop(
+                    stopLabel = "H1237",
                     timingPlaceShortName = "1KALA",
-                    distanceToNextStop = 0.0,
+                    isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
-                    isTimingPoint = false,
-                    stopLabel = "H1237"
+                    distanceToNextStop = 0.0
                 )
             )
             val routes = listOf(

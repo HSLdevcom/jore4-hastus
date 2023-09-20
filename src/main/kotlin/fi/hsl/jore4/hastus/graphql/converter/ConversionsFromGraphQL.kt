@@ -74,12 +74,12 @@ object ConversionsFromGraphQL {
         }
 
         return JoreRouteScheduledStop(
+            stopInJourneyPattern.scheduled_stop_point_label,
             stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label,
-            distanceToNextStop,
+            stopInJourneyPattern.is_used_as_timing_point,
             stopInJourneyPattern.is_regulated_timing_point,
             stopInJourneyPattern.is_loading_time_allowed,
-            stopInJourneyPattern.is_used_as_timing_point,
-            stopInJourneyPattern.scheduled_stop_point_label
+            distanceToNextStop
         )
     }
 

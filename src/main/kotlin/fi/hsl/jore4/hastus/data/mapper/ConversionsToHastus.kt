@@ -69,7 +69,7 @@ object ConversionsToHastus {
         //   converted in such a way that we calculate for each timing point the distance from the
         //   previous timing point.
         return stopPoints.map { stop ->
-            val specTpDistance: NumberWithAccuracy? = if (stop.isTimingPoint) {
+            val specTpDistance: NumberWithAccuracy? = if (stop.isUsedAsTimingPoint) {
                 val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
 
                 firstTimingPointEncountered = true
@@ -86,9 +86,9 @@ object ConversionsToHastus {
             }
 
             RouteVariantPoint(
-                place = stop.timingPlaceShortName?.takeIf { stop.isTimingPoint },
+                place = stop.timingPlaceShortName?.takeIf { stop.isUsedAsTimingPoint },
                 specTpDistance = specTpDistance,
-                isTimingPoint = stop.isTimingPoint,
+                isTimingPoint = stop.isUsedAsTimingPoint,
                 allowLoadTime = stop.isAllowedLoad,
                 regulatedTp = stop.isRegulatedTimingPoint,
                 stopLabel = stop.stopLabel,
