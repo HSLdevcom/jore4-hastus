@@ -16,7 +16,6 @@ interface ExportTestDataCreator {
                 JoreRoute(
                     label = "65x",
                     variant = null,
-                    uniqueLabel = "65x",
                     name = "Reitti A - B FI",
                     direction = JoreRouteDirection.OUTBOUND,
                     reversible = false,
