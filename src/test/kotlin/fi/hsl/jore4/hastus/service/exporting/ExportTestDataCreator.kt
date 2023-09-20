@@ -27,29 +27,29 @@ interface ExportTestDataCreator {
 
     fun createFirstStopPoint(
         timingPlaceShortName: String?,
-        isTimingPoint: Boolean = true
+        isUsedAsTimingPoint: Boolean = true
     ): JoreRouteScheduledStop {
         return JoreRouteScheduledStop(
+            stopLabel = "H1000",
             timingPlaceShortName = timingPlaceShortName,
-            distanceToNextStop = 123.0,
+            isUsedAsTimingPoint = isUsedAsTimingPoint,
             isRegulatedTimingPoint = false,
             isAllowedLoad = false,
-            isTimingPoint = isTimingPoint,
-            stopLabel = "H1000"
+            distanceToNextStop = 123.0
         )
     }
 
     fun createLastStopPoint(
         timingPlaceShortName: String?,
-        isTimingPoint: Boolean = true
+        isUsedAsTimingPoint: Boolean = true
     ): JoreRouteScheduledStop {
         return JoreRouteScheduledStop(
+            stopLabel = "H9999",
             timingPlaceShortName = timingPlaceShortName,
-            distanceToNextStop = 0.0,
+            isUsedAsTimingPoint = isUsedAsTimingPoint,
             isRegulatedTimingPoint = false,
             isAllowedLoad = false,
-            isTimingPoint = isTimingPoint,
-            stopLabel = "H9999"
+            distanceToNextStop = 0.0
         )
     }
 }
