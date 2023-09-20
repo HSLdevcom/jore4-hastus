@@ -94,7 +94,7 @@ class ConversionsToCsvTest {
                 routes = listOf(
                     JoreRoute(
                         label = "65x",
-                        variant = "",
+                        variant = null,
                         uniqueLabel = "65x",
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,
@@ -171,7 +171,7 @@ class ConversionsToCsvTest {
                 routes = listOf(
                     JoreRoute(
                         label = "65x",
-                        variant = "",
+                        variant = null,
                         uniqueLabel = "65x",
                         name = "Reitti A - B FI",
                         direction = JoreRouteDirection.OUTBOUND,

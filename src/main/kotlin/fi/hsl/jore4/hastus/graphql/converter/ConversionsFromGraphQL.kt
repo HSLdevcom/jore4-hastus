@@ -111,7 +111,7 @@ object ConversionsFromGraphQL {
 
         return JoreRoute(
             label = route.label,
-            variant = route.variant.orEmpty(),
+            variant = route.variant,
             uniqueLabel = route.unique_label.orEmpty(),
             name = routeName,
             direction = JoreRouteDirection.from(route.direction),

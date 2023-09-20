@@ -35,22 +35,23 @@ object ConversionsToHastus {
     }
 
     private fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
-        return routes.flatMap {
-            val routeDirection: Int = convertRouteDirection(it.direction)
-            val variant = it.variant.ifEmpty { routeDirection.toString() }
+        return routes.flatMap { route ->
+            val routeDirection: Int = convertRouteDirection(route.direction)
+            val variant: String = route.variant?.takeIf { it.isNotBlank() } ?: routeDirection.toString()
+            val routeUniqueLabel: String = route.label + variant
 
             val routeVariant = RouteVariant(
                 identifier = variant,
-                description = it.name,
+                description = route.name,
                 direction = routeDirection - 1,
-                reversible = it.reversible,
-                routeIdAndVariantId = it.label + variant,
+                reversible = route.reversible,
+                routeIdAndVariantId = routeUniqueLabel,
                 routeId = routeLabel
             )
 
             val routeVariantPoints: List<RouteVariantPoint> = convertJoreRouteScheduledStopsToRouteVariantPoints(
-                it.stopsOnRoute,
-                it.label + variant
+                route.stopsOnRoute,
+                routeUniqueLabel
             )
 
             listOf(routeVariant) + routeVariantPoints
