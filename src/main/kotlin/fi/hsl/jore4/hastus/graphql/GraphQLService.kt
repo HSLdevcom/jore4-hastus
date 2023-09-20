@@ -40,7 +40,7 @@ class GraphQLService(
     private val sessionHeaders: Map<String, String>
 ) {
 
-    fun getStopDistances(
+    private fun getDistancesBetweenRouteStopPoints(
         routeIds: List<UUID>,
         observationDate: LocalDate
     ): List<JoreDistanceBetweenTwoStopPoints> {
@@ -86,7 +86,7 @@ class GraphQLService(
         val routesGQL: List<route_route> = routesResult.route_route
 
         val routeIds: List<UUID> = routesGQL.map { it.route_id }
-        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getStopDistances(
+        val distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints> = getDistancesBetweenRouteStopPoints(
             routeIds,
             observationDate
         )
@@ -109,10 +109,13 @@ class GraphQLService(
         return routesGQL
             .mapNotNull { it.route_line }
             .distinctBy { it.label } // line label
-            .map {
+            .map { line ->
+                val routesBelongingToLine: List<route_route> = routesGQL
+                    .filter { r -> r.route_line?.label == line.label }
+
                 ConversionsFromGraphQL.mapToJoreLineAndRoutes(
-                    it,
-                    routesGQL.filter { r -> r.route_line?.label == it.label },
+                    line,
+                    routesBelongingToLine,
                     distancesIndexedByStopLabels
                 )
             }
@@ -219,15 +222,15 @@ class GraphQLService(
 
         val insertJourneyPatternRefs = InsertJourneyPatternRefs(
             variables = InsertJourneyPatternRefs.Variables(
-                journey_pattern_refs = journeyPatterns.map {
+                journey_pattern_refs = journeyPatterns.map { jp ->
                     timetables_journey_pattern_journey_pattern_ref_insert_input(
-                        journey_pattern_id = OptionalInput.Defined(it.journeyPatternId),
+                        journey_pattern_id = OptionalInput.Defined(jp.journeyPatternId),
                         observation_timestamp = OptionalInput.Defined(timestamp),
                         snapshot_timestamp = OptionalInput.Defined(timestamp),
-                        type_of_line = OptionalInput.Defined(it.typeOfLine),
+                        type_of_line = OptionalInput.Defined(jp.typeOfLine),
                         scheduled_stop_point_in_journey_pattern_refs = OptionalInput.Defined(
                             timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input(
-                                it.stops.map(ConversionsToGraphQL::mapToGraphQL)
+                                jp.stops.map(ConversionsToGraphQL::mapToGraphQL)
                             )
                         )
                     )
