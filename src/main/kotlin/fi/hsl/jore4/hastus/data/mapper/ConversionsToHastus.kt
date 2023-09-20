@@ -19,31 +19,39 @@ object ConversionsToHastus {
 
     fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> {
         return lines.flatMap {
-            listOf(
-                Route(
-                    identifier = it.label,
-                    description = it.name,
-                    serviceType = 0,
-                    direction = 0,
-                    serviceMode = it.vehicleMode
-                )
-            ) + convertJoreRoutesToRouteVariants(it.routes, it.label)
+            val hastusRoute = Route(
+                identifier = it.label,
+                description = it.name,
+                serviceType = 0,
+                direction = 0,
+                serviceMode = it.vehicleMode
+            )
+
+            val hastusRouteVariants: List<IHastusData> = convertJoreRoutesToRouteVariants(it.routes, it.label)
+
+            listOf(hastusRoute) + hastusRouteVariants
         }
     }
 
     private fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
         return routes.flatMap {
             val variant = it.variant.ifEmpty { it.direction.toString() }
-            listOf(
-                RouteVariant(
-                    identifier = variant,
-                    description = it.name,
-                    direction = it.direction - 1,
-                    reversible = it.reversible,
-                    routeIdAndVariantId = it.label + variant,
-                    routeId = routeLabel
-                )
-            ) + convertJoreRouteScheduledStopsToRouteVariantPoints(it.stopsOnRoute, it.label + variant)
+
+            val routeVariant = RouteVariant(
+                identifier = variant,
+                description = it.name,
+                direction = it.direction - 1,
+                reversible = it.reversible,
+                routeIdAndVariantId = it.label + variant,
+                routeId = routeLabel
+            )
+
+            val routeVariantPoints: List<RouteVariantPoint> = convertJoreRouteScheduledStopsToRouteVariantPoints(
+                it.stopsOnRoute,
+                it.label + variant
+            )
+
+            listOf(routeVariant) + routeVariantPoints
         }
     }
 
@@ -92,33 +100,31 @@ object ConversionsToHastus {
     fun convertJoreStopsToHastus(
         stops: List<JoreScheduledStop>
     ): List<Stop> {
-        return stops
-            .map {
-                Stop(
-                    identifier = it.label,
-                    platform = it.platform,
-                    descriptionFinnish = it.nameFinnish,
-                    descriptionSwedish = it.nameSwedish,
-                    streetFinnish = it.streetNameFinnish,
-                    streetSwedish = it.streetNameSwedish,
-                    place = it.timingPlaceShortName,
-                    gpsX = NumberWithAccuracy(it.location.x, 2, 6),
-                    gpsY = NumberWithAccuracy(it.location.y, 2, 6),
-                    shortIdentifier = it.label
-                )
-            }
+        return stops.map {
+            Stop(
+                identifier = it.label,
+                platform = it.platform,
+                descriptionFinnish = it.nameFinnish,
+                descriptionSwedish = it.nameSwedish,
+                streetFinnish = it.streetNameFinnish,
+                streetSwedish = it.streetNameSwedish,
+                place = it.timingPlaceShortName,
+                gpsX = NumberWithAccuracy(it.location.x, 2, 6),
+                gpsY = NumberWithAccuracy(it.location.y, 2, 6),
+                shortIdentifier = it.label
+            )
+        }
     }
 
     fun convertJoreTimingPlacesToHastus(
         timingPlaces: List<JoreTimingPlace>
     ): List<Place> {
-        return timingPlaces
-            .map {
-                Place(
-                    identifier = it.label,
-                    description = it.description
-                )
-            }
+        return timingPlaces.map {
+            Place(
+                identifier = it.label,
+                description = it.description
+            )
+        }
     }
 
     fun convertDistancesBetweenStopPointsToHastus(
