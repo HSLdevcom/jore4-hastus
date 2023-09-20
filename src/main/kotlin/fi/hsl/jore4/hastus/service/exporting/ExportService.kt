@@ -9,12 +9,11 @@ import fi.hsl.jore4.hastus.data.mapper.ConversionsToHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.util.CsvWriter
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
-class ExportService @Autowired constructor(
+class ExportService(
     val graphQLService: GraphQLService,
     val lineValidator: IExportLineValidator
 ) {
