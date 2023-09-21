@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
+import fi.hsl.jore4.hastus.Constants.LANG_FINNISH
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
@@ -15,9 +16,6 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_schedu
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place
 
 object ConversionsFromGraphQL {
-
-    private const val LANG_FINNISH = "fi_FI"
-    private const val LANG_SWEDISH = "se_SE"
 
     private fun convertVehicleMode(vehicleMode: String): Int = when (vehicleMode) {
         "train" -> 2

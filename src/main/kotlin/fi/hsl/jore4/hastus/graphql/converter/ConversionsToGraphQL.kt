@@ -1,6 +1,7 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
+import fi.hsl.jore4.hastus.Constants
 import fi.hsl.jore4.hastus.data.jore.JoreBlock
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
@@ -25,7 +26,6 @@ import kotlin.time.toJavaDuration
 
 object ConversionsToGraphQL {
 
-    const val FI_LANG_KEY = "fi_FI"
     const val PRIORITY_STAGING = 40
 
     fun mapToGraphQL(stop: JoreStopPoint): timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_insert_input {
@@ -120,6 +120,6 @@ object ConversionsToGraphQL {
 
     fun mapToFiJson(text: String): OptionalInput<IJSONB> {
         val converter = JsonbScalarConverter()
-        return OptionalInput.Defined(converter.toScalar(linkedMapOf(FI_LANG_KEY to text)))
+        return OptionalInput.Defined(converter.toScalar(linkedMapOf(Constants.LANG_FINNISH to text)))
     }
 }
