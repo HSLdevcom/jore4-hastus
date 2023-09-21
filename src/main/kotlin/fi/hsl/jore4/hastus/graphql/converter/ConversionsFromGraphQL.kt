@@ -2,33 +2,19 @@ package fi.hsl.jore4.hastus.graphql.converter
 
 import fi.hsl.jore4.hastus.Constants.LANG_FINNISH
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
-import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
-import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
-import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
-import fi.hsl.jore4.hastus.generated.distancebetweenstoppoints.service_pattern_distance_between_stops_calculation
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
-import fi.hsl.jore4.hastus.generated.routeswithhastusdata.timing_pattern_timing_place
 
 object ConversionsFromGraphQL {
 
     private fun convertVehicleMode(vehicleMode: String): Int = when (vehicleMode) {
         "train" -> 2
         else -> 0
-    }
-
-    fun mapToJoreTimingPlace(timingPlace: timing_pattern_timing_place): JoreTimingPlace {
-        val description: String = timingPlace
-            .description
-            ?.content
-            ?.get(LANG_FINNISH) ?: timingPlace.label // Use label as description if one is not provided
-
-        return JoreTimingPlace(timingPlace.label, description)
     }
 
     fun mapToJoreLineAndRoutes(
@@ -47,18 +33,6 @@ object ConversionsFromGraphQL {
             }
         )
     }
-
-    fun mapToJoreStop(stop: service_pattern_scheduled_stop_point) =
-        JoreScheduledStop(
-            stop.label,
-            "00", // TODO
-            "kuvaus", // TODO
-            "beskrivning", // TODO
-            "katu", // TODO
-            "gata", // TODO
-            stop.timing_place?.label,
-            stop.measured_location
-        )
 
     private fun mapToJoreRouteScheduledStop(
         stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
@@ -127,11 +101,4 @@ object ConversionsFromGraphQL {
             }
         )
     }
-
-    fun mapToJoreDistance(distance: service_pattern_distance_between_stops_calculation) =
-        JoreDistanceBetweenTwoStopPoints(
-            distance.start_stop_label,
-            distance.end_stop_label,
-            distance.distance_in_metres.toDouble() // transform decimal number from String format to Double
-        )
 }
