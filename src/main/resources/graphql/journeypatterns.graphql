@@ -26,6 +26,7 @@ query JourneyPatternsForRoutes(
     }
   ) {
     unique_label
+    direction
     route_journey_patterns {
       journey_pattern_id
       scheduled_stop_point_in_journey_patterns(order_by: {scheduled_stop_point_sequence: asc}) {

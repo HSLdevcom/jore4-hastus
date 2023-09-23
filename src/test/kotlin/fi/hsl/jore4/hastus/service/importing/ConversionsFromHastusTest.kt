@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.service.importing
 
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
 import fi.hsl.jore4.hastus.data.hastus.BlockRecord
 import fi.hsl.jore4.hastus.data.hastus.BookingRecord
@@ -30,7 +31,7 @@ class ConversionsFromHastusTest {
     inner class TestConvertHastusDataToJore {
 
         @Test
-        fun `when converting parsed CSV to Jore types`() {
+        fun `when converting parsed CSV to Jore object hierarchy`() {
             val hastusBookingRecordName = "Testing"
 
             val vehicleTypeIndex = mapOf(
@@ -47,18 +48,30 @@ class ConversionsFromHastusTest {
                 JoreStopPoint(UUID.randomUUID(), "stop2", 1),
                 JoreStopPoint(UUID.randomUUID(), "stop3", 2)
             )
-            val journeyPattern1 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-1", "stopping_bus_service", stopList1)
+            val journeyPattern1 = JoreJourneyPattern(
+                id = UUID.randomUUID(),
+                routeUniqueLabel = "ROUTE-1",
+                routeDirection = JoreRouteDirection.OUTBOUND,
+                typeOfLine = "stopping_bus_service",
+                stops = stopList1
+            )
 
             val stopList2 = listOf(
                 JoreStopPoint(UUID.randomUUID(), "stop21", 0),
                 JoreStopPoint(UUID.randomUUID(), "stop22", 1),
                 JoreStopPoint(UUID.randomUUID(), "stop23", 2)
             )
-            val journeyPattern2 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-2", "regional_bus_service", stopList2)
+            val journeyPattern2 = JoreJourneyPattern(
+                id = UUID.randomUUID(),
+                routeUniqueLabel = "ROUTE-2",
+                routeDirection = JoreRouteDirection.INBOUND,
+                typeOfLine = "regional_bus_service",
+                stops = stopList2
+            )
 
-            val journeyPatternsIndexedByRouteLabel = mapOf(
-                journeyPattern1.routeUniqueLabel!! to journeyPattern1,
-                journeyPattern2.routeUniqueLabel!! to journeyPattern2
+            val journeyPatternsIndexedByRouteId = mapOf(
+                journeyPattern1.routeLabelAndDirection to journeyPattern1,
+                journeyPattern2.routeLabelAndDirection to journeyPattern2
             )
 
             val hastusData: List<IHastusData> = listOf(
@@ -66,24 +79,24 @@ class ConversionsFromHastusTest {
                 generateBookingRecord(hastusBookingRecordName, "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1", "1"),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop2", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop2", "0520", "", ""),
                 generateTripStopRecord("trip1", "stop3", "0530", "T", ""),
                 generateBlockRecord("block2", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block2", "trip2", "ROUTE-1", "2"),
+                generateTripRecord("block2", "trip2", "ROUTE-1", "1", direction = 1),
                 generateTripStopRecord("trip2", "stop1", "0655", "T", ""),
                 generateTripStopRecord("trip2", "stop2", "0710", "", ""),
                 generateTripStopRecord("trip2", "stop2", "0720", "", "a"),
                 generateTripStopRecord("trip2", "stop3", "0730", "T", ""),
                 generateBlockRecord("block20", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block20", "trip3", "ROUTE-2", "1"),
+                generateTripRecord("block20", "trip3", "ROUTE-2", "2", direction = 2),
                 generateTripStopRecord("trip3", "stop21", "0455", "T", ""),
                 generateTripStopRecord("trip3", "stop22", "0520", "", ""),
                 generateTripStopRecord("trip3", "stop23", "0530", "T", ""),
                 generateBlockRecord("block21", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block21", "trip4", "ROUTE-2", "2"),
+                generateTripRecord("block21", "trip4", "ROUTE-2", "2", direction = 2),
                 generateTripStopRecord("trip4", "stop21", "0655", "T", ""),
                 generateTripStopRecord("trip4", "stop22", "0720", "", ""),
                 generateTripStopRecord("trip4", "stop23", "0730", "T", "")
@@ -93,7 +106,7 @@ class ConversionsFromHastusTest {
                 hastusData,
                 vehicleTypeIndex,
                 dayTypeIndex,
-                journeyPatternsIndexedByRouteLabel
+                journeyPatternsIndexedByRouteId
             )
 
             assertEquals(hastusBookingRecordName, vehicleScheduleFrame.label)
@@ -182,7 +195,7 @@ class ConversionsFromHastusTest {
         }
 
         @Test
-        fun `when journey pattern does not have a stop defined in Hastus`() {
+        fun `when journey pattern does not contain a stop point defined in Hastus`() {
             val vehicleTypeIndex = mapOf(
                 VEHICLE_TYPE_1_KEY to VEHICLE_TYPE_1_ID
             )
@@ -195,10 +208,16 @@ class ConversionsFromHastusTest {
                 JoreStopPoint(UUID.randomUUID(), "stop2", 1),
                 JoreStopPoint(UUID.randomUUID(), "stop3", 2)
             )
-            val journeyPattern1 = JoreJourneyPattern(UUID.randomUUID(), "ROUTE-1", "stopping_bus_service", stopList1)
+            val journeyPattern1 = JoreJourneyPattern(
+                id = UUID.randomUUID(),
+                routeUniqueLabel = "ROUTE-1",
+                routeDirection = JoreRouteDirection.OUTBOUND,
+                typeOfLine = "stopping_bus_service",
+                stops = stopList1
+            )
 
-            val journeyPatternsIndexedByRouteLabel = mapOf(
-                journeyPattern1.routeUniqueLabel!! to journeyPattern1
+            val journeyPatternsIndexedByRouteId = mapOf(
+                journeyPattern1.routeLabelAndDirection to journeyPattern1
             )
 
             val hastusData: List<IHastusData> = listOf(
@@ -206,23 +225,26 @@ class ConversionsFromHastusTest {
                 generateBookingRecord("name", "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1", "1"),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop4", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop4", "0520", "", ""),
                 generateTripStopRecord("trip1", "stop3", "0530", "T", "")
             )
 
-            val exception = assertFailsWith<IllegalStateException> {
+            val exception = assertFailsWith<NoJourneyPatternMatchesHastusTripStopsException> {
                 ConversionsFromHastus.convertHastusDataToJore(
                     hastusData,
                     vehicleTypeIndex,
                     dayTypeIndex,
-                    journeyPatternsIndexedByRouteLabel
+                    journeyPatternsIndexedByRouteId
                 )
             }
 
-            assertEquals("Trip ROUTE-1 contains unknown stop along the route: [stop4]", exception.message)
+            assertEquals(
+                "400 BAD_REQUEST \"Hastus trip 'ROUTE-1 (outbound)' contains unknown stop points along the route: 'stop4'\"",
+                exception.message
+            )
         }
     }
 
@@ -337,32 +359,44 @@ class ConversionsFromHastusTest {
             vehicleType
         )
 
-        fun generateTripRecord(lineLabel: String, variant: String) =
-            generateTripRecord("BLOCK-1", "TRIP-1", lineLabel, variant)
-
-        fun generateTripRecord(block: String, trip: String, relation: String, variant: String) = TripRecord(
-            "CONTRACT",
-            block,
-            trip,
-            "1595",
-            0,
-            relation,
-            "4571",
-            variant,
-            "05:04",
-            "05:55",
-            60,
-            0,
-            4,
-            25.200,
-            "0",
-            "",
-            1,
-            2,
-            isVehicleTypeMandatory = false,
-            isBackupTrip = false,
-            isExtraTrip = false
+        fun generateTripRecord(lineLabel: String, variant: String) = generateTripRecord(
+            block = "BLOCK-1",
+            tripInternalNumber = "TRIP-1",
+            lineLabel = lineLabel,
+            variant = variant,
+            direction = 1
         )
+
+        fun generateTripRecord(
+            block: String,
+            tripInternalNumber: String,
+            lineLabel: String,
+            variant: String,
+            direction: Int
+        ) =
+            TripRecord(
+                "CONTRACT",
+                block,
+                tripInternalNumber,
+                "1595",
+                0,
+                lineLabel,
+                "4571",
+                variant,
+                "05:04",
+                "05:55",
+                60,
+                0,
+                4,
+                25.200,
+                "0",
+                "",
+                direction,
+                2,
+                isVehicleTypeMandatory = false,
+                isBackupTrip = false,
+                isExtraTrip = false
+            )
 
         fun generateTripStopRecord(
             trip: String,
