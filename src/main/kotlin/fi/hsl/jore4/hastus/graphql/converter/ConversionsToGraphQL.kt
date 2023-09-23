@@ -61,7 +61,7 @@ object ConversionsToGraphQL {
         )
     }
 
-    fun mapToGraphQL(
+    private fun mapToGraphQL(
         vehicleService: JoreVehicleService,
         journeyPatternReferencesIndexedByJourneyPatternId: Map<UUID, JoreJourneyPatternReference>
     ): timetables_vehicle_service_vehicle_service_insert_input {
@@ -76,7 +76,7 @@ object ConversionsToGraphQL {
         )
     }
 
-    fun mapToGraphQL(
+    private fun mapToGraphQL(
         block: JoreBlock,
         journeyPatternReferencesIndexedByJourneyPatternId: Map<UUID, JoreJourneyPatternReference>
     ): timetables_vehicle_service_block_insert_input {
@@ -96,7 +96,7 @@ object ConversionsToGraphQL {
         )
     }
 
-    fun mapToGraphQL(
+    private fun mapToGraphQL(
         vehicleJourney: JoreVehicleJourney,
         associatedJourneyPatternRef: JoreJourneyPatternReference
     ): timetables_vehicle_journey_vehicle_journey_insert_input {
@@ -118,13 +118,12 @@ object ConversionsToGraphQL {
         )
     }
 
-    fun mapToGraphQL(passingTime: Pair<JorePassingTime, JoreStopReference>): timetables_passing_times_timetabled_passing_time_insert_input {
-        return timetables_passing_times_timetabled_passing_time_insert_input(
-            arrival_time = OptionalInput.Defined(passingTime.first.arrivalTime?.toJavaDuration()),
-            departure_time = OptionalInput.Defined(passingTime.first.departureTime?.toJavaDuration()),
-            scheduled_stop_point_in_journey_pattern_ref_id = OptionalInput.Defined(passingTime.second.stopId)
+    private fun mapToGraphQL(pair: Pair<JorePassingTime, JoreStopReference>) =
+        timetables_passing_times_timetabled_passing_time_insert_input(
+            arrival_time = OptionalInput.Defined(pair.first.arrivalTime?.toJavaDuration()),
+            departure_time = OptionalInput.Defined(pair.first.departureTime?.toJavaDuration()),
+            scheduled_stop_point_in_journey_pattern_ref_id = OptionalInput.Defined(pair.second.stopId)
         )
-    }
 
     fun mapToFiJson(text: String): OptionalInput<IJSONB> {
         val converter = JsonbScalarConverter()
