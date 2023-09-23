@@ -37,9 +37,9 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
 
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
             hastusItems,
-            journeyPatternsIndexedByRouteLabel,
             vehicleTypeIndex,
-            dayTypeIndex
+            dayTypeIndex,
+            journeyPatternsIndexedByRouteLabel
         )
 
         return graphQLService.persistVehicleScheduleFrame(
