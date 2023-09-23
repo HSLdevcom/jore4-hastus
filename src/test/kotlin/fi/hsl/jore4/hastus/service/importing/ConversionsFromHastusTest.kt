@@ -86,9 +86,9 @@ class ConversionsFromHastusTest {
 
         val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
             hastusData,
-            journeyPatternsIndexedByRouteLabel,
             vehicleTypeIndex,
-            dayTypeIndex
+            dayTypeIndex,
+            journeyPatternsIndexedByRouteLabel
         )
 
         assertEquals(hastusBookingRecordName, vehicleScheduleFrame.label)
@@ -211,9 +211,9 @@ class ConversionsFromHastusTest {
         val exception = assertFailsWith<IllegalStateException> {
             ConversionsFromHastus.convertHastusDataToJore(
                 hastusData,
-                journeyPatternsIndexedByRouteLabel,
                 vehicleTypeIndex,
-                dayTypeIndex
+                dayTypeIndex,
+                journeyPatternsIndexedByRouteLabel
             )
         }
 

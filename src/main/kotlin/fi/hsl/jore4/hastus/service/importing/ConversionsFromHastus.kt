@@ -28,9 +28,9 @@ object ConversionsFromHastus {
 
     fun convertHastusDataToJore(
         hastusData: List<IHastusData>,
-        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
         vehicleTypeIndex: Map<Int, UUID>,
-        dayTypeIndex: Map<String, UUID>
+        dayTypeIndex: Map<String, UUID>,
+        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>
     ): JoreVehicleScheduleFrame {
         val hastusBookingRecord: BookingRecord = hastusData.filterIsInstance<BookingRecord>().first()
         val hastusVehicleScheduleRecord: VehicleScheduleRecord =
@@ -39,7 +39,7 @@ object ConversionsFromHastus {
         val hastusTripRecords: List<TripRecord> = hastusData.filterIsInstance<TripRecord>()
         val hastusTripStopRecords: List<TripStopRecord> = hastusData.filterIsInstance<TripStopRecord>()
 
-        // Construct relations according to the keys in the elements
+        // Construct relations according to the keys in the elements.
         val hastusTripIndex: Map<TripRecord, List<TripStopRecord>> =
             hastusTripRecords.associateWith { trip ->
                 hastusTripStopRecords.filter { stop -> stop.tripInternalNumber == trip.tripInternalNumber }
@@ -49,21 +49,26 @@ object ConversionsFromHastus {
                 hastusTripIndex.filter { trip -> trip.key.blockNumber == block.internalNumber }
             }
 
-        // Collect the names for all included vehicle services
-        val vehicleServiceNames: List<String> = hastusBlockIndex.keys.map { it.vehicleServiceName }.distinct()
+        // Collect the names for all included vehicle services.
+        val vehicleServiceNames: List<String> = hastusBlockIndex
+            .keys
+            .map { it.vehicleServiceName }
+            .distinct()
+
+        val dayTypeId: UUID = determineIdOfDayType(
+            hastusBookingRecord.startDate,
+            hastusBookingRecord.endDate,
+            hastusVehicleScheduleRecord.scheduleType,
+            dayTypeIndex
+        )
 
         val vehicleServices: List<JoreVehicleService> = vehicleServiceNames.map { vehicleServiceName ->
             mapToJoreVehicleService(
                 vehicleServiceName,
+                dayTypeId,
                 hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
                 journeyPatternsIndexedByRouteLabel,
-                vehicleTypeIndex,
-                determineDayType(
-                    hastusBookingRecord.startDate,
-                    hastusBookingRecord.endDate,
-                    hastusVehicleScheduleRecord.scheduleType,
-                    dayTypeIndex
-                )
+                vehicleTypeIndex
             )
         }
 
@@ -78,8 +83,8 @@ object ConversionsFromHastus {
         )
     }
 
-    // Convert predefined magic numbers into those used in the database
-    private fun determineDayType(
+    // Convert predefined magic numbers into those used in the database.
+    private fun determineIdOfDayType(
         hastusBookingRecordStartDate: LocalDate,
         hastusBookingRecordEndDate: LocalDate,
         day: Int,
@@ -120,10 +125,10 @@ object ConversionsFromHastus {
 
     private fun mapToJoreVehicleService(
         vehicleServiceName: String,
+        dayTypeId: UUID,
         hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
         journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
-        vehicleTypeIndex: Map<Int, UUID>,
-        dayTypeId: UUID
+        vehicleTypeIndex: Map<Int, UUID>
     ): JoreVehicleService {
         return JoreVehicleService(
             vehicleServiceName,
@@ -233,7 +238,7 @@ object ConversionsFromHastus {
         )
     }
 
-    // Convert a HH:MM string into two possibly >24h numbers
+    // Convert a HH:MM string into two possibly >24h numbers.
     private fun getTime(time: String?): Duration? {
         val hours = time?.substring(0, 2)?.toInt()?.hours
         val minutes = time?.substring(2, 4)?.toInt()?.minutes
