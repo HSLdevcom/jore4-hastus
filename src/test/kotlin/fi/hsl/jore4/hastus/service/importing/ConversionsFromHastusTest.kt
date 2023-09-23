@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.mapper
+package fi.hsl.jore4.hastus.service.importing
 
 import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
 import fi.hsl.jore4.hastus.data.hastus.BlockRecord
