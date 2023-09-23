@@ -1,6 +1,8 @@
 package fi.hsl.jore4.hastus.service.importing
 
 import fi.hsl.jore4.hastus.data.format.JoreJourneyType
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
+import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.data.hastus.BlockRecord
 import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
@@ -30,7 +32,7 @@ object ConversionsFromHastus {
         hastusData: List<IHastusData>,
         vehicleTypeIndex: Map<Int, UUID>,
         dayTypeIndex: Map<String, UUID>,
-        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>
+        journeyPatternIndex: Map<RouteLabelAndDirection, JoreJourneyPattern>
     ): JoreVehicleScheduleFrame {
         val hastusBookingRecord: BookingRecord = hastusData.filterIsInstance<BookingRecord>().first()
         val hastusVehicleScheduleRecord: VehicleScheduleRecord =
@@ -67,7 +69,7 @@ object ConversionsFromHastus {
                 vehicleServiceName,
                 dayTypeId,
                 hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
-                journeyPatternsIndexedByRouteLabel,
+                journeyPatternIndex,
                 vehicleTypeIndex
             )
         }
@@ -127,7 +129,7 @@ object ConversionsFromHastus {
         vehicleServiceName: String,
         dayTypeId: UUID,
         hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
-        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
+        journeyPatternIndex: Map<RouteLabelAndDirection, JoreJourneyPattern>,
         vehicleTypeIndex: Map<Int, UUID>
     ): JoreVehicleService {
         return JoreVehicleService(
@@ -137,7 +139,7 @@ object ConversionsFromHastus {
                 mapToJoreBlock(
                     it.key,
                     it.value,
-                    journeyPatternsIndexedByRouteLabel,
+                    journeyPatternIndex,
                     vehicleTypeIndex
                 )
             }
@@ -147,7 +149,7 @@ object ConversionsFromHastus {
     private fun mapToJoreBlock(
         hastusBlock: BlockRecord,
         hastusTripIndex: Map<TripRecord, List<TripStopRecord>>,
-        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>,
+        journeyPatternIndex: Map<RouteLabelAndDirection, JoreJourneyPattern>,
         vehicleTypeIndex: Map<Int, UUID>
     ): JoreBlock {
         if (!vehicleTypeIndex.containsKey(hastusBlock.vehicleType)) {
@@ -159,27 +161,50 @@ object ConversionsFromHastus {
             hastusBlock.prepOutTime.minutes,
             hastusBlock.prepInTime.minutes,
             vehicleTypeIndex[hastusBlock.vehicleType]!!,
-            hastusTripIndex.map { mapToJoreVehicleJourney(it.key, it.value, journeyPatternsIndexedByRouteLabel) }
+            hastusTripIndex.map { mapToJoreVehicleJourney(it.key, it.value, journeyPatternIndex) }
         )
     }
 
     private fun mapToJoreVehicleJourney(
         hastusTrip: TripRecord,
         hastusStops: List<TripStopRecord>,
-        journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern>
+        journeyPatternIndex: Map<RouteLabelAndDirection, JoreJourneyPattern>
     ): JoreVehicleJourney {
-        val routeLabel: String = hastusTrip.tripRoute
-        val journeyPatternStopLabels = hastusStops.map { it.stopId }.distinct()
-        val journeyPatternStopsIndexedByLabel: Map<String, JoreStopPoint> =
-            journeyPatternsIndexedByRouteLabel[routeLabel]?.stops?.associate { it.label to it }.orEmpty()
+        val routeLabelAndDirection: RouteLabelAndDirection = extractRouteLabelAndDirection(hastusTrip)
+        val hastusStopLabels = hastusStops.map { it.stopId }.distinct()
 
-        if (!journeyPatternStopsIndexedByLabel.keys.containsAll(journeyPatternStopLabels)) {
-            val unknowns = journeyPatternStopLabels.subtract(journeyPatternStopsIndexedByLabel.keys)
-            LOGGER.error { "Trip $hastusTrip has unknown stop along the route: $unknowns" }
-            throw IllegalStateException("Trip $routeLabel contains unknown stop along the route: $unknowns")
-        }
+        val journeyPattern: JoreJourneyPattern = journeyPatternIndex[routeLabelAndDirection]
+            ?: run {
+                // Should never happen during application runtime because journeyPatternIndex is
+                // expected to be complete at this point. Possible failures should have occurred
+                // earlier in the processing chain. Hence, logging as an error.
+                val exception = UnmatchedRoutesWithinImport(listOf(routeLabelAndDirection))
+                LOGGER.error(exception.message)
+                throw exception
+            }
 
-        val journeyPatternId = journeyPatternsIndexedByRouteLabel[routeLabel]?.journeyPatternId!!
+        val journeyPatternStopsIndexedByLabel: Map<String, JoreStopPoint> = journeyPattern
+            .stops
+            .associateBy { it.label }
+            .also { resultMap: Map<String, JoreStopPoint> ->
+
+                val stopLabelsExtractedFromJourneyPatternStops: Set<String> = resultMap.keys
+
+                if (!stopLabelsExtractedFromJourneyPatternStops.containsAll(hastusStopLabels)) {
+                    // Should never happen during application runtime because journey pattern stops
+                    // are expected to be complete at this point. The failure should have occurred
+                    // in the earlier stages of the processing chain. Hence, logging as an error.
+                    val unknownStopLabels = hastusStopLabels.subtract(stopLabelsExtractedFromJourneyPatternStops)
+                    val errorMessage =
+                        "Hastus trip '$routeLabelAndDirection' contains unknown stop points along the route: ${
+                            unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
+                        }"
+                    LOGGER.error(errorMessage)
+                    throw NoJourneyPatternMatchesHastusTripStopsException(errorMessage)
+                }
+            }
+
+        val journeyPatternId = journeyPattern.id
 
         return JoreVehicleJourney(
             hastusTrip.tripNumber,
@@ -191,13 +216,13 @@ object ConversionsFromHastus {
             hastusTrip.isBackupTrip,
             hastusTrip.isExtraTrip,
             journeyPatternId,
-            journeyPatternStopLabels
+            hastusStopLabels
                 .mapIndexed { index, stopLabel ->
                     mapToJorePassingTimes(
                         hastusStops.filter { hastusStop -> hastusStop.stopId == stopLabel },
                         journeyPatternStopsIndexedByLabel[stopLabel]!!.id,
                         index == 0,
-                        index == journeyPatternStopLabels.size - 1
+                        index == hastusStopLabels.size - 1
                     )
                 }
         )
@@ -211,7 +236,7 @@ object ConversionsFromHastus {
 
     private fun mapToJorePassingTimes(
         hastusStop: List<TripStopRecord>,
-        stopReferenceId: UUID,
+        journeyPatternStopRefId: UUID,
         isFirstStop: Boolean,
         isLastStop: Boolean
     ): JorePassingTime {
@@ -232,7 +257,7 @@ object ConversionsFromHastus {
         }
 
         return JorePassingTime(
-            stopReferenceId,
+            journeyPatternStopRefId,
             arrivalDefinition,
             departureDefinition
         )
@@ -275,4 +300,17 @@ object ConversionsFromHastus {
 
         return "$lineLabel$trimmedVariant"
     }
+
+    fun extractRouteDirection(trip: TripRecord): JoreRouteDirection {
+        return when (trip.direction) {
+            1 -> JoreRouteDirection.OUTBOUND
+            2 -> JoreRouteDirection.INBOUND
+            else -> throw IllegalArgumentException("Unknown Hastus route direction: ${trip.direction}")
+        }
+    }
+
+    fun extractRouteLabelAndDirection(trip: TripRecord) = RouteLabelAndDirection(
+        extractRouteLabel(trip),
+        extractRouteDirection(trip)
+    )
 }

@@ -1,6 +1,7 @@
 package fi.hsl.jore4.hastus.graphql
 
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
+import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternReference
@@ -138,11 +139,11 @@ class GraphQLService(
         return stopPoints to timingPlaces
     }
 
-    fun getJourneyPatternsIndexingByRouteLabel(
+    fun getJourneyPatterns(
         uniqueRouteLabels: List<String>,
         validityPeriodStart: LocalDate,
         validityPeriodEnd: LocalDate
-    ): Map<String, JoreJourneyPattern> {
+    ): List<JoreJourneyPattern> {
         val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
                 route_labels = uniqueRouteLabels,
@@ -156,12 +157,13 @@ class GraphQLService(
 
         return journeyPatternsResult
             .route_route
-            .associate {
-                it.unique_label.orEmpty() to JoreJourneyPattern(
-                    it.route_journey_patterns[0].journey_pattern_id,
-                    it.unique_label,
-                    it.route_line?.type_of_line.toString().lowercase(),
-                    it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
+            .map {
+                JoreJourneyPattern(
+                    id = it.route_journey_patterns[0].journey_pattern_id,
+                    routeUniqueLabel = it.unique_label!!,
+                    routeDirection = JoreRouteDirection.from(it.direction),
+                    typeOfLine = it.route_line?.type_of_line.toString().lowercase(),
+                    stops = it.route_journey_patterns[0].scheduled_stop_point_in_journey_patterns.map { stop ->
                         JoreStopPoint(
                             stop.scheduled_stop_points.first().scheduled_stop_point_id,
                             stop.scheduled_stop_point_label,
@@ -195,19 +197,20 @@ class GraphQLService(
     }
 
     fun persistVehicleScheduleFrame(
-        journeyPatterns: Collection<JoreJourneyPattern>,
-        vehicleScheduleFrame: JoreVehicleScheduleFrame
+        vehicleScheduleFrame: JoreVehicleScheduleFrame,
+        journeyPatterns: List<JoreJourneyPattern>
     ): UUID? {
         // Use synchronized block when persisting data via GraphQL, since there is no transaction
         // support for it. Multiple simultaneous modifications of the same table will fail.
         synchronized(SYNC_LOCK_OBJECT) {
-            val journeyPatternRefMap = createJourneyPatternReferences(journeyPatterns)
+            val journeyPatternReferencesIndexedByJourneyPatternId: Map<UUID, JoreJourneyPatternReference> =
+                createJourneyPatternReferences(journeyPatterns)
 
             val insertVehicleScheduleFrame = InsertVehicleScheduleFrame(
                 variables = InsertVehicleScheduleFrame.Variables(
                     vehicle_schedule_frame = ConversionsToGraphQL.mapToGraphQL(
                         vehicleScheduleFrame,
-                        journeyPatternRefMap
+                        journeyPatternReferencesIndexedByJourneyPatternId
                     )
                 )
             )
@@ -222,8 +225,8 @@ class GraphQLService(
         }
     }
 
-    fun createJourneyPatternReferences(
-        journeyPatterns: Collection<JoreJourneyPattern>
+    private fun createJourneyPatternReferences(
+        journeyPatterns: List<JoreJourneyPattern>
     ): Map<UUID, JoreJourneyPatternReference> {
         val timestamp = OffsetDateTime.now()
 
@@ -231,7 +234,7 @@ class GraphQLService(
             variables = InsertJourneyPatternRefs.Variables(
                 journey_pattern_refs = journeyPatterns.map { jp ->
                     timetables_journey_pattern_journey_pattern_ref_insert_input(
-                        journey_pattern_id = OptionalInput.Defined(jp.journeyPatternId),
+                        journey_pattern_id = OptionalInput.Defined(jp.id),
                         observation_timestamp = OptionalInput.Defined(timestamp),
                         snapshot_timestamp = OptionalInput.Defined(timestamp),
                         type_of_line = OptionalInput.Defined(jp.typeOfLine),
