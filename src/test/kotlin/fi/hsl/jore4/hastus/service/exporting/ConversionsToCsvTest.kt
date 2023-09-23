@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.mapper
+package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
 import fi.hsl.jore4.hastus.data.hastus.IHastusData

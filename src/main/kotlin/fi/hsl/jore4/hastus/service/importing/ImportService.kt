@@ -4,7 +4,6 @@ import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
-import fi.hsl.jore4.hastus.data.mapper.ConversionsFromHastus
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
 import fi.hsl.jore4.hastus.util.CsvReader
