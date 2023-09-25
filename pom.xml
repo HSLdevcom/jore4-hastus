@@ -13,7 +13,7 @@
     <groupId>fi.hsl.jore4</groupId>
     <artifactId>hastus</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
     <name>Jore4 Hastus Server</name>
     <description>Jore4 hastus import/export server</description>
 
