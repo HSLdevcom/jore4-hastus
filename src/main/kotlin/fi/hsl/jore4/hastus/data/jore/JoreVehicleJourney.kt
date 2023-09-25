@@ -15,7 +15,7 @@ import kotlin.time.Duration
  * @property isVehicleTypeMandatory Is the vehicle type mandatory
  * @property isBackupJourney Is this a backup journey
  * @property isExtraJourney Is this an extra journey
- * @property journeyPatternRefId The identifier of the referenced journey pattern
+ * @property journeyPatternId The identifier of the referenced journey pattern
  * @property passingTimes List of stop passing times in order on the vehicle journey
  */
 data class JoreVehicleJourney(
@@ -27,6 +27,6 @@ data class JoreVehicleJourney(
     val isVehicleTypeMandatory: Boolean,
     val isBackupJourney: Boolean,
     val isExtraJourney: Boolean,
-    val journeyPatternRefId: UUID,
+    val journeyPatternId: UUID,
     val passingTimes: List<JorePassingTime>
 )
