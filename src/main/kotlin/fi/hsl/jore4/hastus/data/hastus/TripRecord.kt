@@ -17,6 +17,7 @@ package fi.hsl.jore4.hastus.data.hastus
  * @property turnaroundTime Turnaround time, the time reserved to proceed from the end of a trip to the start of another
  * @property layoverTime Layover time; a buffer time allowance at the end of a trip
  * @property distance Total distance of the trip
+ * @property tripType2 Duplicated(?) type of the trip. 0 = normal, 1 = pull out, 2 = pull in, 3 = transfer
  * @property note Special note. Value 'p' means it's a friday trip
  * @property note2 Reserved for extra information
  * @property direction Direction. 1 = outbound, 2 = inbound
@@ -41,6 +42,7 @@ data class TripRecord(
     val turnaroundTime: Int,
     val layoverTime: Int,
     val distance: Double,
+    val tripType2: String, // TODO This field appears to be a duplicate
     val note: String,
     val note2: String,
     val direction: Int,
@@ -65,13 +67,14 @@ data class TripRecord(
         turnaroundTime = parseToInt(elements[12]),
         layoverTime = parseToInt(elements[13]),
         distance = parseToDouble(elements[14]),
-        note = elements[15],
-        note2 = elements[16],
-        direction = parseToInt(elements[17]),
-        vehicleType = parseToInt(elements[18]),
-        isVehicleTypeMandatory = parseToBoolean(elements[19]),
-        isBackupTrip = parseToBoolean(elements[20]),
-        isExtraTrip = parseToBoolean(elements[21])
+        tripType2 = elements[15],
+        note = elements[16],
+        note2 = elements[17],
+        direction = parseToInt(elements[18]),
+        vehicleType = parseToInt(elements[19]),
+        isVehicleTypeMandatory = parseToBoolean(elements[20]),
+        isBackupTrip = parseToBoolean(elements[21]),
+        isExtraTrip = parseToBoolean(elements[22])
     )
 
     override fun getFields(): List<Any> {
