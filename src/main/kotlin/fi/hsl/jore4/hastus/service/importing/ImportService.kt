@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.service.importing
 
+import fi.hsl.jore4.hastus.data.hastus.BookingRecord
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
 import fi.hsl.jore4.hastus.data.hastus.TripRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
@@ -20,16 +21,22 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         csv: String,
         hasuraHeaders: Map<String, String>
     ): UUID? {
+        val hastusItems: List<IHastusData> = READER.parseCsv(csv)
         val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
 
-        val hastusItems: List<IHastusData> = READER.parseCsv(csv)
+        val hastusBookingRecord: BookingRecord = hastusItems.filterIsInstance<BookingRecord>().first()
+
         val hastusTrips: List<TripRecord> = hastusItems.filterIsInstance<TripRecord>()
         val uniqueRouteLabels: List<String> = hastusTrips
             .map(ConversionsFromHastus::extractRouteLabel)
             .distinct() // TODO: is distinct operation really required?
 
         val journeyPatternsIndexedByRouteLabel: Map<String, JoreJourneyPattern> =
-            graphQLService.getJourneyPatternsIndexingByRouteLabel(uniqueRouteLabels)
+            graphQLService.getJourneyPatternsIndexingByRouteLabel(
+                uniqueRouteLabels,
+                hastusBookingRecord.startDate,
+                hastusBookingRecord.endDate
+            )
         LOGGER.debug { "Importing got journey patterns $journeyPatternsIndexedByRouteLabel" }
 
         val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes()
