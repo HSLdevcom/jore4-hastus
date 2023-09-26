@@ -139,11 +139,15 @@ class GraphQLService(
     }
 
     fun getJourneyPatternsIndexingByRouteLabel(
-        uniqueRouteLabels: List<String>
+        uniqueRouteLabels: List<String>,
+        validityPeriodStart: LocalDate,
+        validityPeriodEnd: LocalDate
     ): Map<String, JoreJourneyPattern> {
         val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
-                route_labels = OptionalInput.Defined(uniqueRouteLabels)
+                route_labels = uniqueRouteLabels,
+                validity_start = validityPeriodStart,
+                validity_end = validityPeriodEnd
             )
         )
 
