@@ -1,5 +1,30 @@
-query JourneyPatternsForRoutes($route_labels: [String!]) {
-  route_route(where: {unique_label: {_in: $route_labels}}) {
+query JourneyPatternsForRoutes(
+  $route_labels: [String!]!
+  $validity_start: date!,
+  $validity_end: date!
+) {
+  route_route(
+    where: {
+      _and: [
+        { unique_label: { _in: $route_labels } }
+        {
+          _or: [
+            { validity_start: { _is_null: true } }
+            { validity_start: { _lte: $validity_start } }
+          ]
+        }
+        {
+          _or: [
+            { validity_end: { _is_null: true } }
+            { validity_end: { _gte: $validity_end } }
+          ]
+        }
+      ]
+    }
+    order_by: {
+      unique_label: asc
+    }
+  ) {
     unique_label
     route_journey_patterns {
       journey_pattern_id
