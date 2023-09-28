@@ -32,7 +32,7 @@ interface ExportTestDataCreator {
     ): JoreRouteScheduledStop {
         return JoreRouteScheduledStop(
             stopLabel = "H1000",
-            timingPlaceShortName = timingPlaceShortName,
+            timingPlaceCode = timingPlaceShortName,
             isUsedAsTimingPoint = isUsedAsTimingPoint,
             isRegulatedTimingPoint = false,
             isAllowedLoad = false,
@@ -46,7 +46,7 @@ interface ExportTestDataCreator {
     ): JoreRouteScheduledStop {
         return JoreRouteScheduledStop(
             stopLabel = "H9999",
-            timingPlaceShortName = timingPlaceShortName,
+            timingPlaceCode = timingPlaceShortName,
             isUsedAsTimingPoint = isUsedAsTimingPoint,
             isRegulatedTimingPoint = false,
             isAllowedLoad = false,
