@@ -38,7 +38,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration
 
-@DisplayName("Test the object mapper")
+@DisplayName("Test JacksonObjectMapper")
 class ObjectMapperTest {
 
     private val objectMapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
@@ -88,7 +88,7 @@ class ObjectMapperTest {
     )
 
     @Test
-    @DisplayName("When forming JSON")
+    @DisplayName("When parsing JSON")
     fun testJsonForm() {
         val jsonString = """
         {
@@ -108,11 +108,11 @@ class ObjectMapperTest {
     }
 
     @Nested
-    @DisplayName("Mapping to JSON")
-    inner class MappingToJson() {
+    @DisplayName("Test serialising Object types to JSON")
+    inner class TestSerialisingObjectTypesToJson {
 
         @Test
-        fun `test UUID mapping`() {
+        fun `format UUID as JSON`() {
             val value = UUID.randomUUID()
             val formatted = objectMapper.writeValueAsString(UUIDFormat(value))
             val expected = """
@@ -122,7 +122,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test UUIDList mapping`() {
+        fun `format UUIDList as JSON`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
             val expected = """
             {"uuidList":"{${value[0]},${value[1]}}"}
@@ -132,7 +132,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test date mapping`() {
+        fun `format LocalDate as JSON`() {
             val value = LocalDate.of(2022, 2, 2)
             val expected = """
             {"date":"2022-02-02"}
@@ -142,7 +142,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test offset time mapping`() {
+        fun `format OffsetDateTime as JSON`() {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val expected = """
             {"offsetDateTime":"2022-02-02 01:02:03.004 +0000"}
@@ -152,7 +152,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test IJSONB mapping`() {
+        fun `format IJSONB as JSON`() {
             val value = IJSONB(mapOf("first" to "value", "second" to "other"))
             val expected = """
             {"ijsonb":{"first":"value","second":"other"}}
@@ -162,7 +162,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test coordinate mapping`() {
+        fun `format Coordinate as GeoJSON`() {
             val value = Coordinate(1.0, 2.0)
             val expected = """
             {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.x},${value.y},0.0]}}
@@ -172,7 +172,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test duration mapping`() {
+        fun `format Duration as JSON`() {
             val value: Duration = 4.hours
             val expected = """
             {"duration":"${value.toIsoString()}"}
@@ -183,11 +183,11 @@ class ObjectMapperTest {
     }
 
     @Nested
-    @DisplayName("Mapping from JSON")
-    inner class MappingFromJson() {
+    @DisplayName("Test deserialising Object types from JSON")
+    inner class TestDeserialisingObjectTypesFromJson() {
 
         @Test
-        fun `test UUID mapping`() {
+        fun `parse UUID from JSON`() {
             val value = UUID.randomUUID()
             val jsonString = """
             {
@@ -199,7 +199,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test UUIDList mapping`() {
+        fun `parse UUIDList from JSON`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
             val jsonString = """
             {
@@ -211,7 +211,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test date mapping`() {
+        fun `parse LocalDate from JSON`() {
             val value = LocalDate.of(2022, 2, 2)
             val jsonString = """
             {
@@ -223,7 +223,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test offset time mapping`() {
+        fun `parse OffsetDateTime from JSON`() {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val jsonString = """
             {
@@ -235,7 +235,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test IJSONB mapping`() {
+        fun `parse IJSONB from JSON`() {
             val value = mapOf("first" to "value", "second" to "other")
             val jsonString = """
             {
@@ -250,7 +250,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test coordinate mapping`() {
+        fun `parse Coordinate from GeoJSON`() {
             val value = Coordinate(1.0, 2.0)
             val jsonString = """
              {
@@ -275,7 +275,7 @@ class ObjectMapperTest {
         }
 
         @Test
-        fun `test duration mapping`() {
+        fun `parse Duration from JSON`() {
             val value: Duration = 4.hours
             val jsonString = """
             {
