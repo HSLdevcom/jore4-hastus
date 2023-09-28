@@ -44,7 +44,7 @@ class ExportStopPointsValidator(
 
             val firstStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.first()
 
-            if (!firstStopOnRoute.isUsedAsTimingPoint || firstStopOnRoute.timingPlaceShortName == null) {
+            if (!firstStopOnRoute.isUsedAsTimingPoint || firstStopOnRoute.timingPlaceCode == null) {
                 LOGGER.warn {
                     "The first stop point of the journey pattern for route ${route.label} is not a valid " +
                         "timing point as mandated by Hastus"
@@ -56,7 +56,7 @@ class ExportStopPointsValidator(
 
             val lastStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.last()
 
-            if (!lastStopOnRoute.isUsedAsTimingPoint || lastStopOnRoute.timingPlaceShortName == null) {
+            if (!lastStopOnRoute.isUsedAsTimingPoint || lastStopOnRoute.timingPlaceCode == null) {
                 LOGGER.warn {
                     "The last stop point of the journey pattern for route ${route.label} is not a valid " +
                         "timing point as mandated by Hastus"

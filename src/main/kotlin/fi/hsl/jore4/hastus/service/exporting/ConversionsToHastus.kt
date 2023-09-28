@@ -94,7 +94,7 @@ object ConversionsToHastus {
             }
 
             RouteVariantPoint(
-                place = stop.timingPlaceShortName?.takeIf { stop.isUsedAsTimingPoint },
+                place = stop.effectiveTimingPlaceCode,
                 specTpDistance = specTpDistance,
                 isTimingPoint = stop.isUsedAsTimingPoint,
                 allowLoadTime = stop.isAllowedLoad,
