@@ -48,33 +48,39 @@ class ObjectMapperTest {
         @JsonDeserialize(converter = AnyToUUIDConverter::class)
         val uuid: UUID
     )
+
     data class UUIDListFormat(
         @JsonSerialize(converter = UUIDListToAnyConverter::class)
         @JsonDeserialize(converter = AnyToUUIDListConverter::class)
         val uuidList: UUIDList
     )
+
     data class DateFormat(
         @JsonSerialize(converter = LocalDateToAnyConverter::class)
         @JsonDeserialize(converter = AnyToLocalDateConverter::class)
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         val date: LocalDate
     )
-    data class OffsetTimeFormat(
+
+    data class OffsetDateTimeFormat(
         @JsonSerialize(converter = OffsetDateTimeToAnyConverter::class)
         @JsonDeserialize(converter = AnyToOffsetDateTimeConverter::class)
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS Z")
-        val offsetTime: OffsetDateTime
+        val offsetDateTime: OffsetDateTime
     )
-    data class IjsonbFormat(
+
+    data class IJsonbFormat(
         @JsonSerialize(converter = IJSONBToAnyConverter::class)
         @JsonDeserialize(converter = AnyToIJSONBConverter::class)
         val ijsonb: IJSONB
     )
+
     data class CoordinateFormat(
         @JsonSerialize(converter = CoordinateToAnyConverter::class)
         @JsonDeserialize(converter = AnyToCoordinateConverter::class)
         val coordinate: Coordinate
     )
+
     data class DurationFormat(
         @JsonSerialize(converter = DurationToAnyConverter::class)
         @JsonDeserialize(converter = AnyToDurationConverter::class)
@@ -139,9 +145,9 @@ class ObjectMapperTest {
         fun `test offset time mapping`() {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val expected = """
-            {"offsetTime":"2022-02-02 01:02:03.004 +0000"}
+            {"offsetDateTime":"2022-02-02 01:02:03.004 +0000"}
             """.trimIndent()
-            val formatted = objectMapper.writeValueAsString(OffsetTimeFormat(value))
+            val formatted = objectMapper.writeValueAsString(OffsetDateTimeFormat(value))
             assertEquals(expected, formatted)
         }
 
@@ -151,7 +157,7 @@ class ObjectMapperTest {
             val expected = """
             {"ijsonb":{"first":"value","second":"other"}}
             """.trimIndent()
-            val formatted = objectMapper.writeValueAsString(IjsonbFormat(value))
+            val formatted = objectMapper.writeValueAsString(IJsonbFormat(value))
             assertEquals(expected, formatted)
         }
 
@@ -221,11 +227,11 @@ class ObjectMapperTest {
             val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
             val jsonString = """
             {
-                "offsetTime": "2022-02-02 01:02:03.004 +0000"
+                "offsetDateTime": "2022-02-02 01:02:03.004 +0000"
             }
             """.trimIndent()
-            val parsed: OffsetTimeFormat = objectMapper.readValue(jsonString)
-            assertEquals(value, parsed.offsetTime)
+            val parsed: OffsetDateTimeFormat = objectMapper.readValue(jsonString)
+            assertEquals(value, parsed.offsetDateTime)
         }
 
         @Test
@@ -239,7 +245,7 @@ class ObjectMapperTest {
                 }
             }
             """.trimIndent()
-            val parsed: IjsonbFormat = objectMapper.readValue(jsonString)
+            val parsed: IJsonbFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.ijsonb.content)
         }
 
