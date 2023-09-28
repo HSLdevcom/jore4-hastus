@@ -65,7 +65,6 @@ class ObjectMapperTest {
     data class OffsetDateTimeFormat(
         @JsonSerialize(converter = OffsetDateTimeToAnyConverter::class)
         @JsonDeserialize(converter = AnyToOffsetDateTimeConverter::class)
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS Z")
         val offsetDateTime: OffsetDateTime
     )
 
@@ -88,8 +87,8 @@ class ObjectMapperTest {
     )
 
     @Test
-    @DisplayName("When parsing JSON")
-    fun testJsonForm() {
+    @DisplayName("When parsing export parameters from JSON")
+    fun testParsingExportParametersFromJson() {
         val jsonString = """
         {
             "uniqueLabels": ["65x", "65y"],
@@ -141,14 +140,50 @@ class ObjectMapperTest {
             assertEquals(expected, formatted)
         }
 
-        @Test
-        fun `format OffsetDateTime as JSON`() {
-            val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
-            val expected = """
-            {"offsetDateTime":"2022-02-02 01:02:03.004 +0000"}
-            """.trimIndent()
-            val formatted = objectMapper.writeValueAsString(OffsetDateTimeFormat(value))
-            assertEquals(expected, formatted)
+        @Nested
+        @DisplayName("format OffsetDateTime as JSON")
+        inner class TestSerialisingOffsetDateTimeToJson {
+
+            private fun doAssert(expected: String, timestamp: OffsetDateTime) {
+                assertEquals(
+                    """
+                    {"offsetDateTime":"$expected"}
+                    """.trimIndent(),
+                    objectMapper.writeValueAsString(timestamp)
+                )
+            }
+
+            @Test
+            fun `with UTC zone`() {
+                // zero milliseconds
+                doAssert(
+                    "2022-02-02T01:02:03.000Z",
+                    OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 0, ZoneOffset.UTC)
+                )
+
+                // non-zero milliseconds
+                doAssert(
+                    "2022-02-02T01:02:03.004Z",
+                    OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4_000_000, ZoneOffset.UTC)
+                )
+            }
+
+            @Test
+            fun `with offset timezone`() {
+                val zoneOffset = ZoneOffset.of("+03:00")
+
+                // zero milliseconds
+                doAssert(
+                    "2022-02-02T01:02:03.000+03:00",
+                    OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 0, zoneOffset)
+                )
+
+                // non-zero milliseconds
+                doAssert(
+                    "2022-02-02T01:02:03.004+03:00",
+                    OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4_000_000, zoneOffset)
+                )
+            }
         }
 
         @Test
@@ -222,16 +257,76 @@ class ObjectMapperTest {
             assertEquals(value, parsed.date)
         }
 
-        @Test
-        fun `parse OffsetDateTime from JSON`() {
-            val value = OffsetDateTime.of(2022, 2, 2, 1, 2, 3, 4000000, ZoneOffset.UTC)
-            val jsonString = """
-            {
-                "offsetDateTime": "2022-02-02 01:02:03.004 +0000"
+        @Nested
+        @DisplayName("parse OffsetDateTime from JSON")
+        inner class TestDeserialisingOffsetDateTimeFromJSON {
+
+            private fun doAssert(expected: OffsetDateTime, timestamp: String) {
+                assertEquals(
+                    expected,
+                    objectMapper.readValue<OffsetDateTimeFormat>(
+                        """{"offsetDateTime": "$timestamp"}"""
+                    ).offsetDateTime
+                )
             }
-            """.trimIndent()
-            val parsed: OffsetDateTimeFormat = objectMapper.readValue(jsonString)
-            assertEquals(value, parsed.offsetDateTime)
+
+            @Nested
+            @DisplayName("with UTC timezone")
+            inner class WithUtcTimezone {
+
+                private fun createOffsetDateTime(nanoOfSecond: Int) = OffsetDateTime
+                    .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, ZoneOffset.UTC)
+
+                @Test
+                fun `without fractions of seconds`() {
+                    doAssert(createOffsetDateTime(0), "2022-02-02T01:02:03Z")
+                }
+
+                @Test
+                fun `with deci-seconds`() {
+                    doAssert(createOffsetDateTime(400_000_000), "2022-02-02T01:02:03.4Z")
+                }
+
+                @Test
+                fun `with centi-seconds`() {
+                    doAssert(createOffsetDateTime(40_000_000), "2022-02-02T01:02:03.04Z")
+                }
+
+                @Test
+                fun `with milliseconds`() {
+                    doAssert(createOffsetDateTime(4_000_000), "2022-02-02T01:02:03.004Z")
+                }
+            }
+
+            @Nested
+            @DisplayName("with offset timezone")
+            inner class WithOffsetTimezone {
+
+                private val zoneOffset = ZoneOffset.of("+03:00")
+
+                private fun createOffsetDateTime(nanoOfSecond: Int) = OffsetDateTime
+                    .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, zoneOffset)
+
+                @Test
+                fun `without fractions of seconds`() {
+                    doAssert(createOffsetDateTime(0), "2022-02-02T01:02:03+03:00")
+                }
+
+                @Test
+                fun `with deci-seconds`() {
+                    doAssert(createOffsetDateTime(400_000_000), "2022-02-02T01:02:03.4+03:00")
+                }
+
+                @Test
+                fun `with centi-seconds`() {
+                    doAssert(createOffsetDateTime(40_000_000), "2022-02-02T01:02:03.04+03:00")
+                }
+
+                @Test
+                fun `with milliseconds`() {
+                    doAssert(createOffsetDateTime(4_000_000), "2022-02-02T01:02:03.004+03:00")
+                }
+            }
         }
 
         @Test
