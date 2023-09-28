@@ -47,7 +47,7 @@ class ConversionsToCsvTest {
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     stopLabel = "H1234",
-                    timingPlaceShortName = "1AACKT",
+                    timingPlaceCode = "1AACKT",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -55,7 +55,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1235",
-                    timingPlaceShortName = "1ELIMK",
+                    timingPlaceCode = "1ELIMK",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -63,7 +63,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1236",
-                    timingPlaceShortName = "1AURLA",
+                    timingPlaceCode = "1AURLA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = true,
@@ -71,7 +71,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1237",
-                    timingPlaceShortName = null,
+                    timingPlaceCode = null,
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -79,7 +79,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1238",
-                    timingPlaceShortName = "1KALA",
+                    timingPlaceCode = "1KALA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -132,7 +132,7 @@ class ConversionsToCsvTest {
             val stopPoints = listOf(
                 JoreRouteScheduledStop(
                     stopLabel = "H1234",
-                    timingPlaceShortName = "1AACKT",
+                    timingPlaceCode = "1AACKT",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -140,7 +140,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1235",
-                    timingPlaceShortName = "1ELIMK",
+                    timingPlaceCode = "1ELIMK",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
@@ -148,7 +148,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1236",
-                    timingPlaceShortName = "1AURLA",
+                    timingPlaceCode = "1AURLA",
                     isUsedAsTimingPoint = true,
                     isRegulatedTimingPoint = true,
                     isAllowedLoad = false,
@@ -156,7 +156,7 @@ class ConversionsToCsvTest {
                 ),
                 JoreRouteScheduledStop(
                     stopLabel = "H1237",
-                    timingPlaceShortName = "1KALA",
+                    timingPlaceCode = "1KALA",
                     isUsedAsTimingPoint = false,
                     isRegulatedTimingPoint = false,
                     isAllowedLoad = false,
