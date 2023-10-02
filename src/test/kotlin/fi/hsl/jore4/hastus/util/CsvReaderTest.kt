@@ -21,10 +21,13 @@ class CsvReaderTest {
             1;HASTUS;HSL;1.04;20190502;212157
             2;19SYK;Syksy 2019 - Kevät 2020;4571;05;20190812;20200614;CONTRACT
             3;4571;05;00;HSL;20190812;20200614;20190430;113855
-            4;1462351;4571- 1;1;4VARIS;4VARIS;4571; 3; ;0
-            5;CONTRACT;1462351;12766047;1595;0;4571;4571;2;05:04;05:55; 60; 0; 4;25.200;0;;1;2;0;0;0;0
-            6;12766047;4VARIS;4140233;;;;;0504;0.0;T;
-            6;12766047;;4140242;;;;;0505;298.0;;
+            4;1462351;4571- 1;1;4VARIS;1AURLA;4571;3;;0
+            5;CONTRACT;1462351;12766047;1595;0;4571;4571;2;05:04;05:08;10;0;4;0.513;0;;1;2;0;0;0;0
+            6;12766047;4VARIS;H1234;;;;;0504;0.0;T;
+            6;12766047;;H1235;;;;;0505;;;
+            6;12766047;1AACKT;H1236;;;;;0506;334.0;R;t
+            6;12766047;1AACKT;H1236;;;;;0507;334.0;R;a
+            6;12766047;1AURLA;H1237;;;;;0508;179.0;T;
         """.trimIndent()
 
         val expectedApplicationRecord = ApplicationRecord(
@@ -61,7 +64,7 @@ class CsvReaderTest {
             "4571- 1",
             1,
             "4VARIS",
-            "4VARIS",
+            "1AURLA",
             "4571",
             3,
             0,
@@ -78,11 +81,11 @@ class CsvReaderTest {
             "4571",
             "2",
             "05:04",
-            "05:55",
-            60,
+            "05:08",
+            10,
             0,
             4,
-            25.200,
+            0.513,
             "0",
             "",
             1,
@@ -95,7 +98,7 @@ class CsvReaderTest {
         val expectedTripStopRecord1 = TripStopRecord(
             "12766047",
             "4VARIS",
-            "4140233",
+            "H1234",
             "",
             "",
             "",
@@ -109,14 +112,54 @@ class CsvReaderTest {
         val expectedTripStopRecord2 = TripStopRecord(
             "12766047",
             "",
-            "4140242",
+            "H1235",
             "",
             "",
             "",
             "",
             "0505",
-            298.0,
+            0.0,
             "",
+            ""
+        )
+
+        val expectedTripStopRecord3 = TripStopRecord(
+            "12766047",
+            "1AACKT",
+            "H1236",
+            "",
+            "",
+            "",
+            "",
+            "0506",
+            334.0,
+            "R",
+            "t"
+        )
+        val expectedTripStopRecord4 = TripStopRecord(
+            "12766047",
+            "1AACKT",
+            "H1236",
+            "",
+            "",
+            "",
+            "",
+            "0507",
+            334.0,
+            "R",
+            "a"
+        )
+        val expectedTripStopRecord5 = TripStopRecord(
+            "12766047",
+            "1AURLA",
+            "H1237",
+            "",
+            "",
+            "",
+            "",
+            "0508",
+            179.0,
+            "T",
             ""
         )
 
@@ -124,7 +167,7 @@ class CsvReaderTest {
 
         val parsedResult = csvReader.parseCsv(csv)
 
-        assertEquals(7, parsedResult.size)
+        assertEquals(10, parsedResult.size)
 
         val applicationRecord: ApplicationRecord = parsedResult[0] as ApplicationRecord
         val bookingRecord: BookingRecord = parsedResult[1] as BookingRecord
@@ -133,6 +176,9 @@ class CsvReaderTest {
         val tripRecord: TripRecord = parsedResult[4] as TripRecord
         val tripStopRecord1: TripStopRecord = parsedResult[5] as TripStopRecord
         val tripStopRecord2: TripStopRecord = parsedResult[6] as TripStopRecord
+        val tripStopRecord3: TripStopRecord = parsedResult[7] as TripStopRecord
+        val tripStopRecord4: TripStopRecord = parsedResult[8] as TripStopRecord
+        val tripStopRecord5: TripStopRecord = parsedResult[9] as TripStopRecord
 
         assertEquals(expectedApplicationRecord, applicationRecord)
         assertEquals(expectedBookingRecord, bookingRecord)
@@ -141,5 +187,8 @@ class CsvReaderTest {
         assertEquals(expectedTripRecord, tripRecord)
         assertEquals(expectedTripStopRecord1, tripStopRecord1)
         assertEquals(expectedTripStopRecord2, tripStopRecord2)
+        assertEquals(expectedTripStopRecord3, tripStopRecord3)
+        assertEquals(expectedTripStopRecord4, tripStopRecord4)
+        assertEquals(expectedTripStopRecord5, tripStopRecord5)
     }
 }
