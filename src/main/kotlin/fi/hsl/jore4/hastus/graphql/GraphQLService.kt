@@ -69,13 +69,13 @@ class GraphQLService(
      * @param [observationDate] The date used to filter active/valid routes
      */
     fun deepFetchRoutes(
-        uniqueRouteLabels: List<String>,
+        uniqueRouteLabels: Collection<String>,
         priority: Int,
         observationDate: LocalDate
     ): FetchRoutesResult {
         val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
-                route_labels = OptionalInput.Defined(uniqueRouteLabels),
+                route_labels = OptionalInput.Defined(uniqueRouteLabels.toList()),
                 route_priority = priority,
                 observation_date = observationDate
             )
@@ -139,13 +139,13 @@ class GraphQLService(
     }
 
     fun getJourneyPatternsIndexingByRouteLabel(
-        uniqueRouteLabels: List<String>,
+        uniqueRouteLabels: Collection<String>,
         validityPeriodStart: LocalDate,
         validityPeriodEnd: LocalDate
     ): Map<String, JoreJourneyPattern> {
         val journeyPatternsQuery = JourneyPatternsForRoutes(
             variables = JourneyPatternsForRoutes.Variables(
-                route_labels = uniqueRouteLabels,
+                route_labels = uniqueRouteLabels.toList(),
                 validity_start = validityPeriodStart,
                 validity_end = validityPeriodEnd
             )
