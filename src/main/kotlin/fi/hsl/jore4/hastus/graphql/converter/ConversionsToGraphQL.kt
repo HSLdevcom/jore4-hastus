@@ -26,8 +26,6 @@ import kotlin.time.toJavaDuration
 
 object ConversionsToGraphQL {
 
-    const val PRIORITY_STAGING = 40
-
     fun mapToGraphQL(stop: JoreStopPoint): timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_insert_input {
         return timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_insert_input(
             scheduled_stop_point_label = OptionalInput.Defined(stop.label),
@@ -45,7 +43,7 @@ object ConversionsToGraphQL {
             booking_label = OptionalInput.Defined(vehicleScheduleFrame.bookingLabel),
             booking_description_i18n = mapToFiJson(vehicleScheduleFrame.bookingDescription),
             name_i18n = mapToFiJson(vehicleScheduleFrame.name),
-            priority = OptionalInput.Defined(PRIORITY_STAGING),
+            priority = OptionalInput.Defined(Constants.VEHICLE_SCHEDULE_FRAME_PRIORITY_STAGING),
             validity_start = OptionalInput.Defined(vehicleScheduleFrame.validityStart),
             validity_end = OptionalInput.Defined(vehicleScheduleFrame.validityEnd),
             vehicle_services = OptionalInput.Defined(
