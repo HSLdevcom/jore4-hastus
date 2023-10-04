@@ -9,6 +9,7 @@ object Constants {
     const val DEFAULT_HASTUS_TIME_FORMAT = "HHmmss"
 
     // priorities for network scope in GraphQL
+    const val ROUTE_PRIORITY_DRAFT = 30
     const val SCHEDULED_STOP_POINT_PRIORITY_DRAFT = 30
 
     // vehicle schedule frame (timetables) priorities
