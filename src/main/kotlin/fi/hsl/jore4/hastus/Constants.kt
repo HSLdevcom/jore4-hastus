@@ -7,4 +7,7 @@ object Constants {
 
     const val DEFAULT_HASTUS_DATE_FORMAT = "yyyyMMdd"
     const val DEFAULT_HASTUS_TIME_FORMAT = "HHmmss"
+
+    // vehicle schedule frame (timetables) priorities
+    const val VEHICLE_SCHEDULE_FRAME_PRIORITY_STAGING = 40
 }
