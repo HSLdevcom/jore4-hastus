@@ -65,12 +65,25 @@ object ConversionsFromGraphQL {
         distanceToNextStop: Double
     ): JoreRouteScheduledStop {
         if (stopInJourneyPattern == null) {
-            throw IllegalStateException("Should not be possible to get a null route stop when mapping")
+            throw IllegalStateException("Should not encounter a null journey pattern stop during conversion")
         }
 
+        val stopLabel: String = stopInJourneyPattern.scheduled_stop_point_label
+
+        val maxPriorityStopPoint: service_pattern_scheduled_stop_point = stopInJourneyPattern
+            .scheduled_stop_points
+            .maxByOrNull { it.priority }
+            ?: run {
+                // In this case, there is probably something wrong with the GraphQL query, because the
+                // Jore4 database constraints should not allow this.
+                throw IllegalStateException(
+                    "Scheduled stop point (in journey pattern) not found for label: $stopLabel"
+                )
+            }
+
         return JoreRouteScheduledStop(
-            stopInJourneyPattern.scheduled_stop_point_label,
-            stopInJourneyPattern.scheduled_stop_points.first().timing_place?.label,
+            stopLabel,
+            maxPriorityStopPoint.timing_place?.label,
             stopInJourneyPattern.is_used_as_timing_point,
             stopInJourneyPattern.is_regulated_timing_point,
             stopInJourneyPattern.is_loading_time_allowed,

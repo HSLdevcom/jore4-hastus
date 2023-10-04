@@ -1,6 +1,7 @@
 query RoutesWithHastusData(
-  $route_labels: [String!]
+  $route_labels: [String!]!
   $route_priority: Int!
+  $max_stop_point_priority: Int!
   $observation_date: date!
 ) {
   route_route(
@@ -42,8 +43,27 @@ query RoutesWithHastusData(
         is_used_as_timing_point
         is_regulated_timing_point
         is_loading_time_allowed
-        scheduled_stop_points {
+        scheduled_stop_points(
+          where: {
+            _and: [
+              { priority: { _lte: $max_stop_point_priority } }
+              {
+                _or: [
+                  { validity_start: { _is_null: true } }
+                  { validity_start: { _lte: $observation_date } }
+                ]
+              }
+              {
+                _or: [
+                  { validity_end: { _is_null: true } }
+                  { validity_end: { _gte: $observation_date } }
+                ]
+              }
+            ]
+          }
+        ) {
           label
+          priority
           measured_location
           timing_place {
             label
