@@ -30,7 +30,7 @@ class ExportController(
         const val CSV_TYPE = "text/csv"
     }
 
-    data class Routes(
+    data class ExportRoutesRequest(
         val uniqueLabels: List<String>,
         val priority: Int,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") val observationDate: LocalDate
@@ -39,7 +39,7 @@ class ExportController(
     // Headers are not used by this service but passed on to the Hasura API
     @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [CSV_TYPE])
     fun exportForRoutes(
-        @RequestBody request: Routes,
+        @RequestBody request: ExportRoutesRequest,
         @RequestHeader headers: Map<String, String>
     ): ResponseEntity<String> {
         val (result, elapsed) = measureTimedValue {

@@ -87,8 +87,8 @@ class ObjectMapperTest {
     )
 
     @Test
-    @DisplayName("When parsing export parameters from JSON")
-    fun testParsingExportParametersFromJson() {
+    @DisplayName("When parsing parameters for export routes request JSON")
+    fun testParsingExportRouteRequestJson() {
         val jsonString = """
         {
             "uniqueLabels": ["65x", "65y"],
@@ -97,13 +97,12 @@ class ObjectMapperTest {
         }
         """.trimMargin()
 
-        val routes: ExportController.Routes = objectMapper.readValue(jsonString)
+        val request: ExportController.ExportRoutesRequest = objectMapper.readValue(jsonString)
 
-        assertEquals(2, routes.uniqueLabels.size)
-        assertEquals("65x", routes.uniqueLabels[0])
-        assertEquals("65y", routes.uniqueLabels[1])
-        assertEquals(20, routes.priority)
-        assertEquals(LocalDate.of(2022, 10, 24), routes.observationDate)
+        assertEquals(2, request.uniqueLabels.size)
+        assertEquals(listOf("65x", "65y"), request.uniqueLabels)
+        assertEquals(20, request.priority)
+        assertEquals(LocalDate.of(2022, 10, 24), request.observationDate)
     }
 
     @Nested
