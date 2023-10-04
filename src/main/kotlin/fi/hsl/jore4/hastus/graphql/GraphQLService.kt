@@ -1,6 +1,7 @@
 package fi.hsl.jore4.hastus.graphql
 
 import com.expediagroup.graphql.client.jackson.types.OptionalInput
+import fi.hsl.jore4.hastus.Constants
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPattern
@@ -74,10 +75,15 @@ class GraphQLService(
         priority: Int,
         observationDate: LocalDate
     ): FetchRoutesResult {
+        // The priority of the stop point, as part of any journey pattern related to given routes,
+        // must be less than "draft".
+        val maxStopPointPriority: Int = Constants.SCHEDULED_STOP_POINT_PRIORITY_DRAFT - 1
+
         val routesQuery = RoutesWithHastusData(
             variables = RoutesWithHastusData.Variables(
-                route_labels = OptionalInput.Defined(uniqueRouteLabels.toList()),
+                route_labels = uniqueRouteLabels.toList(),
                 route_priority = priority,
+                max_stop_point_priority = maxStopPointPriority,
                 observation_date = observationDate
             )
         )
