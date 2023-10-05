@@ -112,14 +112,14 @@ class CsvReaderTest {
 
         val expectedTripStopRecord2 = TripStopRecord(
             "12766047",
-            "",
+            null,
             "H1235",
             "",
             "",
             "",
             "",
             "0505",
-            0.0,
+            null,
             "",
             ""
         )
