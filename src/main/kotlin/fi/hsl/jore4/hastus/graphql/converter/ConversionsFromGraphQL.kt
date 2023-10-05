@@ -95,14 +95,19 @@ object ConversionsFromGraphQL {
         route: route_route,
         distancesBetweenStops: Map<Pair<String, String>, Double>
     ): JoreRoute {
-        val stops = route.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
+        val routeName: String = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label)
+
+        val journeyPatternStops = route.route_journey_patterns.flatMap { it.scheduled_stop_point_in_journey_patterns }
 
         // Add a null value to end so zipWithNext includes the last element as the last .first() element
-        val stopsWithNextLabel = (stops + null).zipWithNext().map {
-            Pair(it.first, it.second?.scheduled_stop_point_label.orEmpty())
-        }
-
-        val routeName: String = route.name_i18n.content.getOrDefault(LANG_FINNISH, route.label)
+        val journeyPatternStopsWithNextLabel: List<Pair<journey_pattern_scheduled_stop_point_in_journey_pattern, String?>> =
+            (journeyPatternStops + null)
+                .zipWithNext()
+                .mapNotNull { (currentStop, nextStop) ->
+                    currentStop?.let {
+                        Pair(currentStop, nextStop?.scheduled_stop_point_label.orEmpty())
+                    }
+                }
 
         return JoreRoute(
             label = route.label,
@@ -111,10 +116,13 @@ object ConversionsFromGraphQL {
             name = routeName,
             direction = JoreRouteDirection.from(route.direction),
             reversible = false,
-            stopsOnRoute = stopsWithNextLabel.map {
+            stopsOnRoute = journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
+                val currentStopLabel = journeyPatternStop.scheduled_stop_point_label
+                val getDistanceKey = Pair(currentStopLabel, nextStopLabel)
+
                 mapToJoreRouteScheduledStop(
-                    it.first,
-                    distancesBetweenStops.getOrDefault(Pair(it.first?.scheduled_stop_point_label, it.second), 0.0)
+                    journeyPatternStop,
+                    distancesBetweenStops.getOrDefault(getDistanceKey, 0.0)
                 )
             }
         )
