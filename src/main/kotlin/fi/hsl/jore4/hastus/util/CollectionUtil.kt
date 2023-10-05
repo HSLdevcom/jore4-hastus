@@ -2,17 +2,9 @@ package fi.hsl.jore4.hastus.util
 
 object CollectionUtil {
 
-    fun <T> filterOutConsecutiveDuplicates(coll: Collection<T>): List<T> {
-        val list = mutableListOf<T>()
-        var prev: T? = null
-
-        coll.forEach {
-            if (it != prev) {
-                list.add(it)
-                prev = it
-            }
-        }
-
-        return list
-    }
+    fun <T> filterOutConsecutiveDuplicates(iter: Iterable<T>): List<T> =
+        (iter + null) // in order for the last item to be handled correctly, a dummy element must be added to the end
+            .zipWithNext()
+            .filter { (first, second) -> first != second }
+            .mapNotNull { it.first }
 }
