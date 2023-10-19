@@ -10,6 +10,8 @@ object Constants {
     const val DEFAULT_HASTUS_DATE_FORMAT = "yyyyMMdd"
     const val DEFAULT_HASTUS_TIME_FORMAT = "HHmmss"
 
+    const val MIME_TYPE_CSV = "text/csv"
+
     // priorities for network scope in GraphQL
     const val SCHEDULED_STOP_POINT_PRIORITY_DRAFT = 30
 

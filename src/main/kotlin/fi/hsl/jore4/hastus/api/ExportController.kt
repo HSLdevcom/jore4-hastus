@@ -1,6 +1,7 @@
 package fi.hsl.jore4.hastus.api
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.service.exporting.ExportService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
@@ -26,10 +27,6 @@ class ExportController(
     private val exportService: ExportService
 ) {
 
-    companion object {
-        const val CSV_TYPE = "text/csv"
-    }
-
     data class ExportRoutesRequest(
         val uniqueLabels: List<String>,
         val priority: Int,
@@ -37,7 +34,7 @@ class ExportController(
     )
 
     // Headers are not used by this service but passed on to the Hasura API
-    @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [CSV_TYPE])
+    @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MIME_TYPE_CSV])
     fun exportForRoutes(
         @RequestBody request: ExportRoutesRequest,
         @RequestHeader headers: Map<String, String>
