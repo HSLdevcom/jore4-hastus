@@ -1,5 +1,6 @@
 package fi.hsl.jore4.hastus.api
 
+import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import mu.KotlinLogging
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,11 +20,7 @@ class ImportController(
     private val importService: ImportService
 ) {
 
-    companion object {
-        const val CSV_TYPE = "text/csv"
-    }
-
-    @PostMapping("", consumes = [CSV_TYPE])
+    @PostMapping("", consumes = [MIME_TYPE_CSV])
     fun importCsvFile(
         @RequestBody csv: String,
         @RequestHeader headers: Map<String, String>
