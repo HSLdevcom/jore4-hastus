@@ -63,7 +63,7 @@ class ExportController(
             is ResponseStatusException -> ResponseEntity.status(ex.statusCode).body(ex.reason)
 
             else -> {
-                LOGGER.error { "Exception during request:$ex" }
+                LOGGER.error { "Exception during export request:$ex" }
                 LOGGER.error(ex.stackTraceToString())
 
                 ResponseEntity("status", HttpStatus.INTERNAL_SERVER_ERROR)
