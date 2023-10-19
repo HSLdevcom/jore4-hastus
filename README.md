@@ -21,13 +21,13 @@ Uses maven to build the project, use `mvn install` to build the server. You can 
 
 ## API structure
 
-### POST
+### Export feature
 
-`export/routes` Send a JSON body containing the route labels, priority and date for which to produce a CSV file for Hastus export
+`POST export/routes` Send a JSON body containing the route labels, priority and date for which to produce a CSV file for Hastus.
 
 Export endpoint expects a JSON format:
 
-```
+```json
 {
     uniqueLabels: [string...],
     priority: int,
@@ -35,7 +35,40 @@ Export endpoint expects a JSON format:
 }
 ```
 
-The returned CSV file follows the Hastus CSV specification.
+Request parameters are used to filter routes when they are retrieved (via GraphQL) from the Jore4 network & routes database.
+During the export, as a side effect, a `journey_pattern_ref` entry is created for each route in the Jore4 timetables database.
+These entries are later used to connect Hastus timetables to their source routes in the import function.
+
+The returned CSV file follows the HSL's Hastus CSV specification.
+
+### Import feature
+
+`POST import` Send a text body in CSV format containing a Hastus schedule to be imported as a vehicle schedule frame to the Jore4 timetables database.
+The trip records in the CSV data are matched against the journey pattern references (`journey_pattern_ref`) in the Jore4 timetables database.
+For each trip record in the CSV, a route match must be found in the existing journey pattern references.
+
+The matching criteria between Hastus trips and journey pattern references are:
+- route labels must be the same
+- route direction must be the same
+- the stop point labels must match and be in the same order
+- the timing point labels must match and be in the same order
+
+As a result of a successful import event, a vehicle schedule frame is created in the Jore4 timetables database.
+The identifier of the resulting vehicle schedule frame is returned in the JSON response:
+
+```json
+{
+  "vehicleScheduleFrameId": "238d0bbc-6be7-4070-9a3b-73fbaae57e01"
+}
+```
+
+In the event of an error, e.g. when no journey pattern reference is found for a Hastus trip, the following error response is returned:
+
+```json
+{
+    "reason": "descriptive error message"
+}
+```
 
 ## Technical Documentation
 
