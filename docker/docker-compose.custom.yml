@@ -11,7 +11,7 @@ services:
     # locking hasura image so that we can develop against a static graphql API
     # Link to available jore4-hasura images in Docker Hub:
     # https://hub.docker.com/r/hsldevcom/jore4-hasura/tags?page=1&ordering=last_updated
-    image: "hsldevcom/jore4-hasura:hsl-main--20231011-bbd4c8750a5e09e115a8a1350ec9f6f10e43eb65"
+    image: "hsldevcom/jore4-hasura:hsl-main--20231019-667942672c4ff4f7493a49903f6ed2bbe35a7615"
     # Waiting for database to be ready to avoid startup delay due to hasura crashing at startup if db is offline
     # Note: this should only be done in development setups as Kubernetes does not allow waiting for services to be ready
     depends_on:

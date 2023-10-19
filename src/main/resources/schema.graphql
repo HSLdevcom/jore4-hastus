@@ -44,6 +44,10 @@ type ReplaceTimetablesOutput {
   replacedVehicleScheduleFrameIds: [uuid]!
 }
 
+type ToReplaceVehicleScheduleFrameIdsOutput {
+  toReplaceVehicleScheduleFrameIds: [uuid]!
+}
+
 "Legacy, avoid using. Main use nowadays is to enable support for eg. data exports that still need this. Originally this was used to represent the primary region for routes/lines."
 type hsl_route_legacy_hsl_municipality_code {
   hsl_municipality: String!
@@ -2556,6 +2560,7 @@ type query_root {
   ): timing_pattern_timing_place_aggregate!
   "fetch data from the table: \"timing_pattern.timing_place\" using primary key columns"
   timing_pattern_timing_place_by_pk(timing_place_id: uuid!): timing_pattern_timing_place
+  toReplaceVehicleScheduleFrameIds(arg1: ToReplaceVehicleScheduleFrameIdsInput!): ToReplaceVehicleScheduleFrameIdsOutput
 }
 
 "The vehicle modes from Transmodel: https://www.transmodel-cen.eu/model/index.htm?goto=1:6:1:283"
@@ -10281,6 +10286,11 @@ input String_comparison_exp {
   _regex: String
   "does the column match the given SQL regular expression"
   _similar: String
+}
+
+input ToReplaceVehicleScheduleFrameIdsInput {
+  stagingVehicleScheduleFrameId: uuid!
+  targetPriority: Int!
 }
 
 "Boolean expression to compare columns of type \"date\". All fields are combined with logical 'AND'."
