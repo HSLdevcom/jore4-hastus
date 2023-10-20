@@ -7,7 +7,7 @@ import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import fi.hsl.jore4.hastus.service.importing.InvalidHastusDataException
 import fi.hsl.jore4.hastus.service.importing.NoJourneyPatternRefMatchesHastusTripStopsException
-import fi.hsl.jore4.hastus.service.importing.UnmatchedRoutesWithinImport
+import fi.hsl.jore4.hastus.service.importing.UnmatchedRoutesWithinImportException
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -104,7 +104,7 @@ class ImportControllerTest @Autowired constructor(
     fun `returns 400 when there are unmatched routes in Hastus data`() {
         every {
             importService.importTimetablesFromCsv(any(), any())
-        } throws UnmatchedRoutesWithinImport(
+        } throws UnmatchedRoutesWithinImportException(
             listOf(
                 RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
                 RouteLabelAndDirection("456", JoreRouteDirection.INBOUND)
