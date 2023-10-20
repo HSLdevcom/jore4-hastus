@@ -178,7 +178,7 @@ object ConversionsFromHastus {
                 // Should never happen during application runtime because journeyPatternRefIndex is
                 // expected to be complete at this point. Possible failures should have occurred
                 // earlier in the processing chain. Hence, logging as an error.
-                val exception = UnmatchedRoutesWithinImport(listOf(routeLabelAndDirection))
+                val exception = UnmatchedRoutesWithinImportException(listOf(routeLabelAndDirection))
                 LOGGER.error(exception.message)
                 throw exception
             }

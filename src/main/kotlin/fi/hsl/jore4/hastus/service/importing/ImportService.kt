@@ -144,7 +144,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 .sorted()
 
             if (missingRouteLabelsAndDirections.isNotEmpty()) {
-                val exception = UnmatchedRoutesWithinImport(missingRouteLabelsAndDirections)
+                val exception = UnmatchedRoutesWithinImportException(missingRouteLabelsAndDirections)
                 LOGGER.warn(exception.message)
                 throw exception
             }
