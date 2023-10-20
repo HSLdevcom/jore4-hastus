@@ -6,6 +6,7 @@ import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
+import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -71,7 +72,17 @@ class HasuraClient(
 
             queryResponse.errors?.let { errorList ->
                 if (errorList.isNotEmpty()) {
-                    throw IllegalStateException(errorList.toString())
+                    val authenticationFailedMessage: String? = errorList
+                        .find { it.message.contains("authentication request failed") }
+                        ?.message
+
+                    if (authenticationFailedMessage != null) {
+                        LOGGER.warn("Authentication failed for GraphQL request")
+                        throw GraphQLAuthenticationFailedException(authenticationFailedMessage)
+                    } else {
+                        LOGGER.warn { "Got errors in GraphQL response: $errorList" }
+                        throw IllegalStateException(errorList.toString())
+                    }
                 }
             }
 

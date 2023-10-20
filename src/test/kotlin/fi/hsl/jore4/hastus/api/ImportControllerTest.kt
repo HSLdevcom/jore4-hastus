@@ -4,6 +4,7 @@ import com.ninjasquad.springmockk.MockkBean
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
+import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import fi.hsl.jore4.hastus.service.importing.InvalidHastusDataException
 import fi.hsl.jore4.hastus.service.importing.NoJourneyPatternRefMatchesHastusTripStopsException
@@ -140,6 +141,25 @@ class ImportControllerTest @Autowired constructor(
                     "No journey pattern reference was found whose stop points correspond to the Hastus trip: " +
                         "123 (outbound)"
                 )
+            )
+
+        verify(exactly = 1) {
+            importService.importTimetablesFromCsv(any(), any())
+        }
+    }
+
+    @Test
+    fun `returns 403 when authentication fails for GraphQL request`() {
+        val resultErrorMessage = "authentication failed"
+
+        every {
+            importService.importTimetablesFromCsv(any(), any())
+        } throws GraphQLAuthenticationFailedException(resultErrorMessage)
+
+        executeImportTimetablesRequest("<csv_content>")
+            .andExpect(MockMvcResultMatchers.status().isForbidden)
+            .andExpect(
+                constructExpectedErrorBody(resultErrorMessage)
             )
 
         verify(exactly = 1) {
