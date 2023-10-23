@@ -51,11 +51,7 @@ class HasuraClient(
     ): T {
         return runBlocking {
             LOGGER.debug {
-                "GraphQL request:\n${request.query},\nvariables: ${
-                    objectMapper
-                        .writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(request.variables)
-                }"
+                "GraphQL request:\n${request.query},\nvariables: ${request.variables}"
             }
 
             val queryResponse: GraphQLClientResponse<T> = gqlClient.execute(request) {
