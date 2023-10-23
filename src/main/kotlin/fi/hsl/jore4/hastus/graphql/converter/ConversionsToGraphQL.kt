@@ -81,6 +81,7 @@ object ConversionsToGraphQL {
         return timetables_vehicle_service_block_insert_input(
             finishing_time = OptionalInput.Defined(block.finishingTime.toJavaDuration()),
             preparing_time = OptionalInput.Defined(block.preparingTime.toJavaDuration()),
+            vehicle_type_id = OptionalInput.Defined(block.vehicleTypeId),
             vehicle_journeys = OptionalInput.Defined(
                 timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input(
                     block.vehicleJourneys.map { vehicleJourney ->
