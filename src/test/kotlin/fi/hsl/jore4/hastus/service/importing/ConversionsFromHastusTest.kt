@@ -143,7 +143,7 @@ class ConversionsFromHastusTest {
 
             val block1 = service1.blocks[0]
 
-            assertEquals(VEHICLE_TYPE_1_ID, block1.vehicleType)
+            assertEquals(VEHICLE_TYPE_1_ID, block1.vehicleTypeId)
 
             assertEquals(1, block1.vehicleJourneys.size)
 
@@ -178,7 +178,7 @@ class ConversionsFromHastusTest {
 
             val block2 = service1.blocks[1]
 
-            assertEquals(VEHICLE_TYPE_1_ID, block2.vehicleType)
+            assertEquals(VEHICLE_TYPE_1_ID, block2.vehicleTypeId)
 
             assertEquals(1, block2.vehicleJourneys.size)
 
