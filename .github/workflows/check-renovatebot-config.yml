@@ -2,6 +2,8 @@ name: Check renovatebot config
 
 on:
   pull_request:
+    paths-ignore:
+      - "**.md"
 
 jobs:
   validate:
