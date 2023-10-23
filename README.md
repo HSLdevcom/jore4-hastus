@@ -23,7 +23,7 @@ Uses maven to build the project, use `mvn install` to build the server. You can 
 
 ### Export feature
 
-`POST export/routes` Send a JSON body containing the route labels, priority and date for which to produce a CSV file for Hastus.
+`POST /export/routes` Send a JSON body containing the route labels, priority and date for which to produce a CSV file for Hastus.
 
 Export endpoint expects a JSON format:
 
@@ -43,7 +43,7 @@ The returned CSV file follows the HSL's Hastus CSV specification.
 
 ### Import feature
 
-`POST import` Send a text body in CSV format containing a Hastus schedule to be imported as a vehicle schedule frame to the Jore4 timetables database.
+`POST /import` Send a text body in CSV format containing a Hastus schedule to be imported as a vehicle schedule frame to the Jore4 timetables database.
 The trip records in the CSV data are matched against the journey pattern references (`journey_pattern_ref`) in the Jore4 timetables database.
 For each trip record in the CSV, a route match must be found in the existing journey pattern references.
 
