@@ -35,7 +35,6 @@
         <quicktheories.version>0.26</quicktheories.version>
         <graphql-kotlin.version>7.0.1</graphql-kotlin.version>
         <ktor.version>2.3.4</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
-        <jackson-datatype.version>2.15.1</jackson-datatype.version>
         <mockk.version>1.13.7</mockk.version>
 
         <!-- Other properties -->
@@ -491,7 +490,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-kotlin</artifactId>
-            <version>${jackson-datatype.version}</version>
+            <!-- version inherited from the Spring Boot parent POM -->
         </dependency>
 
         <dependency>
@@ -503,7 +502,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson-datatype.version}</version>
+            <!-- version inherited from the Spring Boot parent POM -->
         </dependency>
 
         <dependency>
