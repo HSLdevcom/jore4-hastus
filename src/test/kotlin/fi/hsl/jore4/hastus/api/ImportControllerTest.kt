@@ -22,8 +22,9 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.ResultMatcher
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.UUID
 
 @ExtendWith(MockKExtension::class)
@@ -48,12 +49,12 @@ class ImportControllerTest @Autowired constructor(
 
         return mockMvc
             .perform(
-                MockMvcRequestBuilders.post("/import")
+                post("/import")
                     .headers(hasuraHeaders)
                     .contentType(MIME_TYPE_CSV)
                     .content(csv)
             )
-            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 
     @Test
@@ -65,9 +66,9 @@ class ImportControllerTest @Autowired constructor(
         } answers { resultVehicleScheduleFrameId }
 
         executeImportTimetablesRequest("<some_csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(status().isOk)
             .andExpect(
-                MockMvcResultMatchers.content().json(
+                content().json(
                     """
                     {
                       "vehicleScheduleFrameId": $resultVehicleScheduleFrameId
@@ -91,7 +92,7 @@ class ImportControllerTest @Autowired constructor(
         } throws InvalidHastusDataException(resultErrorMessage)
 
         executeImportTimetablesRequest("<invalid_csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
@@ -113,7 +114,7 @@ class ImportControllerTest @Autowired constructor(
         )
 
         executeImportTimetablesRequest("<csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
                     "Could not find journey pattern reference for Hastus trips with the following route " +
@@ -135,7 +136,7 @@ class ImportControllerTest @Autowired constructor(
         )
 
         executeImportTimetablesRequest("<csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
                     "No journey pattern reference was found whose stop points correspond to the Hastus trip: " +
@@ -157,7 +158,7 @@ class ImportControllerTest @Autowired constructor(
         } throws GraphQLAuthenticationFailedException(resultErrorMessage)
 
         executeImportTimetablesRequest("<csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isForbidden)
+            .andExpect(status().isForbidden)
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
@@ -176,7 +177,7 @@ class ImportControllerTest @Autowired constructor(
         } throws Exception(resultErrorMessage)
 
         executeImportTimetablesRequest("<csv_content>")
-            .andExpect(MockMvcResultMatchers.status().isInternalServerError)
+            .andExpect(status().isInternalServerError)
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
@@ -188,7 +189,7 @@ class ImportControllerTest @Autowired constructor(
 
     companion object {
         private fun constructExpectedErrorBody(errorMessage: String): ResultMatcher {
-            return MockMvcResultMatchers.content().json(
+            return content().json(
                 """
                 {
                     "reason": "$errorMessage"
