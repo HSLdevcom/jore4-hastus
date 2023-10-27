@@ -144,7 +144,7 @@ class ImportControllerTest @Autowired constructor(
                     No journey pattern reference was found whose stop points correspond to the Hastus trip.
 
                     Trip label: 123,
-                    Trip direction: OUTBOUND,
+                    Trip direction: 1,
                     Stop points: [H1000, H1001, H1002],
                     Place codes: [1PLACE, , 2PLACE]
                     """.trimIndent()
