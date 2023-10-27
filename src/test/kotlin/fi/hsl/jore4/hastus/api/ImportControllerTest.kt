@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.UUID
 
@@ -67,6 +68,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<some_csv_content>")
             .andExpect(status().isOk)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 content().json(
                     """
@@ -93,6 +95,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<invalid_csv_content>")
             .andExpect(status().isBadRequest)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
@@ -115,6 +118,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isBadRequest)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 constructExpectedErrorBody(
                     "Could not find journey pattern reference for Hastus trips with the following route " +
@@ -137,6 +141,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isBadRequest)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 constructExpectedErrorBody(
                     "No journey pattern reference was found whose stop points correspond to the Hastus trip: " +
@@ -159,6 +164,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isForbidden)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
@@ -178,6 +184,7 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isInternalServerError)
+            .andExpect(header().doesNotExist(HttpHeaders.CONTENT_LENGTH))
             .andExpect(
                 constructExpectedErrorBody(resultErrorMessage)
             )
