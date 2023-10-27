@@ -102,11 +102,16 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                             throw InvalidHastusDataException(errorMessage)
                         }
 
-                // Consecutive pairs of stop points and Hastus codes (with same labels) are removed.
+                // Consecutive pairs of stop points and Hastus codes with exactly same labels are
+                // removed. The duplicates are found in case where a stop point has separate
+                // records for both arrival and departure time.
                 val hastusStopAndTimingPlaces: List<Pair<String, String?>> =
                     filterOutConsecutiveDuplicates(
                         hastusTripStops.map { it.stopId to it.timingPlace }
                     )
+
+                val hastusStopLabels: List<String> = hastusStopAndTimingPlaces.map { it.first }
+                val hastusTimingPlaceLabels: List<String?> = hastusStopAndTimingPlaces.map { it.second }
 
                 val firstMatchingJourneyPatternRef: JoreJourneyPatternRef =
                     journeyPatternRefsGroupedByRouteLabelAndDirection[hastusRouteLabelAndDirection]
@@ -117,14 +122,18 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                             it.snapshotTime
                         }
                         .firstOrNull { journeyPatternRef ->
-                            val joreStopAndTimingPlaces: List<Pair<String, String?>> =
-                                journeyPatternRef.stops.map { it.stopLabel to it.timingPlaceCode }
+                            val joreStopLabels: List<String> = journeyPatternRef.stops.map { it.stopLabel }
+                            val joreTimingPlaceLabels: List<String?> =
+                                journeyPatternRef.stops.map { it.timingPlaceCode }
 
-                            joreStopAndTimingPlaces == hastusStopAndTimingPlaces
+                            joreStopLabels == hastusStopLabels && joreTimingPlaceLabels == hastusTimingPlaceLabels
                         }
                         ?: run {
-                            val exception =
-                                NoJourneyPatternRefMatchesHastusTripStopsException(hastusRouteLabelAndDirection)
+                            val exception = NoJourneyPatternRefMatchesHastusTripStopsException(
+                                hastusRouteLabelAndDirection,
+                                hastusStopLabels,
+                                hastusTimingPlaceLabels
+                            )
                             LOGGER.warn(exception.message)
                             throw exception
                         }
