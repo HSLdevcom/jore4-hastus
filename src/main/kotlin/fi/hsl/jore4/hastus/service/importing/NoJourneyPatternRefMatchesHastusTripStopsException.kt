@@ -8,7 +8,18 @@ class NoJourneyPatternRefMatchesHastusTripStopsException(message: String) : Resp
     HttpStatus.BAD_REQUEST,
     message
 ) {
-    constructor(routeIdentifier: RouteLabelAndDirection) : this(
-        "No journey pattern reference was found whose stop points correspond to the Hastus trip: $routeIdentifier"
+    constructor(
+        routeIdentifier: RouteLabelAndDirection,
+        stopLabels: List<String>,
+        placeCodes: List<String?>
+    ) : this(
+        """
+        No journey pattern reference was found whose stop points correspond to the Hastus trip.
+
+        Trip label: ${routeIdentifier.routeLabel},
+        Trip direction: ${routeIdentifier.direction},
+        Stop points: $stopLabels,
+        Place codes: ${placeCodes.map { /* replace nulls with empty strings */ it ?: "" }}
+        """.trimIndent()
     )
 }

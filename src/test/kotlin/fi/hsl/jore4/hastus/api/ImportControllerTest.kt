@@ -131,15 +131,23 @@ class ImportControllerTest @Autowired constructor(
         every {
             importService.importTimetablesFromCsv(any(), any())
         } throws NoJourneyPatternRefMatchesHastusTripStopsException(
-            RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND)
+            RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
+            listOf("H1000", "H1001", "H1002"),
+            listOf("1PLACE", null, "2PLACE")
         )
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
-                    "No journey pattern reference was found whose stop points correspond to the Hastus trip: " +
-                        "123 (outbound)"
+                    """
+                    No journey pattern reference was found whose stop points correspond to the Hastus trip.
+
+                    Trip label: 123,
+                    Trip direction: OUTBOUND,
+                    Stop points: [H1000, H1001, H1002],
+                    Place codes: [1PLACE, , 2PLACE]
+                    """.trimIndent()
                 )
             )
 
