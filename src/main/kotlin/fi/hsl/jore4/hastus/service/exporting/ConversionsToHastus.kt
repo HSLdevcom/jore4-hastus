@@ -58,7 +58,7 @@ object ConversionsToHastus {
         }
     }
 
-    private fun convertRouteDirection(routeDirection: JoreRouteDirection): Int = when (routeDirection) {
+    fun convertRouteDirection(routeDirection: JoreRouteDirection): Int = when (routeDirection) {
         JoreRouteDirection.OUTBOUND -> 1
         JoreRouteDirection.INBOUND -> 2
         else -> throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
