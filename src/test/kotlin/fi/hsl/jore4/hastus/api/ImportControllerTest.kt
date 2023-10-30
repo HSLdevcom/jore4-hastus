@@ -5,10 +5,10 @@ import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
+import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByRouteLabelAndDirectionException
+import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import fi.hsl.jore4.hastus.service.importing.InvalidHastusDataException
-import fi.hsl.jore4.hastus.service.importing.NoJourneyPatternRefMatchesHastusTripStopsException
-import fi.hsl.jore4.hastus.service.importing.UnmatchedRoutesWithinImportException
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -106,7 +106,7 @@ class ImportControllerTest @Autowired constructor(
     fun `returns 400 when there are unmatched routes in Hastus data`() {
         every {
             importService.importTimetablesFromCsv(any(), any())
-        } throws UnmatchedRoutesWithinImportException(
+        } throws CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
             listOf(
                 RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
                 RouteLabelAndDirection("456", JoreRouteDirection.INBOUND)
@@ -131,7 +131,7 @@ class ImportControllerTest @Autowired constructor(
     fun `returns 400 when no journey pattern reference matches any trip record in Hastus data`() {
         every {
             importService.importTimetablesFromCsv(any(), any())
-        } throws NoJourneyPatternRefMatchesHastusTripStopsException(
+        } throws CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
             RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
             listOf("H1000", "H1001", "H1002"),
             listOf("1PLACE", null, "2PLACE")

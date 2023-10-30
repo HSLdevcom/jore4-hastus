@@ -178,7 +178,8 @@ object ConversionsFromHastus {
                 // Should never happen during application runtime because journeyPatternRefIndex is
                 // expected to be complete at this point. Possible failures should have occurred
                 // earlier in the processing chain. Hence, logging as an error.
-                val exception = UnmatchedRoutesWithinImportException(listOf(routeLabelAndDirection))
+                val exception =
+                    CannotFindJourneyPatternRefByRouteLabelAndDirectionException(listOf(routeLabelAndDirection))
                 LOGGER.error(exception.message)
                 throw exception
             }
@@ -200,7 +201,7 @@ object ConversionsFromHastus {
                             unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
                         }"
                     LOGGER.error(errorMessage)
-                    throw NoJourneyPatternRefMatchesHastusTripStopsException(errorMessage)
+                    throw CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(errorMessage)
                 }
             }
 

@@ -5,10 +5,13 @@ import fi.hsl.jore4.hastus.service.exporting.ConversionsToHastus
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-class NoJourneyPatternRefMatchesHastusTripStopsException(message: String) : ResponseStatusException(
+class CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
+    message: String
+) : ResponseStatusException(
     HttpStatus.BAD_REQUEST,
     message
 ) {
+
     constructor(
         routeIdentifier: RouteLabelAndDirection,
         stopLabels: List<String>,
