@@ -5,7 +5,7 @@ import fi.hsl.jore4.hastus.service.exporting.ConversionsToHastus
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
-class CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
+class CannotFindJourneyPatternRefByTimingPlaceLabelsException(
     message: String
 ) : ResponseStatusException(
     HttpStatus.BAD_REQUEST,
@@ -18,7 +18,7 @@ class CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
         placeCodes: List<String?>
     ) : this(
         """
-        No journey pattern reference was found whose stop points correspond to the Hastus trip.
+        Could not find matching journey pattern reference whose timing place labels correspond to the Hastus trip.
 
         Trip label: ${routeIdentifier.routeLabel},
         Trip direction: ${
