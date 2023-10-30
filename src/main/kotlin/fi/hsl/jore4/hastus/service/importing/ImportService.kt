@@ -129,7 +129,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                             joreStopLabels == hastusStopLabels && joreTimingPlaceLabels == hastusTimingPlaceLabels
                         }
                         ?: run {
-                            val exception = NoJourneyPatternRefMatchesHastusTripStopsException(
+                            val exception = CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
                                 hastusRouteLabelAndDirection,
                                 hastusStopLabels,
                                 hastusTimingPlaceLabels
@@ -153,7 +153,9 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 .sorted()
 
             if (missingRouteLabelsAndDirections.isNotEmpty()) {
-                val exception = UnmatchedRoutesWithinImportException(missingRouteLabelsAndDirections)
+                val exception = CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
+                    missingRouteLabelsAndDirections
+                )
                 LOGGER.warn(exception.message)
                 throw exception
             }
