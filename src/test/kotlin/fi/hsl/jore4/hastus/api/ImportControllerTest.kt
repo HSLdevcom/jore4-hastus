@@ -6,7 +6,8 @@ import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
 import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByRouteLabelAndDirectionException
-import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException
+import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByStopPointLabelsException
+import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByTimingPlaceLabelsException
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import fi.hsl.jore4.hastus.service.importing.InvalidHastusDataException
 import io.mockk.every
@@ -103,7 +104,7 @@ class ImportControllerTest @Autowired constructor(
     }
 
     @Test
-    fun `returns 400 when there are unmatched routes in Hastus data`() {
+    fun `returns 400 when not able to find journey pattern reference whose route label and direction match Hastus trip`() {
         every {
             importService.importTimetablesFromCsv(any(), any())
         } throws CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
@@ -128,10 +129,38 @@ class ImportControllerTest @Autowired constructor(
     }
 
     @Test
-    fun `returns 400 when no journey pattern reference matches any trip record in Hastus data`() {
+    fun `returns 400 when not able to find journey pattern reference whose stop point labels match Hastus trip`() {
         every {
             importService.importTimetablesFromCsv(any(), any())
-        } throws CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException(
+        } throws CannotFindJourneyPatternRefByStopPointLabelsException(
+            RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
+            listOf("H1000", "H1001", "H1002")
+        )
+
+        executeImportTimetablesRequest("<csv_content>")
+            .andExpect(status().isBadRequest)
+            .andExpect(
+                constructExpectedErrorBody(
+                    """
+                    Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
+
+                    Trip label: 123,
+                    Trip direction: 1,
+                    Stop points: [H1000, H1001, H1002]
+                    """.trimIndent()
+                )
+            )
+
+        verify(exactly = 1) {
+            importService.importTimetablesFromCsv(any(), any())
+        }
+    }
+
+    @Test
+    fun `returns 400 when not able to find journey pattern reference whose timing place labels match Hastus trip`() {
+        every {
+            importService.importTimetablesFromCsv(any(), any())
+        } throws CannotFindJourneyPatternRefByTimingPlaceLabelsException(
             RouteLabelAndDirection("123", JoreRouteDirection.OUTBOUND),
             listOf("H1000", "H1001", "H1002"),
             listOf("1PLACE", null, "2PLACE")
@@ -142,7 +171,7 @@ class ImportControllerTest @Autowired constructor(
             .andExpect(
                 constructExpectedErrorBody(
                     """
-                    No journey pattern reference was found whose stop points correspond to the Hastus trip.
+                    Could not find matching journey pattern reference whose timing place labels correspond to the Hastus trip.
 
                     Trip label: 123,
                     Trip direction: 1,

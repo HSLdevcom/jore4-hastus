@@ -260,7 +260,7 @@ class ConversionsFromHastusTest {
                 generateTripStopRecord("trip1", "stop3", "0530", "T", "")
             )
 
-            val exception = assertFailsWith<CannotFindJourneyPatternRefByStopLabelsAndTimingPointLabelsException> {
+            val exception = assertFailsWith<CannotFindJourneyPatternRefByStopPointLabelsException> {
                 ConversionsFromHastus.convertHastusDataToJore(
                     hastusData,
                     vehicleTypeIndex,
