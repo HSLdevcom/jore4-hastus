@@ -1,7 +1,6 @@
 query JourneyPatternRefs(
   $route_labels: [String!]!,
-  $validity_start: date!,
-  $validity_end: date!
+  $validity_start: date!
 ) {
   timetables {
     timetables_journey_pattern_journey_pattern_ref(
@@ -12,12 +11,6 @@ query JourneyPatternRefs(
             _or: [
               { route_validity_start: { _is_null: true } }
               { route_validity_start: { _lte: $validity_start } }
-            ]
-          }
-          {
-            _or: [
-              { route_validity_end: { _is_null: true } }
-              { route_validity_end: { _gte: $validity_end } }
             ]
           }
         ]

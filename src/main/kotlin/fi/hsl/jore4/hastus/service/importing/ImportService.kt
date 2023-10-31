@@ -38,8 +38,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
 
         val journeyPatternRefs: List<JoreJourneyPatternRef> = graphQLService.getJourneyPatternReferences(
             uniqueRouteLabels,
-            hastusBookingRecord.startDate,
-            hastusBookingRecord.endDate
+            hastusBookingRecord.startDate
         )
         LOGGER.debug { "Fetched journey pattern references: $journeyPatternRefs" }
 
@@ -131,28 +130,38 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                     throw exception
                 }
 
-                val bestJourneyPatternRefMatch: JoreJourneyPatternRef =
-                    journeyPatternRefsMatchedByStopPointLabels
-                        .sortedByDescending {
-                            // TODO Make sure that this is the appropriate ordering criteria when
-                            //  finding JourneyPatternRef match.
+                val journeyPatternRefsMatchedByTimingPlaceLabels: List<JoreJourneyPatternRef> =
+                    journeyPatternRefsMatchedByStopPointLabels.filter { journeyPatternRef ->
+                        val joreTimingPlaceLabels: List<String?> =
+                            journeyPatternRef.stops.map { it.timingPlaceCode }
+
+                        joreTimingPlaceLabels == hastusPlaceLabels
+                    }
+
+                if (journeyPatternRefsMatchedByTimingPlaceLabels.isEmpty()) {
+                    val exception = CannotFindJourneyPatternRefByTimingPlaceLabelsException(
+                        hastusRouteLabelAndDirection,
+                        hastusStopPointLabels,
+                        hastusPlaceLabels
+                    )
+                    LOGGER.warn(exception.message)
+                    throw exception
+                }
+
+                val bestJourneyPatternRefMatch: JoreJourneyPatternRef = journeyPatternRefsMatchedByTimingPlaceLabels
+                    .sortedWith(
+                        compareByDescending<JoreJourneyPatternRef> {
+                            // By choosing the one with the latest validity start date, we are
+                            // effectively choosing the route/journey-pattern that is currently
+                            // active or was most recently active among the candidates.
+                            it.routeValidityStart
+                        }.thenByDescending {
+                            // The last exported item with the most up-to-date route information is
+                            // picked.
                             it.snapshotTime
                         }
-                        .firstOrNull { journeyPatternRef ->
-                            val joreTimingPlaceLabels: List<String?> =
-                                journeyPatternRef.stops.map { it.timingPlaceCode }
-
-                            joreTimingPlaceLabels == hastusPlaceLabels
-                        }
-                        ?: run {
-                            val exception = CannotFindJourneyPatternRefByTimingPlaceLabelsException(
-                                hastusRouteLabelAndDirection,
-                                hastusStopPointLabels,
-                                hastusPlaceLabels
-                            )
-                            LOGGER.warn(exception.message)
-                            throw exception
-                        }
+                    )
+                    .first()
 
                 results[hastusRouteLabelAndDirection] = bestJourneyPatternRefMatch
             }
