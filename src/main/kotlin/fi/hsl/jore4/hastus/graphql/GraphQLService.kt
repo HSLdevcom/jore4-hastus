@@ -230,14 +230,14 @@ class GraphQLService(
 
     fun getJourneyPatternReferences(
         routeLabels: Collection<String>,
-        validityStart: LocalDate,
-        validityEnd: LocalDate
+        validityStart: LocalDate
     ): List<JoreJourneyPatternRef> {
+        // It is required that the route referenced by the journey pattern reference must be valid
+        // before (or at) the start date of the Hastus booking record.
         val journeyPatternRefsQuery = JourneyPatternRefs(
             variables = JourneyPatternRefs.Variables(
                 route_labels = routeLabels.toList(),
-                validity_start = validityStart,
-                validity_end = validityEnd
+                validity_start = validityStart
             )
         )
 
