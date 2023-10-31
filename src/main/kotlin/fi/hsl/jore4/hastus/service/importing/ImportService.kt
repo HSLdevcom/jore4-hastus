@@ -105,34 +105,34 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 // Consecutive pairs of stop points and Hastus codes with exactly same labels are
                 // removed. The duplicates are found in case where a stop point has separate
                 // records for both arrival and departure time.
-                val hastusStopAndTimingPlaces: List<Pair<String, String?>> =
+                val hastusStopPointsAndTimingPlaces: List<Pair<String, String?>> =
                     filterOutConsecutiveDuplicates(
                         hastusTripStops.map { it.stopId to it.timingPlace }
                     )
 
-                val hastusStopLabels: List<String> = hastusStopAndTimingPlaces.map { it.first }
-                val hastusTimingPlaceLabels: List<String?> = hastusStopAndTimingPlaces.map { it.second }
+                val hastusStopPointLabels: List<String> = hastusStopPointsAndTimingPlaces.map { it.first }
+                val hastusPlaceLabels: List<String?> = hastusStopPointsAndTimingPlaces.map { it.second }
 
-                val journeyPatternRefsMatchedByStopLabels: List<JoreJourneyPatternRef> =
+                val journeyPatternRefsMatchedByStopPointLabels: List<JoreJourneyPatternRef> =
                     journeyPatternRefsGroupedByRouteLabelAndDirection[hastusRouteLabelAndDirection]
                         .orEmpty() // won't really be empty because of previously done label-direction matching
                         .filter { journeyPatternRef ->
-                            val joreStopLabels: List<String> = journeyPatternRef.stops.map { it.stopLabel }
+                            val joreStopPointLabels: List<String> = journeyPatternRef.stops.map { it.stopLabel }
 
-                            joreStopLabels == hastusStopLabels
+                            joreStopPointLabels == hastusStopPointLabels
                         }
 
-                if (journeyPatternRefsMatchedByStopLabels.isEmpty()) {
+                if (journeyPatternRefsMatchedByStopPointLabels.isEmpty()) {
                     val exception = CannotFindJourneyPatternRefByStopPointLabelsException(
                         hastusRouteLabelAndDirection,
-                        hastusStopLabels
+                        hastusStopPointLabels
                     )
                     LOGGER.warn(exception.message)
                     throw exception
                 }
 
                 val bestJourneyPatternRefMatch: JoreJourneyPatternRef =
-                    journeyPatternRefsMatchedByStopLabels
+                    journeyPatternRefsMatchedByStopPointLabels
                         .sortedByDescending {
                             // TODO Make sure that this is the appropriate ordering criteria when
                             //  finding JourneyPatternRef match.
@@ -142,13 +142,13 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                             val joreTimingPlaceLabels: List<String?> =
                                 journeyPatternRef.stops.map { it.timingPlaceCode }
 
-                            joreTimingPlaceLabels == hastusTimingPlaceLabels
+                            joreTimingPlaceLabels == hastusPlaceLabels
                         }
                         ?: run {
                             val exception = CannotFindJourneyPatternRefByTimingPlaceLabelsException(
                                 hastusRouteLabelAndDirection,
-                                hastusStopLabels,
-                                hastusTimingPlaceLabels
+                                hastusStopPointLabels,
+                                hastusPlaceLabels
                             )
                             LOGGER.warn(exception.message)
                             throw exception
