@@ -2,6 +2,7 @@ package fi.hsl.jore4.hastus.api
 
 import com.ninjasquad.springmockk.MockkBean
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
+import fi.hsl.jore4.hastus.config.WebSecurityConfig
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
@@ -16,8 +17,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
@@ -28,11 +29,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.util.UUID
 
+@WebMvcTest(ImportController::class)
+@Import(WebSecurityConfig::class)
 @ExtendWith(MockKExtension::class)
-@AutoConfigureMockMvc
-@SpringBootTest
 class ImportControllerTest @Autowired constructor(
-    val mockMvc: MockMvc
+    private val mockMvc: MockMvc
 ) {
 
     @MockkBean
