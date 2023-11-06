@@ -8,101 +8,50 @@ services:
     build:
       context: ".."
 
-  jore4-testdb:
+  jore4-db:
     container_name: "database"
+    extends:
+      service: jore4-testdb
+      file: docker-compose.yml
     image: "${TESTDB_DOCKER_IMAGE}"
+    ports:
+      - "127.0.0.1:6432:5432"
 
-  jore4-testdb-test:
+  jore4-db-test:
     container_name: "database-test"
+    extends:
+      service: jore4-testdb
+      file: docker-compose.yml
     image: "${TESTDB_DOCKER_IMAGE}"
-    restart: "unless-stopped"
-    networks:
-      - jore4
-    environment:
-      POSTGRES_DB: "jore4e2e"
-      POSTGRES_PASSWORD: "adminpassword"
-      POSTGRES_USER: "dbadmin"
-      SECRET_STORE_BASE_PATH: "/mnt/secrets-store"
     ports:
       - "127.0.0.1:6433:5432"
-    secrets:
-      - source: testdb-db-auth-name
-        target: /mnt/secrets-store/db-auth-name
-      - source: testdb-db-auth-password
-        target: /mnt/secrets-store/db-auth-password
-      - source: testdb-db-auth-username
-        target: /mnt/secrets-store/db-auth-username
-      - source: testdb-db-hasura-name
-        target: /mnt/secrets-store/db-hasura-name
-      - source: testdb-db-hasura-password
-        target: /mnt/secrets-store/db-hasura-password
-      - source: testdb-db-hasura-username
-        target: /mnt/secrets-store/db-hasura-username
-      - source: testdb-db-jore3importer-name
-        target: /mnt/secrets-store/db-jore3importer-name
-      - source: testdb-db-jore3importer-password
-        target: /mnt/secrets-store/db-jore3importer-password
-      - source: testdb-db-jore3importer-username
-        target: /mnt/secrets-store/db-jore3importer-username
-      - source: testdb-db-tiamat-name
-        target: /mnt/secrets-store/db-tiamat-name
-      - source: testdb-db-tiamat-password
-        target: /mnt/secrets-store/db-tiamat-password
-      - source: testdb-db-tiamat-username
-        target: /mnt/secrets-store/db-tiamat-username
-      - source: testdb-db-timetables-api-password
-        target: /mnt/secrets-store/db-timetables-api-password
-      - source: testdb-db-timetables-api-username
-        target: /mnt/secrets-store/db-timetables-api-username
-      - source: testdb-db-timetables-name
-        target: /mnt/secrets-store/db-timetables-name
 
   jore4-hasura:
     container_name: "hasura"
     image: "${HASURA_DOCKER_IMAGE}"
+    extends:
+      service: jore4-hasura
+      file: docker-compose.yml
+    ports:
+      - "127.0.0.1:3201:8080"
     # Waiting for database to be ready to avoid startup delay due to hasura crashing at startup if db is offline
     # Note: this should only be done in development setups as Kubernetes does not allow waiting for services to be ready
     depends_on:
-      jore4-testdb:
+      jore4-db:
         condition: service_healthy
+    environment:
+      DB_HOSTNAME: "jore4-db"
 
   jore4-hasura-test:
     container_name: "hasura-test"
     image: "${HASURA_DOCKER_IMAGE}"
-    depends_on:
-      jore4-testdb-test:
-        condition: service_healthy
-    restart: "unless-stopped"
-    networks:
-      - jore4
-    environment:
-      HASURA_GRAPHQL_AUTH_HOOK: "http://jore4-auth:8080/public/v1/hasura/webhook"
-      HASURA_GRAPHQL_AUTH_HOOK_MODE: "GET"
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-      HASURA_GRAPHQL_ENABLE_TELEMETRY: "false"
-      HASURA_GRAPHQL_METADATA_DIR: "/hasura-metadata"
-      HASURA_GRAPHQL_MIGRATIONS_DIR: "/hasura-migrations"
-      HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT: "60"
-      SECRET_STORE_BASE_PATH: "/mnt/secrets-store"
-      DB_HOSTNAME: "jore4-testdb-test"
+    extends:
+      service: jore4-hasura
+      file: docker-compose.yml
     ports:
       - "127.0.0.1:3202:8080"
-    secrets:
-      - source: hasura-db-auth-username
-        target: /mnt/secrets-store/db-auth-username
-      - source: hasura-db-jore3importer-username
-        target: /mnt/secrets-store/db-jore3importer-username
-      - source: hasura-db-name
-        target: /mnt/secrets-store/db-name
-      - source: hasura-db-password
-        target: /mnt/secrets-store/db-password
-      - source: hasura-db-tiamat-name
-        target: /mnt/secrets-store/db-tiamat-name
-      - source: hasura-db-timetables-api-username
-        target: /mnt/secrets-store/db-timetables-api-username
-      - source: hasura-db-timetables-name
-        target: /mnt/secrets-store/db-timetables-name
-      - source: hasura-db-username
-        target: /mnt/secrets-store/db-username
-      - source: hasura-hasura-admin-secret
-        target: /mnt/secrets-store/hasura-admin-secret
+    depends_on:
+      jore4-db-test:
+        condition: service_healthy
+    environment:
+      DB_HOSTNAME: "jore4-db-test"
