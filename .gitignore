@@ -8,6 +8,7 @@ profiles/dev/config.*.properties
 # Docker
 docker/**
 !docker/docker-compose.custom.yml
+!docker/.env
 
 # Build target
 target/**
