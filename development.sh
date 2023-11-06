@@ -20,13 +20,13 @@ function download_docker_bundle {
 
 function start_all {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
 }
 
 function start_deps {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test
 }
 
 function stop_all {
