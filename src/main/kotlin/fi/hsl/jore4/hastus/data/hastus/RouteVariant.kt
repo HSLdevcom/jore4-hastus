@@ -20,7 +20,6 @@ data class RouteVariant(
     private val routeId: String
 ) : HastusData() {
 
-    override fun getFields(): List<Any> {
-        return listOf(identifier, description, direction, reversible, routeIdAndVariantId, routeId)
-    }
+    override fun getFields(): List<Any> =
+        listOf(identifier, description, direction, reversible, routeIdAndVariantId, routeId)
 }

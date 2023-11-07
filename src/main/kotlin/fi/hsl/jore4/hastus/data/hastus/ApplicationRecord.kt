@@ -29,7 +29,5 @@ data class ApplicationRecord(
         jobTime = LocalTime.parse(elements[5].substring(0, 6), timeFormatter())
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }

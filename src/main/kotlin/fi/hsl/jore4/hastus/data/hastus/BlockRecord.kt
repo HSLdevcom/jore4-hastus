@@ -38,7 +38,5 @@ data class BlockRecord(
         vehicleType = parseToInt(elements[9])
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }

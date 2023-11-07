@@ -38,7 +38,5 @@ data class VehicleScheduleRecord(
         editTime = LocalTime.parse(elements[8], timeFormatter())
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }

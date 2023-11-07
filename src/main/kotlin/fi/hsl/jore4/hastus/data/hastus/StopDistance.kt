@@ -16,12 +16,10 @@ data class StopDistance(
     val editedDistance: Int
 ) : HastusData() {
 
-    override fun getFields(): List<Any> {
-        return listOf(
-            stopStart,
-            stopEnd,
-            baseInService,
-            editedDistance
-        )
-    }
+    override fun getFields(): List<Any> = listOf(
+        stopStart,
+        stopEnd,
+        baseInService,
+        editedDistance
+    )
 }
