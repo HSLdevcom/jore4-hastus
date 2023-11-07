@@ -37,7 +37,7 @@ object ConversionsToHastus {
         joreLineLabel: String
     ): List<IHastusData> {
         return joreRoutes.flatMap { joreRoute ->
-            val routeDirection: Int = convertRouteDirection(joreRoute.direction)
+            val routeDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction)
             val hastusRouteVariantId: String =
                 joreRoute.variant?.takeIf { it.isNotBlank() } ?: routeDirection.toString()
             val routeUniqueLabel: String = joreRoute.label + hastusRouteVariantId
@@ -61,10 +61,9 @@ object ConversionsToHastus {
         }
     }
 
-    fun convertRouteDirection(routeDirection: JoreRouteDirection): Int = when (routeDirection) {
-        JoreRouteDirection.OUTBOUND -> 1
-        JoreRouteDirection.INBOUND -> 2
-        else -> throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
+    private fun getRouteDirectionAsNumberOrThrow(routeDirection: JoreRouteDirection): Int {
+        return routeDirection.wellKnownNumber
+            ?: throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
     }
 
     private fun convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(

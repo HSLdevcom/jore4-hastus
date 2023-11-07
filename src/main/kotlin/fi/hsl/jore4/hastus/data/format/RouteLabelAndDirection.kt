@@ -12,11 +12,7 @@ data class RouteLabelAndDirection(
         // Sort outbound first and inbound after that.
         // The rest are set mutually equal and greater than the two aforementioned in terms of
         // sort order (because in-/outbound directions are only used in Hastus).
-        fun getDirectionAsInt(dir: JoreRouteDirection): Int = when (dir) {
-            JoreRouteDirection.OUTBOUND -> 1
-            JoreRouteDirection.INBOUND -> 2
-            else -> 999
-        }
+        fun getDirectionAsInt(dir: JoreRouteDirection): Int = dir.wellKnownNumber ?: 999
 
         return when (labelComparison) {
             0 -> getDirectionAsInt(direction).compareTo(getDirectionAsInt(other.direction))
