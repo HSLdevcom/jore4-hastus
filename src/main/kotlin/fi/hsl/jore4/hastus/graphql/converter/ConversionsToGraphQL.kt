@@ -6,7 +6,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreBlock
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternStopRef
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleJourney
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleService
@@ -26,7 +26,7 @@ import kotlin.time.toJavaDuration
 
 object ConversionsToGraphQL {
 
-    fun mapToGraphQL(stop: JoreRouteScheduledStop) =
+    fun mapToGraphQL(stop: JoreStopPointInJourneyPattern) =
         timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_insert_input(
             scheduled_stop_point_label = OptionalInput.Defined(stop.stopLabel),
             scheduled_stop_point_sequence = OptionalInput.Defined(stop.stopSequenceNumber),

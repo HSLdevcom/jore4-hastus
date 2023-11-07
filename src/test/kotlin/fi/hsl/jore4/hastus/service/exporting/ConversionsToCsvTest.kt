@@ -7,8 +7,8 @@ import fi.hsl.jore4.hastus.data.hastus.Place
 import fi.hsl.jore4.hastus.data.hastus.Stop
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 import fi.hsl.jore4.hastus.util.CsvWriter
 import org.junit.jupiter.api.DisplayName
@@ -46,8 +46,8 @@ class ConversionsToCsvTest {
             rvpoint;1KALA;0.750;1;0;0;H1238;65y2
             """.trimIndent()
 
-            val stopPoints = listOf(
-                JoreRouteScheduledStop(
+            val stopPointsInJourneyPattern = listOf(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1234",
                     stopSequenceNumber = 1,
                     timingPlaceCode = "1AACKT",
@@ -56,7 +56,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 1234.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1235",
                     stopSequenceNumber = 2,
                     timingPlaceCode = "1ELIMK",
@@ -65,7 +65,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 1000.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1236",
                     stopSequenceNumber = 3,
                     timingPlaceCode = "1AURLA",
@@ -74,7 +74,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = true,
                     distanceToNextStop = 250.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1237",
                     stopSequenceNumber = 4,
                     timingPlaceCode = null,
@@ -83,7 +83,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 500.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1238",
                     stopSequenceNumber = 5,
                     timingPlaceCode = "1KALA",
@@ -112,7 +112,7 @@ class ConversionsToCsvTest {
                         validityEnd = LocalDate.of(2050, 12, 31),
                         typeOfLine = typeOfLine,
                         journeyPatternId = UUID.randomUUID(),
-                        stopsOnRoute = stopPoints
+                        stopPointsInJourneyPattern = stopPointsInJourneyPattern
                     ),
                     JoreRoute(
                         label = "65y",
@@ -124,7 +124,7 @@ class ConversionsToCsvTest {
                         validityEnd = LocalDate.of(2050, 12, 31),
                         typeOfLine = typeOfLine,
                         journeyPatternId = UUID.randomUUID(),
-                        stopsOnRoute = stopPoints
+                        stopPointsInJourneyPattern = stopPointsInJourneyPattern
                     )
                 )
             )
@@ -145,8 +145,8 @@ class ConversionsToCsvTest {
             rvpoint;;;0;0;0;H1237;65x1
             """.trimIndent()
 
-            val stopPoints = listOf(
-                JoreRouteScheduledStop(
+            val stopPointsInJourneyPattern = listOf(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1234",
                     stopSequenceNumber = 1,
                     timingPlaceCode = "1AACKT",
@@ -155,7 +155,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 1234.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1235",
                     stopSequenceNumber = 2,
                     timingPlaceCode = "1ELIMK",
@@ -164,7 +164,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 1000.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1236",
                     stopSequenceNumber = 3,
                     timingPlaceCode = "1AURLA",
@@ -173,7 +173,7 @@ class ConversionsToCsvTest {
                     isAllowedLoad = false,
                     distanceToNextStop = 2500.0
                 ),
-                JoreRouteScheduledStop(
+                JoreStopPointInJourneyPattern(
                     stopLabel = "H1237",
                     stopSequenceNumber = 4,
                     timingPlaceCode = "1KALA",
@@ -202,7 +202,7 @@ class ConversionsToCsvTest {
                         validityEnd = LocalDate.of(2050, 12, 31),
                         typeOfLine = typeOfLine,
                         journeyPatternId = UUID.randomUUID(),
-                        stopsOnRoute = stopPoints
+                        stopPointsInJourneyPattern = stopPointsInJourneyPattern
                     )
                 )
             )

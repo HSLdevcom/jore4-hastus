@@ -18,7 +18,7 @@ data class JoreRoute(
     val validityEnd: LocalDate?,
     val typeOfLine: String,
     val journeyPatternId: UUID,
-    val stopsOnRoute: List<JoreRouteScheduledStop>
+    val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern>
 ) {
     val uniqueLabel: String
         get() = "$label${

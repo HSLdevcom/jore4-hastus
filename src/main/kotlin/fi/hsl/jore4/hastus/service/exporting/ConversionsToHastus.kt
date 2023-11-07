@@ -12,8 +12,8 @@ import fi.hsl.jore4.hastus.data.hastus.StopDistance
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object ConversionsToHastus {
@@ -53,7 +53,7 @@ object ConversionsToHastus {
 
             val routeVariantPoints: List<RouteVariantPoint> =
                 convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
-                    joreRoute.stopsOnRoute,
+                    joreRoute.stopPointsInJourneyPattern,
                     routeUniqueLabel
                 )
 
@@ -68,7 +68,7 @@ object ConversionsToHastus {
     }
 
     private fun convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
-        joreStopPointsInJourneyPattern: List<JoreRouteScheduledStop>,
+        joreStopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern>,
         hastusRouteIdAndVariantId: String
     ): List<RouteVariantPoint> {
         var firstTimingPointEncountered = false

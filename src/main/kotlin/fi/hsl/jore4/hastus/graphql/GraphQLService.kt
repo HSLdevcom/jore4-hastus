@@ -209,7 +209,7 @@ class GraphQLService(
                         route_validity_end = OptionalInput.Defined(route.validityEnd),
                         scheduled_stop_point_in_journey_pattern_refs = OptionalInput.Defined(
                             timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_arr_rel_insert_input(
-                                route.stopsOnRoute.map(ConversionsToGraphQL::mapToGraphQL)
+                                route.stopPointsInJourneyPattern.map(ConversionsToGraphQL::mapToGraphQL)
                             )
                         )
                     )
