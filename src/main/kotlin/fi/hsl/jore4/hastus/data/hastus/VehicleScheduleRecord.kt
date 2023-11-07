@@ -9,12 +9,12 @@ import java.time.LocalTime
  * @property name Displayed name for the vehicle schedule
  * @property scheduleType Day type
  * @property scenario Hastus scenario number
- * @property owner Owner of this shcedule
+ * @property owner Owner of this schedule
  * @property startDate Start date for the vehicle schedule
  * @property endDate End date for the vehicle schedule
  * @property editDate Date when this was last edited
  * @property editTime Time when this was last edited
- * @constructor Create a vehicle scheduel record from a list of strings
+ * @constructor Create a vehicle schedule record from a list of strings
  */
 data class VehicleScheduleRecord(
     val name: String,

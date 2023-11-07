@@ -5,7 +5,7 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 /**
  * Hastus Stop point representing a Jore4 scheduled stop point
  *
- * @property identifier Stop label as a 7 numbers long string NNNNNNN
+ * @property identifier Stop label as a 7 number long string NNNNNNN
  * @property platform Platform number of the stop. Formatted as two numbers NN
  * @property descriptionFinnish Stop name in Finnish
  * @property descriptionSwedish Stop name in Swedish

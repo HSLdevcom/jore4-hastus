@@ -13,8 +13,8 @@ package fi.hsl.jore4.hastus.data.hastus
  * @property passingTime Passing time for the stop point
  * @property distanceFromPreviousStop Distance from the previous timing point in meters. Null, if
  * this stop point is not a timing point.
- * @property stopType Type of the stop point. 'R' on timing places, 'T' on first and last stop,
- * otherwise empty
+ * @property stopType Type of the stop point. 'R' on timing places, 'T' on the first and the last
+ * stop point, otherwise empty
  * @property note Used to mark a regulated timing point. 'a' to mark leaving time, 't' to mark
  * arrival time
  *
