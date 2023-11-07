@@ -1,6 +1,6 @@
 package fi.hsl.jore4.hastus.data.jore
 
-data class JoreRouteScheduledStop(
+data class JoreStopPointInJourneyPattern(
     val stopLabel: String,
     val stopSequenceNumber: Int,
     val timingPlaceCode: String?,

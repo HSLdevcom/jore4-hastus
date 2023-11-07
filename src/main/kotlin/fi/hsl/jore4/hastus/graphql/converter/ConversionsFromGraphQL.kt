@@ -4,7 +4,7 @@ import fi.hsl.jore4.hastus.Constants.LANG_FINNISH
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_journey_pattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.journey_pattern_scheduled_stop_point_in_journey_pattern
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_line
@@ -44,7 +44,7 @@ object ConversionsFromGraphQL {
     private fun mapToJoreRouteScheduledStop(
         stopInJourneyPattern: journey_pattern_scheduled_stop_point_in_journey_pattern?,
         distanceToNextStop: Double
-    ): JoreRouteScheduledStop {
+    ): JoreStopPointInJourneyPattern {
         if (stopInJourneyPattern == null) {
             throw IllegalStateException("Should not encounter a null journey pattern stop during conversion")
         }
@@ -62,7 +62,7 @@ object ConversionsFromGraphQL {
                 )
             }
 
-        return JoreRouteScheduledStop(
+        return JoreStopPointInJourneyPattern(
             stopLabel,
             stopInJourneyPattern.scheduled_stop_point_sequence,
             maxPriorityStopPoint.timing_place?.label,
@@ -106,7 +106,7 @@ object ConversionsFromGraphQL {
             validityEnd = route.validity_end,
             typeOfLine = typeOfLine.lowercase(),
             journeyPatternId = journeyPattern.journey_pattern_id,
-            stopsOnRoute = journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
+            stopPointsInJourneyPattern = journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
                 val currentStopLabel = journeyPatternStop.scheduled_stop_point_label
                 val getDistanceKey = Pair(currentStopLabel, nextStopLabel)
 

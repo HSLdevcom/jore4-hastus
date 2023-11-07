@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.service.exporting.validation
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -33,7 +33,7 @@ class ExportStopPointsValidator(
     override fun validateLine(line: JoreLine) {
         line.routes.forEach { route ->
 
-            if (route.stopsOnRoute.size < 2) {
+            if (route.stopPointsInJourneyPattern.size < 2) {
                 LOGGER.warn {
                     "Journey pattern for route ${route.label} contains less than two stop points"
                 }
@@ -42,7 +42,7 @@ class ExportStopPointsValidator(
                 }
             }
 
-            val firstStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.first()
+            val firstStopOnRoute: JoreStopPointInJourneyPattern = route.stopPointsInJourneyPattern.first()
 
             if (!firstStopOnRoute.isUsedAsTimingPoint || firstStopOnRoute.timingPlaceCode == null) {
                 LOGGER.warn {
@@ -54,7 +54,7 @@ class ExportStopPointsValidator(
                 }
             }
 
-            val lastStopOnRoute: JoreRouteScheduledStop = route.stopsOnRoute.last()
+            val lastStopOnRoute: JoreStopPointInJourneyPattern = route.stopPointsInJourneyPattern.last()
 
             if (!lastStopOnRoute.isUsedAsTimingPoint || lastStopOnRoute.timingPlaceCode == null) {
                 LOGGER.warn {

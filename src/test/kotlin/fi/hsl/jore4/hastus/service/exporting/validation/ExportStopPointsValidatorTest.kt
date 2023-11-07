@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.service.exporting.validation
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.service.exporting.ExportTestDataCreator
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -12,11 +12,11 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
     @Test
     fun `validation should succeed when the first and the last stop points are timing points`() {
-        val stopPoints: List<JoreRouteScheduledStop> = listOf(
+        val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
             createFirstStopPoint("1KALA"),
             createFirstStopPoint("1ELIEL")
         )
-        val line: JoreLine = createLine(stopPoints)
+        val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
         // should not throw exception
         validateLine(line)
@@ -67,11 +67,11 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
         @Test
         fun `when the first stop point is a timing point but does not have timing place name`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint(null, true),
                 createLastStopPoint(2, "1ELIEL")
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             assertFailsWith<FirstStopNotTimingPointException> {
                 validateLine(line)
@@ -80,11 +80,11 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
         @Test
         fun `when the first stop point is not a timing point but has timing place name`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint("1KALA", false),
                 createLastStopPoint(2, "1ELIEL")
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             assertFailsWith<FirstStopNotTimingPointException> {
                 validateLine(line)
@@ -118,11 +118,11 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
         @Test
         fun `when the last stop point is a timing point but does not have timing place name`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint("1ELIEL"),
                 createLastStopPoint(2, null, true)
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             assertFailsWith<LastStopNotTimingPointException> {
                 validateLine(line)
@@ -131,11 +131,11 @@ class ExportStopPointsValidatorTest : ExportTestDataCreator {
 
         @Test
         fun `when the last stop point is not a timing point but has timing place name`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint("1KALA"),
                 createLastStopPoint(2, "1ELIEL", false)
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             assertFailsWith<LastStopNotTimingPointException> {
                 validateLine(line)

@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.jore.JoreLine
-import fi.hsl.jore4.hastus.data.jore.JoreRouteScheduledStop
+import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.graphql.FetchRoutesResult
 import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
@@ -69,11 +69,11 @@ class ExportServiceTest : ExportTestDataCreator {
 
         @Test
         fun `validation should succeed when the first and the last stop points are timing points`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint("1KALA"),
                 createLastStopPoint(2, "1ELIEL")
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             mockGraphQLService(line)
 
@@ -84,11 +84,11 @@ class ExportServiceTest : ExportTestDataCreator {
 
         @Test
         fun `validation should fail when the first or the last stop point is not a timing point`() {
-            val stopPoints: List<JoreRouteScheduledStop> = listOf(
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
                 createFirstStopPoint(null, false),
                 createLastStopPoint(2, "1ELIEL", true)
             )
-            val line: JoreLine = createLine(stopPoints)
+            val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             mockGraphQLService(line)
 
