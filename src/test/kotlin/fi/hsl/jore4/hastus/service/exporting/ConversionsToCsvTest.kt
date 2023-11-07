@@ -38,12 +38,12 @@ class ConversionsToCsvTest {
             rvpoint;1AURLA;2.234;1;1;1;H1236;65x1
             rvpoint;;;0;0;0;H1237;65x1
             rvpoint;1KALA;0.750;1;0;0;H1238;65x1
-            rvariant;2;Reitti A - B 3 FI;0;0;65y2;65
-            rvpoint;1AACKT;0.000;1;0;0;H1234;65y2
-            rvpoint;;;0;0;0;H1235;65y2
-            rvpoint;1AURLA;2.234;1;1;1;H1236;65y2
-            rvpoint;;;0;0;0;H1237;65y2
-            rvpoint;1KALA;0.750;1;0;0;H1238;65y2
+            rvariant;3;Reitti A - B 3 FI;1;0;65y3;65
+            rvpoint;1AACKT;0.000;1;0;0;H1234;65y3
+            rvpoint;;;0;0;0;H1235;65y3
+            rvpoint;1AURLA;2.234;1;1;1;H1236;65y3
+            rvpoint;;;0;0;0;H1237;65y3
+            rvpoint;1KALA;0.750;1;0;0;H1238;65y3
             """.trimIndent()
 
             val stopPointsInJourneyPattern = listOf(
@@ -116,9 +116,9 @@ class ConversionsToCsvTest {
                     ),
                     JoreRoute(
                         label = "65y",
-                        variant = "2",
+                        variant = "3",
                         name = "Reitti A - B 3 FI",
-                        direction = JoreRouteDirection.OUTBOUND,
+                        direction = JoreRouteDirection.INBOUND,
                         reversible = false,
                         validityStart = LocalDate.of(2023, 1, 1),
                         validityEnd = LocalDate.of(2050, 12, 31),
