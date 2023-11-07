@@ -37,28 +37,41 @@ object ConversionsToHastus {
         joreLineLabel: String
     ): List<IHastusData> {
         return joreRoutes.flatMap { joreRoute ->
-            val routeDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction)
             val hastusRouteVariantId: String =
-                joreRoute.variant?.takeIf { it.isNotBlank() } ?: routeDirection.toString()
-            val routeUniqueLabel: String = joreRoute.label + hastusRouteVariantId
+                getHastusRouteVariantId(joreLineLabel, joreRoute.label, joreRoute.variant, joreRoute.direction)
+            val hastusRouteIdAndVariantId: String = joreLineLabel + hastusRouteVariantId
+            val hastusRouteDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction) - 1
 
-            val routeVariant = RouteVariant(
+            val hastusRouteVariant = RouteVariant(
                 identifier = hastusRouteVariantId,
                 description = joreRoute.name,
-                direction = routeDirection - 1,
+                direction = hastusRouteDirection,
                 reversible = joreRoute.reversible,
-                routeIdAndVariantId = routeUniqueLabel,
+                routeIdAndVariantId = hastusRouteIdAndVariantId,
                 routeId = joreLineLabel
             )
 
-            val routeVariantPoints: List<RouteVariantPoint> =
+            val hastusRouteVariantPoints: List<RouteVariantPoint> =
                 convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
                     joreRoute.stopPointsInJourneyPattern,
-                    routeUniqueLabel
+                    hastusRouteIdAndVariantId
                 )
 
-            listOf(routeVariant) + routeVariantPoints
+            listOf(hastusRouteVariant) + hastusRouteVariantPoints
         }
+    }
+
+    fun getHastusRouteVariantId(
+        joreLineLabel: String,
+        joreRouteLabel: String,
+        variant: String?,
+        direction: JoreRouteDirection
+    ): String {
+        val letterVariant: String = joreRouteLabel.substringAfter(joreLineLabel)
+        val numberVariant: String = variant ?: ""
+        val routeDirection: Int = getRouteDirectionAsNumberOrThrow(direction)
+
+        return "$letterVariant$numberVariant$routeDirection"
     }
 
     private fun getRouteDirectionAsNumberOrThrow(routeDirection: JoreRouteDirection): Int {

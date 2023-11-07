@@ -32,18 +32,18 @@ class ConversionsToCsvTest {
         fun `when the first and last stop are timing points`() {
             val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
-            rvariant;1;Reitti A - B FI;0;0;65x1;65
+            rvariant;x1;Reitti A - B FI;0;0;65x1;65
             rvpoint;1AACKT;0.000;1;0;0;H1234;65x1
             rvpoint;;;0;0;0;H1235;65x1
             rvpoint;1AURLA;2.234;1;1;1;H1236;65x1
             rvpoint;;;0;0;0;H1237;65x1
             rvpoint;1KALA;0.750;1;0;0;H1238;65x1
-            rvariant;3;Reitti A - B 3 FI;1;0;65y3;65
-            rvpoint;1AACKT;0.000;1;0;0;H1234;65y3
-            rvpoint;;;0;0;0;H1235;65y3
-            rvpoint;1AURLA;2.234;1;1;1;H1236;65y3
-            rvpoint;;;0;0;0;H1237;65y3
-            rvpoint;1KALA;0.750;1;0;0;H1238;65y3
+            rvariant;y32;Reitti A - B 3 FI;1;0;65y32;65
+            rvpoint;1AACKT;0.000;1;0;0;H1234;65y32
+            rvpoint;;;0;0;0;H1235;65y32
+            rvpoint;1AURLA;2.234;1;1;1;H1236;65y32
+            rvpoint;;;0;0;0;H1237;65y32
+            rvpoint;1KALA;0.750;1;0;0;H1238;65y32
             """.trimIndent()
 
             val stopPointsInJourneyPattern = listOf(
@@ -138,7 +138,7 @@ class ConversionsToCsvTest {
         fun `when the first and last stop are NOT timing points`() {
             val expectedCsv = """
             route;65;Rautatientori - Veräjälaakso FI;0;0;0
-            rvariant;1;Reitti A - B FI;0;0;65x1;65
+            rvariant;x1;Reitti A - B FI;0;0;65x1;65
             rvpoint;;;0;0;0;H1234;65x1
             rvpoint;1ELIMK;0.000;1;0;0;H1235;65x1
             rvpoint;1AURLA;1.000;1;0;1;H1236;65x1
