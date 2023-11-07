@@ -265,7 +265,7 @@ class ConversionsToCsvTest {
             )
         )
 
-        val hastusStops: List<Stop> = ConversionsToHastus.convertJoreStopsToHastus(stopPoints)
+        val hastusStops: List<Stop> = ConversionsToHastus.convertJoreStopPointsToHastus(stopPoints)
 
         assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusStops))
     }

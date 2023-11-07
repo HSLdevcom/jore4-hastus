@@ -61,7 +61,7 @@ class ExportService(
 
         val hastusData: List<IHastusData> =
             ConversionsToHastus.convertJoreLinesToHastus(lines) +
-                ConversionsToHastus.convertJoreStopsToHastus(stopPoints) +
+                ConversionsToHastus.convertJoreStopPointsToHastus(stopPoints) +
                 ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces) +
                 ConversionsToHastus.convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints)
 
