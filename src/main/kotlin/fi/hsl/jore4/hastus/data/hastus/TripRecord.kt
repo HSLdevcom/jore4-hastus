@@ -77,7 +77,5 @@ data class TripRecord(
         isExtraTrip = parseToBoolean(elements[22])
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }

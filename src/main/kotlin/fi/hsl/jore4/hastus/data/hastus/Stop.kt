@@ -30,18 +30,16 @@ data class Stop(
     private val shortIdentifier: String
 ) : HastusData() {
 
-    override fun getFields(): List<Any> {
-        return listOf(
-            identifier,
-            platform,
-            descriptionFinnish,
-            descriptionSwedish,
-            streetFinnish,
-            streetSwedish,
-            place ?: "",
-            gpsX,
-            gpsY,
-            shortIdentifier
-        )
-    }
+    override fun getFields(): List<Any> = listOf(
+        identifier,
+        platform,
+        descriptionFinnish,
+        descriptionSwedish,
+        streetFinnish,
+        streetSwedish,
+        place ?: "",
+        gpsX,
+        gpsY,
+        shortIdentifier
+    )
 }

@@ -12,7 +12,5 @@ data class Place(
     private val description: String
 ) : HastusData() {
 
-    override fun getFields(): List<Any> {
-        return listOf(identifier, description)
-    }
+    override fun getFields(): List<Any> = listOf(identifier, description)
 }

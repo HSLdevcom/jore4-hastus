@@ -18,7 +18,5 @@ data class Route(
     private val serviceMode: Int
 ) : HastusData() {
 
-    override fun getFields(): List<Any> {
-        return listOf(identifier, description, serviceType, direction, serviceMode)
-    }
+    override fun getFields(): List<Any> = listOf(identifier, description, serviceType, direction, serviceMode)
 }
