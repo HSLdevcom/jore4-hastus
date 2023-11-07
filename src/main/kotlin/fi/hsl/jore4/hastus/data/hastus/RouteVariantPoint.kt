@@ -35,15 +35,13 @@ data class RouteVariantPoint(
         }
     }
 
-    override fun getFields(): List<Any> {
-        return listOf(
-            place ?: "", // null to empty string
-            specTpDistance ?: "", // empty string instead of decimal number if distance not given
-            isTimingPoint,
-            allowLoadTime,
-            regulatedTp,
-            stopLabel,
-            routeIdAndVariantId
-        )
-    }
+    override fun getFields(): List<Any> = listOf(
+        place ?: "", // null to empty string
+        specTpDistance ?: "", // empty string instead of decimal number if distance not given
+        isTimingPoint,
+        allowLoadTime,
+        regulatedTp,
+        stopLabel,
+        routeIdAndVariantId
+    )
 }
