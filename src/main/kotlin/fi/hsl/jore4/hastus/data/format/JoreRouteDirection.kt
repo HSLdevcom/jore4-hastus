@@ -14,6 +14,13 @@ enum class JoreRouteDirection {
     SOUTHBOUND,
     WESTBOUND;
 
+    val wellKnownNumber: Int?
+        get() = when (this) {
+            OUTBOUND -> 1
+            INBOUND -> 2
+            else -> null
+        }
+
     fun toGraphQLInNetworkScope(): timetables_route_direction_enum = when (this) {
         ANTICLOCKWISE -> timetables_route_direction_enum.ANTICLOCKWISE
         CLOCKWISE -> timetables_route_direction_enum.CLOCKWISE
