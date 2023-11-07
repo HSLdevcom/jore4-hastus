@@ -34,7 +34,5 @@ data class BookingRecord(
         contract = elements[7]
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }

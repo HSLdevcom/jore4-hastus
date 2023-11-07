@@ -48,7 +48,5 @@ data class TripStopRecord(
         note = elements[11]
     )
 
-    override fun getFields(): List<Any> {
-        return listOf()
-    }
+    override fun getFields(): List<Any> = emptyList()
 }
