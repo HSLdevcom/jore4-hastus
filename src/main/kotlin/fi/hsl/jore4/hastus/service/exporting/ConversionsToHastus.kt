@@ -19,40 +19,43 @@ import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 object ConversionsToHastus {
 
     fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> {
-        return lines.flatMap {
+        return lines.flatMap { joreLine ->
             val hastusRoute = Route(
-                identifier = it.label,
-                description = it.name,
+                identifier = joreLine.label,
+                description = joreLine.name,
                 serviceType = 0,
                 direction = 0,
-                serviceMode = it.vehicleMode
+                serviceMode = joreLine.vehicleMode
             )
 
-            val hastusRouteVariants: List<IHastusData> = convertJoreRoutesToRouteVariants(it.routes, it.label)
-
-            listOf(hastusRoute) + hastusRouteVariants
+            listOf(hastusRoute) + convertJoreRoutesToHastusRouteVariants(joreLine.routes, joreLine.label)
         }
     }
 
-    private fun convertJoreRoutesToRouteVariants(routes: List<JoreRoute>, routeLabel: String): List<IHastusData> {
-        return routes.flatMap { route ->
-            val routeDirection: Int = convertRouteDirection(route.direction)
-            val variant: String = route.variant?.takeIf { it.isNotBlank() } ?: routeDirection.toString()
-            val routeUniqueLabel: String = route.label + variant
+    private fun convertJoreRoutesToHastusRouteVariants(
+        joreRoutes: List<JoreRoute>,
+        joreLineLabel: String
+    ): List<IHastusData> {
+        return joreRoutes.flatMap { joreRoute ->
+            val routeDirection: Int = convertRouteDirection(joreRoute.direction)
+            val hastusRouteVariantId: String =
+                joreRoute.variant?.takeIf { it.isNotBlank() } ?: routeDirection.toString()
+            val routeUniqueLabel: String = joreRoute.label + hastusRouteVariantId
 
             val routeVariant = RouteVariant(
-                identifier = variant,
-                description = route.name,
+                identifier = hastusRouteVariantId,
+                description = joreRoute.name,
                 direction = routeDirection - 1,
-                reversible = route.reversible,
+                reversible = joreRoute.reversible,
                 routeIdAndVariantId = routeUniqueLabel,
-                routeId = routeLabel
+                routeId = joreLineLabel
             )
 
-            val routeVariantPoints: List<RouteVariantPoint> = convertJoreRouteScheduledStopsToRouteVariantPoints(
-                route.stopsOnRoute,
-                routeUniqueLabel
-            )
+            val routeVariantPoints: List<RouteVariantPoint> =
+                convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
+                    joreRoute.stopsOnRoute,
+                    routeUniqueLabel
+                )
 
             listOf(routeVariant) + routeVariantPoints
         }
@@ -64,9 +67,9 @@ object ConversionsToHastus {
         else -> throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
     }
 
-    private fun convertJoreRouteScheduledStopsToRouteVariantPoints(
-        stopPoints: List<JoreRouteScheduledStop>,
-        routeIdAndVariant: String
+    private fun convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
+        joreStopPointsInJourneyPattern: List<JoreRouteScheduledStop>,
+        hastusRouteIdAndVariantId: String
     ): List<RouteVariantPoint> {
         var firstTimingPointEncountered = false
         var accumulatedDistanceFromPreviousTimingPoint = 0.0
@@ -77,7 +80,7 @@ object ConversionsToHastus {
         // - In the input, the distances are given as distances to the next stop. The distances are
         //   converted in such a way that we calculate for each timing point the distance from the
         //   previous timing point.
-        return stopPoints.map { stop ->
+        return joreStopPointsInJourneyPattern.map { stop ->
             val specTpDistance: NumberWithAccuracy? = if (stop.isUsedAsTimingPoint) {
                 val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
 
@@ -101,15 +104,15 @@ object ConversionsToHastus {
                 allowLoadTime = stop.isAllowedLoad,
                 regulatedTp = stop.isRegulatedTimingPoint,
                 stopLabel = stop.stopLabel,
-                routeIdAndVariantId = routeIdAndVariant
+                routeIdAndVariantId = hastusRouteIdAndVariantId
             )
         }
     }
 
-    fun convertJoreStopsToHastus(
-        stops: List<JoreScheduledStop>
+    fun convertJoreStopPointsToHastus(
+        joreStopPoints: List<JoreScheduledStop>
     ): List<Stop> {
-        return stops.map {
+        return joreStopPoints.map {
             Stop(
                 identifier = it.label,
                 platform = it.platform,
@@ -126,9 +129,9 @@ object ConversionsToHastus {
     }
 
     fun convertJoreTimingPlacesToHastus(
-        timingPlaces: List<JoreTimingPlace>
+        joreTimingPlaces: List<JoreTimingPlace>
     ): List<Place> {
-        return timingPlaces.map {
+        return joreTimingPlaces.map {
             Place(
                 identifier = it.label,
                 description = it.description
