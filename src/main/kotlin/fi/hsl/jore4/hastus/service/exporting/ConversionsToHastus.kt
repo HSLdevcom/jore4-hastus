@@ -40,12 +40,12 @@ object ConversionsToHastus {
             val hastusRouteVariantId: String =
                 getHastusRouteVariantId(joreLineLabel, joreRoute.label, joreRoute.variant, joreRoute.direction)
             val hastusRouteIdAndVariantId: String = joreLineLabel + hastusRouteVariantId
-            val hastusRouteDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction) - 1
+            val hastusRouteVariantDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction) - 1
 
             val hastusRouteVariant = RouteVariant(
                 identifier = hastusRouteVariantId,
                 description = joreRoute.name,
-                direction = hastusRouteDirection,
+                direction = hastusRouteVariantDirection,
                 reversible = joreRoute.reversible,
                 routeIdAndVariantId = hastusRouteIdAndVariantId,
                 routeId = joreLineLabel
@@ -67,11 +67,11 @@ object ConversionsToHastus {
         variant: String?,
         direction: JoreRouteDirection
     ): String {
-        val letterVariant: String = joreRouteLabel.substringAfter(joreLineLabel)
-        val numberVariant: String = variant ?: ""
+        val majorVariant: String = joreRouteLabel.substringAfter(joreLineLabel)
+        val minorVariant: String = variant ?: ""
         val routeDirection: Int = getRouteDirectionAsNumberOrThrow(direction)
 
-        return "$letterVariant$numberVariant$routeDirection"
+        return "$majorVariant$minorVariant$routeDirection"
     }
 
     private fun getRouteDirectionAsNumberOrThrow(routeDirection: JoreRouteDirection): Int {
