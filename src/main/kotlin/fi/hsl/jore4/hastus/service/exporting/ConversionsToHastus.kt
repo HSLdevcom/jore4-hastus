@@ -1,5 +1,11 @@
 package fi.hsl.jore4.hastus.service.exporting
 
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_ROUTE_DESCRIPTION
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_ROUTE_VARIANT_DESCRIPTION
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_NAME_IN_FINNISH
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_NAME_IN_SWEDISH
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_FINNISH
+import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_SWEDISH
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 import fi.hsl.jore4.hastus.data.hastus.IHastusData
@@ -17,15 +23,6 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object ConversionsToHastus {
-
-    private const val MAX_LENGTH_HASTUS_ROUTE_DESCRIPTION = 50
-    private const val MAX_LENGTH_HASTUS_ROUTE_VARIANT_DESCRIPTION = 60
-
-    private const val MAX_LENGTH_HASTUS_STOP_NAME_IN_FINNISH = 100
-    private const val MAX_LENGTH_HASTUS_STOP_NAME_IN_SWEDISH = 100
-
-    private const val MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_FINNISH = 50
-    private const val MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_SWEDISH = 50
 
     fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> {
         return lines.flatMap { joreLine ->
