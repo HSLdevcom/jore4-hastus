@@ -61,7 +61,7 @@ object ConversionsToHastus {
         }
     }
 
-    fun getHastusRouteVariantId(
+    internal fun getHastusRouteVariantId(
         joreLineLabel: String,
         joreRouteLabel: String,
         variant: String?,
