@@ -11,11 +11,11 @@ package fi.hsl.jore4.hastus.data.hastus
  * @constructor Create a Route with given values
  */
 data class Route(
-    private val identifier: String,
-    private val description: String,
-    private val serviceType: Int = 0,
-    private val direction: Int = 0,
-    private val serviceMode: Int
+    val identifier: String,
+    val description: String,
+    val serviceType: Int = 0,
+    val direction: Int = 0,
+    val serviceMode: Int
 ) : HastusData() {
 
     override fun getFields(): List<Any> = listOf(identifier, description, serviceType, direction, serviceMode)

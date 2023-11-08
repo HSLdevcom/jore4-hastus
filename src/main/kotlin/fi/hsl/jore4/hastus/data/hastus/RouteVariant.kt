@@ -12,12 +12,12 @@ package fi.hsl.jore4.hastus.data.hastus
  * @constructor Create a Route variant with the given values
  */
 data class RouteVariant(
-    private val identifier: String,
-    private val description: String,
-    private val direction: Int,
-    private val reversible: Boolean = false,
-    private val routeIdAndVariantId: String,
-    private val routeId: String
+    val identifier: String,
+    val description: String,
+    val direction: Int,
+    val reversible: Boolean = false,
+    val routeIdAndVariantId: String,
+    val routeId: String
 ) : HastusData() {
 
     override fun getFields(): List<Any> =

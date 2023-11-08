@@ -18,16 +18,16 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
  * @constructor Create a Hastus Stop with given values
  */
 data class Stop(
-    private val identifier: String,
-    private val platform: String,
-    private val descriptionFinnish: String,
-    private val descriptionSwedish: String,
-    private val streetFinnish: String,
-    private val streetSwedish: String,
-    private val place: String?,
-    private val gpsX: NumberWithAccuracy,
-    private val gpsY: NumberWithAccuracy,
-    private val shortIdentifier: String
+    val identifier: String,
+    val platform: String,
+    val descriptionFinnish: String,
+    val descriptionSwedish: String,
+    val streetFinnish: String,
+    val streetSwedish: String,
+    val place: String?,
+    val gpsX: NumberWithAccuracy,
+    val gpsY: NumberWithAccuracy,
+    val shortIdentifier: String
 ) : HastusData() {
 
     override fun getFields(): List<Any> = listOf(
