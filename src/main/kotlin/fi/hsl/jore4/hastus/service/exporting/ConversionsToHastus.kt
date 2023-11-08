@@ -18,11 +18,24 @@ import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object ConversionsToHastus {
 
+    private const val MAX_LENGTH_HASTUS_ROUTE_DESCRIPTION = 50
+    private const val MAX_LENGTH_HASTUS_ROUTE_VARIANT_DESCRIPTION = 60
+
+    private const val MAX_LENGTH_HASTUS_STOP_NAME_IN_FINNISH = 100
+    private const val MAX_LENGTH_HASTUS_STOP_NAME_IN_SWEDISH = 100
+
+    private const val MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_FINNISH = 50
+    private const val MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_SWEDISH = 50
+
     fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> {
         return lines.flatMap { joreLine ->
+
+            // The cut is done due to length limit in Hastus.
+            val hastusRouteDescription: String = joreLine.name.take(MAX_LENGTH_HASTUS_ROUTE_DESCRIPTION)
+
             val hastusRoute = Route(
                 identifier = joreLine.label,
-                description = joreLine.name,
+                description = hastusRouteDescription,
                 serviceType = 0,
                 direction = 0,
                 serviceMode = joreLine.vehicleMode
@@ -42,9 +55,12 @@ object ConversionsToHastus {
             val hastusRouteIdAndVariantId: String = joreLineLabel + hastusRouteVariantId
             val hastusRouteVariantDirection: Int = getRouteDirectionAsNumberOrThrow(joreRoute.direction) - 1
 
+            // The cut is done due to length limit in Hastus.
+            val hastusRouteVariantDescription: String = joreRoute.name.take(MAX_LENGTH_HASTUS_ROUTE_VARIANT_DESCRIPTION)
+
             val hastusRouteVariant = RouteVariant(
                 identifier = hastusRouteVariantId,
-                description = joreRoute.name,
+                description = hastusRouteVariantDescription,
                 direction = hastusRouteVariantDirection,
                 reversible = joreRoute.reversible,
                 routeIdAndVariantId = hastusRouteIdAndVariantId,
@@ -125,13 +141,21 @@ object ConversionsToHastus {
         joreStopPoints: List<JoreScheduledStop>
     ): List<Stop> {
         return joreStopPoints.map {
+            // The cuts below are done due to length limits in Hastus.
+
+            val stopNameFi: String = it.nameFinnish.take(MAX_LENGTH_HASTUS_STOP_NAME_IN_FINNISH)
+            val stopNameSv: String = it.nameSwedish.take(MAX_LENGTH_HASTUS_STOP_NAME_IN_SWEDISH)
+
+            val stopStreetNameFi: String = it.streetNameFinnish.take(MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_FINNISH)
+            val stopStreetNameSv: String = it.streetNameSwedish.take(MAX_LENGTH_HASTUS_STOP_STREET_NAME_IN_SWEDISH)
+
             Stop(
                 identifier = it.label,
                 platform = it.platform,
-                descriptionFinnish = it.nameFinnish,
-                descriptionSwedish = it.nameSwedish,
-                streetFinnish = it.streetNameFinnish,
-                streetSwedish = it.streetNameSwedish,
+                descriptionFinnish = stopNameFi,
+                descriptionSwedish = stopNameSv,
+                streetFinnish = stopStreetNameFi,
+                streetSwedish = stopStreetNameSv,
                 place = it.timingPlaceShortName,
                 gpsX = NumberWithAccuracy(it.location.x, 2, 6),
                 gpsY = NumberWithAccuracy(it.location.y, 2, 6),
