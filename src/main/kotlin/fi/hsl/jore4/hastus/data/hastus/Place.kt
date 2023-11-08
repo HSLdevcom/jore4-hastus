@@ -8,8 +8,8 @@ package fi.hsl.jore4.hastus.data.hastus
  * @constructor Creates a Hastus Place
  */
 data class Place(
-    private val identifier: String,
-    private val description: String
+    val identifier: String,
+    val description: String
 ) : HastusData() {
 
     override fun getFields(): List<Any> = listOf(identifier, description)

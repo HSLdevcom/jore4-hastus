@@ -12,7 +12,7 @@ package fi.hsl.jore4.hastus.data.hastus
 data class StopDistance(
     val stopStart: String,
     val stopEnd: String,
-    private val baseInService: Boolean = true,
+    val baseInService: Boolean = true,
     val editedDistance: Int
 ) : HastusData() {
 

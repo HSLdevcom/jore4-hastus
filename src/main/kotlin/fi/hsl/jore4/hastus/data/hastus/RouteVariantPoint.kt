@@ -16,13 +16,13 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
  * @constructor Create empty Route variant point
  */
 data class RouteVariantPoint(
-    private val place: String?,
-    private val specTpDistance: NumberWithAccuracy?,
-    private val isTimingPoint: Boolean,
-    private val allowLoadTime: Boolean,
-    private val regulatedTp: Boolean,
-    private val stopLabel: String,
-    private val routeIdAndVariantId: String
+    val place: String?,
+    val specTpDistance: NumberWithAccuracy?,
+    val isTimingPoint: Boolean,
+    val allowLoadTime: Boolean,
+    val regulatedTp: Boolean,
+    val stopLabel: String,
+    val routeIdAndVariantId: String
 ) : HastusData() {
 
     init {
