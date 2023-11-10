@@ -67,10 +67,10 @@ object ConversionsFromHastus {
         val vehicleServices: List<JoreVehicleService> = vehicleServiceNames.map { vehicleServiceName ->
             mapToJoreVehicleService(
                 vehicleServiceName,
+                vehicleTypeIndex,
                 dayTypeId,
                 hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
-                journeyPatternRefIndex,
-                vehicleTypeIndex
+                journeyPatternRefIndex
             )
         }
 
@@ -127,10 +127,10 @@ object ConversionsFromHastus {
 
     private fun mapToJoreVehicleService(
         vehicleServiceName: String,
+        vehicleTypeIndex: Map<Int, UUID>,
         dayTypeId: UUID,
         hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
-        journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef>,
-        vehicleTypeIndex: Map<Int, UUID>
+        journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef>
     ): JoreVehicleService {
         return JoreVehicleService(
             vehicleServiceName,
