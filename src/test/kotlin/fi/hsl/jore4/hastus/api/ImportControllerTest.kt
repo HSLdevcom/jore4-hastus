@@ -175,8 +175,7 @@ class ImportControllerTest @Autowired constructor(
 
                     Trip label: 123,
                     Trip direction: 1,
-                    Stop points: [H1000, H1001, H1002],
-                    Place codes: [1PLACE, , 2PLACE]
+                    Stop points with place codes: [H1000:1PLACE, H1001, H1002:2PLACE]
                     """.trimIndent()
                 )
             )

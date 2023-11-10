@@ -21,8 +21,15 @@ class CannotFindJourneyPatternRefByTimingPlaceLabelsException(
 
         Trip label: ${routeIdentifier.routeLabel},
         Trip direction: ${routeIdentifier.direction.wellKnownNumber},
-        Stop points: $stopLabels,
-        Place codes: ${placeCodes.map { /* replace nulls with empty strings */ it ?: "" }}
+        Stop points with place codes: ${
+            stopLabels
+                .zip(placeCodes)
+                .map { (stopLabel, nullablePlaceCode) ->
+                    nullablePlaceCode
+                        ?.let { "$stopLabel:$it" }
+                        ?: stopLabel
+                }
+        }
         """.trimIndent()
     )
 }
