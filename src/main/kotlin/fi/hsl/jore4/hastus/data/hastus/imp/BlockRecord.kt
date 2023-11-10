@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 /**
  * Block record
@@ -24,7 +24,7 @@ data class BlockRecord(
     val prepOutTime: Int,
     val prepInTime: Int,
     val vehicleType: Int
-) : HastusData() {
+) : ImportableItem() {
 
     constructor(elements: List<String>) : this(
         internalNumber = elements[1],
@@ -37,6 +37,4 @@ data class BlockRecord(
         prepInTime = parseToInt(elements[8]),
         vehicleType = parseToInt(elements[9])
     )
-
-    override fun getFields(): List<Any> = emptyList()
 }

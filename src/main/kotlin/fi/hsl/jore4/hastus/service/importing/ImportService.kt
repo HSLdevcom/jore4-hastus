@@ -1,10 +1,10 @@
 package fi.hsl.jore4.hastus.service.importing
 
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BookingRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ImportableItem
+import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.graphql.GraphQLService
@@ -24,7 +24,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         csv: String,
         hasuraHeaders: Map<String, String>
     ): UUID? {
-        val hastusItems: List<IHastusData> = getHastusDataItems(csv)
+        val hastusItems: List<ImportableItem> = getHastusDataItems(csv)
         val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
 
         val hastusBookingRecord: BookingRecord = hastusItems.filterIsInstance<BookingRecord>().first()
@@ -63,7 +63,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         return graphQLService.persistVehicleScheduleFrame(vehicleScheduleFrame, selectedJourneyPatternRefs)
     }
 
-    private fun getHastusDataItems(csv: String): List<IHastusData> = filterOutDeadRunItems(READER.parseCsv(csv))
+    private fun getHastusDataItems(csv: String): List<ImportableItem> = filterOutDeadRunItems(READER.parseCsv(csv))
 
     companion object {
 
@@ -192,7 +192,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
             }
         }
 
-        private fun filterOutDeadRunItems(hastusItems: List<IHastusData>): List<IHastusData> {
+        private fun filterOutDeadRunItems(hastusItems: List<ImportableItem>): List<ImportableItem> {
             val internalNumbersOfDeadRuns: List<String> = hastusItems
                 .filterIsInstance<TripRecord>()
                 .filter { trip ->

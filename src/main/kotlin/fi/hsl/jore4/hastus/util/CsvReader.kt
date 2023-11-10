@@ -1,23 +1,23 @@
 package fi.hsl.jore4.hastus.util
 
-import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
-import fi.hsl.jore4.hastus.data.hastus.BlockRecord
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ApplicationRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BlockRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BookingRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ImportableItem
+import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.VehicleScheduleRecord
 import mu.KotlinLogging
 
 class CsvReader(
     private val separator: String = ";"
 ) {
 
-    fun parseCsv(file: String): List<IHastusData> {
+    fun parseCsv(file: String): List<ImportableItem> {
         return file.split("\n").mapNotNull { parseLine(it) }
     }
 
-    private fun parseLine(line: String): IHastusData? {
+    private fun parseLine(line: String): ImportableItem? {
         val values = line.trim().split(separator)
         return when (values[0]) {
             "1" -> ApplicationRecord(values)

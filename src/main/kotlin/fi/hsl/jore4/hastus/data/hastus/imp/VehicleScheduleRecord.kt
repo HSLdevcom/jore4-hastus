@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 import java.time.LocalDate
 import java.time.LocalTime
@@ -25,7 +25,7 @@ data class VehicleScheduleRecord(
     val endDate: LocalDate,
     val editDate: LocalDate,
     val editTime: LocalTime
-) : HastusData() {
+) : ImportableItem() {
 
     constructor(elements: List<String>) : this(
         name = elements[1],
@@ -37,6 +37,4 @@ data class VehicleScheduleRecord(
         editDate = LocalDate.parse(elements[7], dateFormatter()),
         editTime = LocalTime.parse(elements[8], timeFormatter())
     )
-
-    override fun getFields(): List<Any> = emptyList()
 }

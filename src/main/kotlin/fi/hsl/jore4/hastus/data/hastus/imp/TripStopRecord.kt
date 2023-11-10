@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 /**
  * Hastus trip stop record
@@ -32,7 +32,7 @@ data class TripStopRecord(
     val distanceFromPreviousStop: Double?,
     val stopType: String,
     val note: String
-) : HastusData() {
+) : ImportableItem() {
 
     val isUsedAsTimingPoint: Boolean
         get() = stopType == "T" || stopType == "R"
@@ -55,6 +55,4 @@ data class TripStopRecord(
         stopType = elements[10],
         note = elements[11]
     )
-
-    override fun getFields(): List<Any> = emptyList()
 }

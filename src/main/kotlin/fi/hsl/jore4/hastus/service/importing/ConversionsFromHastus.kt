@@ -3,12 +3,12 @@ package fi.hsl.jore4.hastus.service.importing
 import fi.hsl.jore4.hastus.data.format.JoreJourneyType
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
-import fi.hsl.jore4.hastus.data.hastus.BlockRecord
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BlockRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BookingRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ImportableItem
+import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.VehicleScheduleRecord
 import fi.hsl.jore4.hastus.data.jore.JoreBlock
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternStopRef
@@ -29,7 +29,7 @@ object ConversionsFromHastus {
     private val LOGGER = KotlinLogging.logger {}
 
     fun convertHastusDataToJore(
-        hastusData: List<IHastusData>,
+        hastusData: List<ImportableItem>,
         vehicleTypeIndex: Map<Int, UUID>,
         dayTypeIndex: Map<String, UUID>,
         journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef>

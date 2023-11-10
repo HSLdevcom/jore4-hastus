@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 /**
  * Stop distance Hastus element. Distances between stops.
@@ -14,7 +14,7 @@ data class StopDistance(
     val stopEnd: String,
     val baseInService: Boolean = true,
     val editedDistance: Int
-) : HastusData() {
+) : IExportableItem {
 
     override fun getFields(): List<Any> = listOf(
         stopStart,

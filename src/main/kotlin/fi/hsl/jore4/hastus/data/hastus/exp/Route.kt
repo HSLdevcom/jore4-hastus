@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 /**
  * A Route Hastus element, represents a Jore4 Line
@@ -16,7 +16,7 @@ data class Route(
     val serviceType: Int = 0,
     val direction: Int = 0,
     val serviceMode: Int
-) : HastusData() {
+) : IExportableItem {
 
     override fun getFields(): List<Any> = listOf(identifier, description, serviceType, direction, serviceMode)
 }

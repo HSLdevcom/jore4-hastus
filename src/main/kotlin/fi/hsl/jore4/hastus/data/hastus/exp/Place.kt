@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 /**
  * Represents a Hastus Place element
@@ -10,7 +10,7 @@ package fi.hsl.jore4.hastus.data.hastus
 data class Place(
     val identifier: String,
     val description: String
-) : HastusData() {
+) : IExportableItem {
 
     override fun getFields(): List<Any> = listOf(identifier, description)
 }
