@@ -321,6 +321,7 @@ object ConversionsFromHastus {
         return when (trip.direction) {
             1 -> JoreRouteDirection.OUTBOUND
             2 -> JoreRouteDirection.INBOUND
+            null -> throw IllegalArgumentException("Null route direction encountered (dead run)")
             else -> throw IllegalArgumentException("Unknown Hastus route direction: ${trip.direction}")
         }
     }
