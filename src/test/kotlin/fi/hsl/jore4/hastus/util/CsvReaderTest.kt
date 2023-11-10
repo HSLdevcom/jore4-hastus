@@ -1,11 +1,11 @@
 package fi.hsl.jore4.hastus.util
 
-import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
-import fi.hsl.jore4.hastus.data.hastus.BlockRecord
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ApplicationRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BlockRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BookingRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.VehicleScheduleRecord
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDate

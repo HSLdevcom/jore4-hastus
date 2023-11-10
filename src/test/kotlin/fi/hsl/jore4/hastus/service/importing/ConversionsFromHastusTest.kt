@@ -1,13 +1,13 @@
 package fi.hsl.jore4.hastus.service.importing
 
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
-import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
-import fi.hsl.jore4.hastus.data.hastus.BlockRecord
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ApplicationRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BlockRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.BookingRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.ImportableItem
+import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
+import fi.hsl.jore4.hastus.data.hastus.imp.VehicleScheduleRecord
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternStopRef
 import fi.hsl.jore4.hastus.data.jore.JorePassingTime
@@ -92,7 +92,7 @@ class ConversionsFromHastusTest {
                 journeyPatternRef2.routeLabelAndDirection to journeyPatternRef2
             )
 
-            val hastusData: List<IHastusData> = listOf(
+            val hastusData: List<ImportableItem> = listOf(
                 generateApplicationRecord(),
                 generateBookingRecord(hastusBookingRecordName, "booking", "description"),
                 generateVehicleScheduleRecord(13),
@@ -248,7 +248,7 @@ class ConversionsFromHastusTest {
                 journeyPatternRef1.routeLabelAndDirection to journeyPatternRef1
             )
 
-            val hastusData: List<IHastusData> = listOf(
+            val hastusData: List<ImportableItem> = listOf(
                 generateApplicationRecord(),
                 generateBookingRecord("name", "booking", "description"),
                 generateVehicleScheduleRecord(13),

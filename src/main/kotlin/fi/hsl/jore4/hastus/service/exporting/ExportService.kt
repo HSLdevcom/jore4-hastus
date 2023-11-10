@@ -1,6 +1,6 @@
 package fi.hsl.jore4.hastus.service.exporting
 
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
+import fi.hsl.jore4.hastus.data.hastus.exp.IExportableItem
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreJourneyPatternRef
 import fi.hsl.jore4.hastus.data.jore.JoreLine
@@ -59,7 +59,7 @@ class ExportService(
         // validate lines
         lines.forEach { lineValidator.validateLine(it) }
 
-        val hastusData: List<IHastusData> =
+        val hastusData: List<IExportableItem> =
             ConversionsToHastus.convertJoreLinesToHastus(lines) +
                 ConversionsToHastus.convertJoreStopPointsToHastus(stopPoints) +
                 ConversionsToHastus.convertJoreTimingPlacesToHastus(timingPlaces) +

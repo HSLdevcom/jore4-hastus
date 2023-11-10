@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 /**
  * A Route variant Hastus element, represents a Jore4 route
@@ -18,7 +18,7 @@ data class RouteVariant(
     val reversible: Boolean = false,
     val routeIdAndVariantId: String,
     val routeId: String
-) : HastusData() {
+) : IExportableItem {
 
     override fun getFields(): List<Any> =
         listOf(identifier, description, direction, reversible, routeIdAndVariantId, routeId)

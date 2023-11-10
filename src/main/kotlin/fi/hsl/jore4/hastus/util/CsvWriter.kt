@@ -1,19 +1,13 @@
 package fi.hsl.jore4.hastus.util
 
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
-import fi.hsl.jore4.hastus.data.hastus.ApplicationRecord
-import fi.hsl.jore4.hastus.data.hastus.BlockRecord
-import fi.hsl.jore4.hastus.data.hastus.BookingRecord
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.Place
-import fi.hsl.jore4.hastus.data.hastus.Route
-import fi.hsl.jore4.hastus.data.hastus.RouteVariant
-import fi.hsl.jore4.hastus.data.hastus.RouteVariantPoint
-import fi.hsl.jore4.hastus.data.hastus.Stop
-import fi.hsl.jore4.hastus.data.hastus.StopDistance
-import fi.hsl.jore4.hastus.data.hastus.TripRecord
-import fi.hsl.jore4.hastus.data.hastus.TripStopRecord
-import fi.hsl.jore4.hastus.data.hastus.VehicleScheduleRecord
+import fi.hsl.jore4.hastus.data.hastus.exp.IExportableItem
+import fi.hsl.jore4.hastus.data.hastus.exp.Place
+import fi.hsl.jore4.hastus.data.hastus.exp.Route
+import fi.hsl.jore4.hastus.data.hastus.exp.RouteVariant
+import fi.hsl.jore4.hastus.data.hastus.exp.RouteVariantPoint
+import fi.hsl.jore4.hastus.data.hastus.exp.Stop
+import fi.hsl.jore4.hastus.data.hastus.exp.StopDistance
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 
@@ -31,29 +25,23 @@ class CsvWriter(
         decimalFormat.isGroupingUsed = false
     }
 
-    fun transformToCsv(data: List<IHastusData>): String {
+    fun transformToCsv(data: List<IExportableItem>): String {
         return data.joinToString(System.lineSeparator()) { transformToCsvLine(it) }
     }
 
-    fun transformToCsvLine(data: IHastusData): String {
+    fun transformToCsvLine(data: IExportableItem): String {
         return (listOf(hastusFieldName(data)) + data.getFields())
             .joinToString(separator = separator, transform = { safeStringTransform(it) })
     }
 
-    private fun hastusFieldName(data: IHastusData): String {
+    private fun hastusFieldName(data: IExportableItem): String {
         return when (data) {
-            is ApplicationRecord -> "1"
-            is BlockRecord -> "4"
-            is BookingRecord -> "2"
             is Place -> "place"
             is Route -> "route"
             is RouteVariant -> "rvariant"
             is RouteVariantPoint -> "rvpoint"
             is Stop -> "stop"
             is StopDistance -> "stpdist"
-            is TripRecord -> "5"
-            is TripStopRecord -> "6"
-            is VehicleScheduleRecord -> "3"
         }
     }
 
@@ -75,9 +63,9 @@ class CsvWriter(
     // Remove all separators from strings which would break the CSV
     private fun safeStringTransform(item: Any): String {
         return when (item) {
-            is NumberWithAccuracy -> formattedNumberTransform(item)
-            is Number -> safeNumberTransform(item)
             is Boolean -> booleanTransform(item)
+            is Number -> safeNumberTransform(item)
+            is NumberWithAccuracy -> formattedNumberTransform(item)
             else -> item.toString().replace(separator, "")
         }
     }

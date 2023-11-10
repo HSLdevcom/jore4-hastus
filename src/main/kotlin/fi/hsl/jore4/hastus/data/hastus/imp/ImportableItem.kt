@@ -1,10 +1,12 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 import fi.hsl.jore4.hastus.Constants
 import java.time.format.DateTimeFormatter
 
-sealed class HastusData : IHastusData {
-
+/**
+ * Hastus data class which represents a line of CSV data to be imported from Hastus.
+ */
+sealed class ImportableItem {
     companion object {
         private val DATE_FORMATTER: DateTimeFormatter =
             DateTimeFormatter.ofPattern(Constants.DEFAULT_HASTUS_DATE_FORMAT)

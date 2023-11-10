@@ -6,9 +6,9 @@ import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_NAME
 import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_STREET_NAME
 import fi.hsl.jore4.hastus.data.format.Coordinate
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
-import fi.hsl.jore4.hastus.data.hastus.Route
-import fi.hsl.jore4.hastus.data.hastus.RouteVariant
-import fi.hsl.jore4.hastus.data.hastus.Stop
+import fi.hsl.jore4.hastus.data.hastus.exp.Route
+import fi.hsl.jore4.hastus.data.hastus.exp.RouteVariant
+import fi.hsl.jore4.hastus.data.hastus.exp.Stop
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop

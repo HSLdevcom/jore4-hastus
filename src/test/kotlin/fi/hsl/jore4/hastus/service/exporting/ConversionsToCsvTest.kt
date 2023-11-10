@@ -2,9 +2,9 @@ package fi.hsl.jore4.hastus.service.exporting
 
 import fi.hsl.jore4.hastus.data.format.Coordinate
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.Place
-import fi.hsl.jore4.hastus.data.hastus.Stop
+import fi.hsl.jore4.hastus.data.hastus.exp.IExportableItem
+import fi.hsl.jore4.hastus.data.hastus.exp.Place
+import fi.hsl.jore4.hastus.data.hastus.exp.Stop
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
 import fi.hsl.jore4.hastus.data.jore.JoreScheduledStop
@@ -129,7 +129,7 @@ class ConversionsToCsvTest {
                 )
             )
 
-            val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
+            val hastusData: List<IExportableItem> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
 
             assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusData))
         }
@@ -207,7 +207,7 @@ class ConversionsToCsvTest {
                 )
             )
 
-            val hastusData: List<IHastusData> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
+            val hastusData: List<IExportableItem> = ConversionsToHastus.convertJoreLinesToHastus(listOf(line))
 
             assertEquals(expectedCsv, CsvWriter().transformToCsv(hastusData))
         }

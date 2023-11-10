@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 /**
  * Trip record
@@ -50,7 +50,7 @@ data class TripRecord(
     val isVehicleTypeMandatory: Boolean,
     val isBackupTrip: Boolean,
     val isExtraTrip: Boolean
-) : HastusData() {
+) : ImportableItem() {
 
     constructor(elements: List<String>) : this(
         contract = elements[1],
@@ -76,6 +76,4 @@ data class TripRecord(
         isBackupTrip = parseToBoolean(elements[21]),
         isExtraTrip = parseToBoolean(elements[22])
     )
-
-    override fun getFields(): List<Any> = emptyList()
 }

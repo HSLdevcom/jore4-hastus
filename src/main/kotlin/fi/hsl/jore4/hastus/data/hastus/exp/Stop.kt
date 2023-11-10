@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 
@@ -28,7 +28,7 @@ data class Stop(
     val gpsX: NumberWithAccuracy,
     val gpsY: NumberWithAccuracy,
     val shortIdentifier: String
-) : HastusData() {
+) : IExportableItem {
 
     override fun getFields(): List<Any> = listOf(
         identifier,

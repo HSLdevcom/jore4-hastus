@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.imp
 
 import java.time.LocalDate
 import java.time.LocalTime
@@ -19,7 +19,7 @@ data class ApplicationRecord(
     val vscVersion: Number,
     val jobDate: LocalDate,
     val jobTime: LocalTime
-) : HastusData() {
+) : ImportableItem() {
 
     constructor(elements: List<String>) : this(
         hastus = elements[1],
@@ -28,6 +28,4 @@ data class ApplicationRecord(
         jobDate = LocalDate.parse(elements[4], dateFormatter()),
         jobTime = LocalTime.parse(elements[5].substring(0, 6), timeFormatter())
     )
-
-    override fun getFields(): List<Any> = emptyList()
 }

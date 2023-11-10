@@ -6,13 +6,13 @@ import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_NAME
 import fi.hsl.jore4.hastus.Constants.MAX_LENGTH_HASTUS_STOP_STREET_NAME
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
-import fi.hsl.jore4.hastus.data.hastus.IHastusData
-import fi.hsl.jore4.hastus.data.hastus.Place
-import fi.hsl.jore4.hastus.data.hastus.Route
-import fi.hsl.jore4.hastus.data.hastus.RouteVariant
-import fi.hsl.jore4.hastus.data.hastus.RouteVariantPoint
-import fi.hsl.jore4.hastus.data.hastus.Stop
-import fi.hsl.jore4.hastus.data.hastus.StopDistance
+import fi.hsl.jore4.hastus.data.hastus.exp.IExportableItem
+import fi.hsl.jore4.hastus.data.hastus.exp.Place
+import fi.hsl.jore4.hastus.data.hastus.exp.Route
+import fi.hsl.jore4.hastus.data.hastus.exp.RouteVariant
+import fi.hsl.jore4.hastus.data.hastus.exp.RouteVariantPoint
+import fi.hsl.jore4.hastus.data.hastus.exp.Stop
+import fi.hsl.jore4.hastus.data.hastus.exp.StopDistance
 import fi.hsl.jore4.hastus.data.jore.JoreDistanceBetweenTwoStopPoints
 import fi.hsl.jore4.hastus.data.jore.JoreLine
 import fi.hsl.jore4.hastus.data.jore.JoreRoute
@@ -22,7 +22,7 @@ import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object ConversionsToHastus {
 
-    fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IHastusData> = lines.flatMap { joreLine ->
+    fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IExportableItem> = lines.flatMap { joreLine ->
         listOf(
             convertJoreLineToHastus(joreLine)
         ).plus(
@@ -46,7 +46,7 @@ object ConversionsToHastus {
     private fun convertJoreRoutesToHastusRouteVariants(
         joreRoutes: List<JoreRoute>,
         joreLineLabel: String
-    ): List<IHastusData> {
+    ): List<IExportableItem> {
         return joreRoutes.flatMap { joreRoute ->
             val hastusRouteVariant = convertJoreRouteToHastusRouteVariant(joreRoute, joreLineLabel)
 

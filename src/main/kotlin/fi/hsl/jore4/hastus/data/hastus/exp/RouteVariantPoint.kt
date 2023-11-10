@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.data.hastus
+package fi.hsl.jore4.hastus.data.hastus.exp
 
 import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 
@@ -23,7 +23,7 @@ data class RouteVariantPoint(
     val regulatedTp: Boolean,
     val stopLabel: String,
     val routeIdAndVariantId: String
-) : HastusData() {
+) : IExportableItem {
 
     init {
         if (isTimingPoint) {
