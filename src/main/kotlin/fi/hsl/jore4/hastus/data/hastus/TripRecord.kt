@@ -20,7 +20,7 @@ package fi.hsl.jore4.hastus.data.hastus
  * @property tripType2 Duplicated(?) type of the trip. 0 = normal, 1 = pull out, 2 = pull in, 3 = transfer
  * @property note Special note. Value 'p' means it's a friday trip
  * @property note2 Reserved for extra information
- * @property direction Direction. 1 = outbound, 2 = inbound
+ * @property direction Direction. 1 = outbound, 2 = inbound, null = dead run
  * @property vehicleType HSL vehicle type id
  * @property isVehicleTypeMandatory Is vehicle type mandatory
  * @property isBackupTrip Is this a backup trip
@@ -45,7 +45,7 @@ data class TripRecord(
     val tripType2: String, // TODO This field appears to be a duplicate
     val note: String,
     val note2: String,
-    val direction: Int,
+    val direction: Int?,
     val vehicleType: Int,
     val isVehicleTypeMandatory: Boolean,
     val isBackupTrip: Boolean,
@@ -70,7 +70,7 @@ data class TripRecord(
         tripType2 = elements[15],
         note = elements[16],
         note2 = elements[17],
-        direction = parseToInt(elements[18]),
+        direction = elements[18].trim().toIntOrNull(),
         vehicleType = parseToInt(elements[19]),
         isVehicleTypeMandatory = parseToBoolean(elements[20]),
         isBackupTrip = parseToBoolean(elements[21]),

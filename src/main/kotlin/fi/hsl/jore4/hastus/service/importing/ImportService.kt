@@ -24,7 +24,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         csv: String,
         hasuraHeaders: Map<String, String>
     ): UUID? {
-        val hastusItems: List<IHastusData> = READER.parseCsv(csv)
+        val hastusItems: List<IHastusData> = getHastusDataItems(csv)
         val graphQLService: GraphQLService = graphQLServiceFactory.createForSession(hasuraHeaders)
 
         val hastusBookingRecord: BookingRecord = hastusItems.filterIsInstance<BookingRecord>().first()
@@ -62,6 +62,8 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
 
         return graphQLService.persistVehicleScheduleFrame(vehicleScheduleFrame, selectedJourneyPatternRefs)
     }
+
+    private fun getHastusDataItems(csv: String): List<IHastusData> = filterOutDeadRunItems(READER.parseCsv(csv))
 
     companion object {
 
@@ -188,6 +190,32 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 LOGGER.warn(exception.message)
                 throw exception
             }
+        }
+
+        private fun filterOutDeadRunItems(hastusItems: List<IHastusData>): List<IHastusData> {
+            val internalNumbersOfDeadRuns: List<String> = hastusItems
+                .filterIsInstance<TripRecord>()
+                .filter { trip ->
+                    // Null direction denotes a dead run which is not imported to Jore4.
+                    trip.direction == null
+                }
+                .map {
+                    it.tripInternalNumber.also {
+                        LOGGER.info {
+                            "Found a dead run trip with internal number $it. " +
+                                "Discarding the trip and the related stop points."
+                        }
+                    }
+                }
+
+            return hastusItems
+                .filter { item ->
+                    when (item) {
+                        is TripRecord -> item.tripInternalNumber !in internalNumbersOfDeadRuns
+                        is TripStopRecord -> item.tripInternalNumber !in internalNumbersOfDeadRuns
+                        else -> true
+                    }
+                }
         }
     }
 }
