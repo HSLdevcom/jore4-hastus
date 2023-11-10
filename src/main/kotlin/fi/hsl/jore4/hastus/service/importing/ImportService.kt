@@ -106,7 +106,11 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 // records for both arrival and departure time.
                 val hastusStopPointsAndTimingPlaces: List<Pair<String, String?>> =
                     filterOutConsecutiveDuplicates(
-                        hastusTripStops.map { it.stopId to it.timingPlace }
+                        hastusTripStops.map {
+                            // By using effectiveTimingPlace, it is taken into account whether the
+                            // stop point is used as a timing point in journey pattern.
+                            it.stopId to it.effectiveTimingPlace
+                        }
                     )
 
                 val hastusStopPointLabels: List<String> = hastusStopPointsAndTimingPlaces.map { it.first }

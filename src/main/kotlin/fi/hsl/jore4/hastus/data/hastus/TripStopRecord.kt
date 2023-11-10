@@ -34,6 +34,11 @@ data class TripStopRecord(
     val note: String
 ) : HastusData() {
 
+    // The value of timing place is taken if the stop point is used as a timing point in journey
+    // pattern.
+    val effectiveTimingPlace: String?
+        get() = timingPlace?.takeIf { stopType == "T" || stopType == "R" }
+
     constructor(elements: List<String>) : this(
         tripInternalNumber = elements[1],
         timingPlace = elements[2].takeIf { it.isNotBlank() },
