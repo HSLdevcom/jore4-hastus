@@ -50,6 +50,35 @@ function download_docker_bundle {
   echo "Finished removing properties to be overridden from docker-compose base file."
 }
 
+prepare_timetables_data_inserter() {
+  ensure_hasura_submodule_initialized
+
+  cd jore4-hasura/test/hasura
+  yarn install
+  yarn timetables-data-inserter:build
+  cd -
+}
+
+ensure_hasura_submodule_initialized() {
+  if [ ! -d jore4-hasura/test ]; then
+    echo "jore4-hasura submodule not found! Initializing..."
+
+    git submodule init
+    git submodule update
+    echo "jore4-hasura submodule: setting sparse checkout..."
+    cd jore4-hasura
+    git sparse-checkout init --cone
+    git sparse-checkout set test/hasura
+    cd -
+
+    echo "jore4-hasura submodule initialized."
+  fi
+
+  echo "jore4-hasura submodule: updating..."
+  git submodule update
+  echo "jore4-hasura submodule up to date."
+}
+
 # jore4-db - Jore 4 database. This is the database used when starting the application.
 # jore4-db-test - Jore 4 database instance for the integration tests.
 # jore4-hasura - Hasura. We have to start Hasura because it ensures that db migrations are run to the Jore 4 database.
@@ -59,11 +88,13 @@ function start_all {
   download_docker_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
+  prepare_timetables_data_inserter
 }
 
 function start_deps {
   download_docker_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
+  prepare_timetables_data_inserter
 }
 
 function stop_all {
@@ -91,6 +122,9 @@ function usage {
   build
     Build the Hastus service locally
 
+  build:data-inserter
+    Build the Data-Inserter for integration tests (Git submodule)
+
   start
     Start Hastus service in Docker container
 
@@ -117,6 +151,10 @@ else
   case $1 in
   build)
     build
+    ;;
+
+  build:data-inserter)
+    prepare_timetables_data_inserter
     ;;
 
   start)
