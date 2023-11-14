@@ -8,6 +8,8 @@ A spring boot server application which acts as a converter between jore4 and Has
 
 - Maven
 - JDK17+
+- Node.js >= 18.18.2
+- Yarn 1.x
 
 Uses maven to build the project, use `mvn install` to build the server. You can also run the generated .jar file locally to test the server on port 8080.
 
@@ -18,6 +20,18 @@ Uses maven to build the project, use `mvn install` to build the server. You can 
 - `remove` removes the docker container
 - `build` builds the server locally using maven
 - `test` runs all tests
+
+### Submodules
+
+Tests use `timetables-data-inserter` from
+[jore4-hasura](https://github.com/HSLdevcom/jore4-hasura) repository. This is
+included as a Git submodule. The submodule is automatically initialised when
+dependencies are set up by running `development.sh`.
+
+When the submodule is updated, to get the newest version of inserter you need to:
+- Update git submodules with `git submodule update`
+- Install dependencies and build the timetables data inserter with `development.sh`,
+  by running either of the `start` tasks or `build:data-inserter`
 
 ## API structure
 
