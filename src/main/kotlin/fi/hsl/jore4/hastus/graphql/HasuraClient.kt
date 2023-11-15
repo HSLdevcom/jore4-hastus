@@ -68,9 +68,19 @@ class HasuraClient(
 
             queryResponse.errors?.let { errorList ->
                 if (errorList.isNotEmpty()) {
-                    val authenticationFailedMessage: String? = errorList
-                        .find { it.message.contains("authentication request failed") }
-                        ?.message
+                    val authenticationFailedMessage: String? =
+                        errorList
+                            .find { error ->
+                                // In the latter case (the "access-denied" code), there is also an
+                                // error message, but checking the code is actually a more robust
+                                // way to detect an authentication failure. In the former case, the
+                                // code is "unexpected", from which the actual reason cannot be
+                                // deduced.
+
+                                "authentication request failed" in error.message ||
+                                    error.extensions?.let { it["code"] == "access-denied" } ?: false
+                            }
+                            ?.message
 
                     if (authenticationFailedMessage != null) {
                         LOGGER.warn("Authentication failed for GraphQL request")
