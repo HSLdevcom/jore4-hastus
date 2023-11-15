@@ -1,0 +1,64 @@
+{
+  "_journey_pattern_refs": {
+    "route100Outbound": {
+      "journey_pattern_id": "4b070731-700d-4c4c-8e30-cd177fa80ada",
+      "type_of_line": "stopping_bus_service",
+      "observation_timestamp": "2023-07-01T00:00:00+00:00",
+      "snapshot_timestamp": "2023-03-28T00:00:00+00:00",
+      "route_label": "100",
+      "route_direction": "outbound",
+      "route_validity_start": "2023-01-01",
+      "route_validity_end": "2050-12-31",
+
+      "_stop_points": [
+        {
+          "scheduled_stop_point_sequence": 1,
+          "scheduled_stop_point_label": "H1001",
+          "timing_place_label": "TP001"
+        },
+        {
+          "scheduled_stop_point_sequence": 2,
+          "scheduled_stop_point_label": "H1011"
+        },
+        {
+          "scheduled_stop_point_sequence": 3,
+          "scheduled_stop_point_label": "H1021"
+        },
+        {
+          "scheduled_stop_point_sequence": 4,
+          "scheduled_stop_point_label": "H1031",
+          "timing_place_label": "TP002"
+        }
+      ]
+    },
+    "route100Inbound": {
+      "journey_pattern_id": "0d05d12f-cf7b-47f8-961c-edb89b789e1d",
+      "type_of_line": "stopping_bus_service",
+      "observation_timestamp": "2023-07-01T00:00:00+00:00",
+      "snapshot_timestamp": "2023-09-28T00:00:00+00:00",
+      "route_label": "100",
+      "route_direction": "inbound",
+
+      "_stop_points": [
+        {
+          "scheduled_stop_point_sequence": 1,
+          "scheduled_stop_point_label": "H1032",
+          "timing_place_label": "TP002"
+        },
+        {
+          "scheduled_stop_point_sequence": 2,
+          "scheduled_stop_point_label": "H1022"
+        },
+        {
+          "scheduled_stop_point_sequence": 3,
+          "scheduled_stop_point_label": "H1012"
+        },
+        {
+          "scheduled_stop_point_sequence": 4,
+          "scheduled_stop_point_label": "H1002",
+          "timing_place_label": "TP001"
+        }
+      ]
+    }
+  }
+}
