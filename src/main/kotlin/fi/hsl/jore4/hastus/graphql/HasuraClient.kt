@@ -69,7 +69,13 @@ class HasuraClient(
             queryResponse.errors?.let { errorList ->
                 if (errorList.isNotEmpty()) {
                     val authenticationFailedMessage: String? = errorList
-                        .find { it.message.contains("authentication request failed") }
+                        .find {
+                            val msg = it.message
+
+                            // These error messages have been encountered so far.
+                            msg.contains("authentication request failed") ||
+                                msg.contains("hook unauthorized this request")
+                        }
                         ?.message
 
                     if (authenticationFailedMessage != null) {
