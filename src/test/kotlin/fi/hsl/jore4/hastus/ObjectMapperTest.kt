@@ -1,4 +1,4 @@
-package fi.hsl.jore4.hastus.test
+package fi.hsl.jore4.hastus
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.databind.ObjectMapper
