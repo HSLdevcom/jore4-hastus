@@ -132,7 +132,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                         hastusRouteLabelAndDirection,
                         hastusStopPointLabels
                     )
-                    LOGGER.warn(exception.message)
+                    LOGGER.warn(exception.reason)
                     throw exception
                 }
 
@@ -150,7 +150,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                         hastusStopPointLabels,
                         hastusPlaceLabels
                     )
-                    LOGGER.warn(exception.message)
+                    LOGGER.warn(exception.reason)
                     throw exception
                 }
 
@@ -187,7 +187,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                 val exception = CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
                     missingRouteLabelsAndDirections
                 )
-                LOGGER.warn(exception.message)
+                LOGGER.warn(exception.reason)
                 throw exception
             }
         }
