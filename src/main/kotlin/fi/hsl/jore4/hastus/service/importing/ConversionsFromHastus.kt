@@ -201,7 +201,7 @@ object ConversionsFromHastus {
                             unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
                         }"
                     LOGGER.error(errorMessage)
-                    throw CannotFindJourneyPatternRefByStopPointLabelsException(errorMessage)
+                    throw ErrorWhileProcessingHastusDataException(errorMessage)
                 }
             }
 

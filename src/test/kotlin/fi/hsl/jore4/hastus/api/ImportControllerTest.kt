@@ -9,6 +9,7 @@ import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedExceptio
 import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByRouteLabelAndDirectionException
 import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByStopPointLabelsException
 import fi.hsl.jore4.hastus.service.importing.CannotFindJourneyPatternRefByTimingPlaceLabelsException
+import fi.hsl.jore4.hastus.service.importing.ErrorWhileProcessingHastusDataException
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import fi.hsl.jore4.hastus.service.importing.InvalidHastusDataException
 import io.mockk.every
@@ -180,6 +181,22 @@ class ImportControllerTest @Autowired constructor(
                     """.trimIndent()
                 )
             )
+
+        verify(exactly = 1) {
+            importService.importTimetablesFromCsv(any(), any())
+        }
+    }
+
+    // This should actually never occur but the output format is tested anyway.
+    @Test
+    fun `returns 500 when error encountered while processing Hastus data`() {
+        every {
+            importService.importTimetablesFromCsv(any(), any())
+        } throws ErrorWhileProcessingHastusDataException("encountered an error")
+
+        executeImportTimetablesRequest("<csv_content>")
+            .andExpect(status().isInternalServerError)
+            .andExpect(constructExpectedErrorBody("encountered an error"))
 
         verify(exactly = 1) {
             importService.importTimetablesFromCsv(any(), any())

@@ -17,6 +17,7 @@ import fi.hsl.jore4.hastus.util.DateTimeUtil.toOffsetDateTimeAtDefaultZone
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatusCode
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.OffsetDateTime
@@ -260,7 +261,7 @@ class ConversionsFromHastusTest {
                 generateTripStopRecord("trip1", "stop3", "0530", "T", "")
             )
 
-            val exception = assertFailsWith<CannotFindJourneyPatternRefByStopPointLabelsException> {
+            val exception = assertFailsWith<ErrorWhileProcessingHastusDataException> {
                 ConversionsFromHastus.convertHastusDataToJore(
                     hastusData,
                     vehicleTypeIndex,
@@ -269,9 +270,10 @@ class ConversionsFromHastusTest {
                 )
             }
 
+            assertEquals(HttpStatusCode.valueOf(500), exception.statusCode)
             assertEquals(
-                "400 BAD_REQUEST \"Hastus trip 'ROUTE-1 (outbound)' contains unknown stop points along the route: 'stop4'\"",
-                exception.message
+                "Hastus trip 'ROUTE-1 (outbound)' contains unknown stop points along the route: 'stop4'",
+                exception.reason
             )
         }
     }
