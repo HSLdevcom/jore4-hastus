@@ -5,22 +5,24 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 
 class CannotFindJourneyPatternRefByStopPointLabelsException(
-    message: String
+    val routeIdentifier: RouteLabelAndDirection,
+    val stopLabels: List<String>
 ) : ResponseStatusException(
     HttpStatus.BAD_REQUEST,
-    message
+    constructErrorMessage(routeIdentifier, stopLabels)
 ) {
-
-    constructor(
-        routeIdentifier: RouteLabelAndDirection,
-        stopLabels: List<String>
-    ) : this(
-        """
-        Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
-
-        Trip label: ${routeIdentifier.routeLabel},
-        Trip direction: ${routeIdentifier.direction.wellKnownNumber},
-        Stop points: $stopLabels
-        """.trimIndent()
-    )
+    companion object {
+        private fun constructErrorMessage(
+            routeIdentifier: RouteLabelAndDirection,
+            stopLabels: List<String>
+        ): String {
+            return """
+            Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
+    
+            Trip label: ${routeIdentifier.routeLabel},
+            Trip direction: ${routeIdentifier.direction.wellKnownNumber},
+            Stop points: $stopLabels
+            """.trimIndent()
+        }
+    }
 }
