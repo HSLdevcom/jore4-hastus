@@ -9,7 +9,7 @@ cd "${WD}"
 # initialize package folder
 mkdir -p ./docker
 
-DOCKER_COMPOSE_CMD="docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
+DOCKER_COMPOSE_CMD="docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
 
 function download_docker_bundle {
   # based on https://github.com/HSLdevcom/jore4-tools#download-docker-bundlesh
