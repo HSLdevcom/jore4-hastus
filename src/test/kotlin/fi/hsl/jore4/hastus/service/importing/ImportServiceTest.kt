@@ -6,6 +6,7 @@ import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
 import fi.hsl.jore4.hastus.test.IntTest
 import fi.hsl.jore4.hastus.test.TimetablesDataInserterRunner
 import fi.hsl.jore4.hastus.test.TimetablesDataset
+import fi.hsl.jore4.hastus.test.getNested
 import mu.KotlinLogging
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -30,15 +31,18 @@ class ImportServiceTest(
     @Autowired private val dataInserterRunner: TimetablesDataInserterRunner,
     @Value("\${hasura.secret}") private val hasuraSecret: String
 ) {
-    private fun populateDatabaseFromDataset(pathToFile: String) {
-        val dataset = TimetablesDataset.createFromResource(pathToFile)
-
+    private fun populateDatabaseFromDataset(dataset: TimetablesDataset): String =
         dataInserterRunner
             .truncateAndInsertDataset(dataset.toJSONString())
             .also { json ->
                 // Change log level to e.g. DEBUG see what is being persisted into database.
                 LOGGER.trace { "Persisting dataset:\n$json" }
             }
+
+    private fun populateDatabaseFromDataset(pathToFile: String): String {
+        val dataset = TimetablesDataset.createFromResource(pathToFile)
+
+        return populateDatabaseFromDataset(dataset)
     }
 
     private fun getHasuraHeaders(): Map<String, String> =
@@ -60,7 +64,12 @@ class ImportServiceTest(
 
     @Test
     fun `when the start date of the booking record is earlier than the route of the related journey pattern`() {
-        populateDatabaseFromDataset("datasets/journey_pattern_ref_100_starting_2024.json")
+        val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
+
+        // Mutate the dataset by setting the route start from 2024-01-01.
+        dataset.getNested("_journey_pattern_refs.route100Outbound")["route_validity_start"] = "2024-01-01"
+
+        populateDatabaseFromDataset(dataset)
 
         val csvToImport: String = readFileAsString("hastus_booking_records/100_both_directions.exp")
 
@@ -78,7 +87,12 @@ class ImportServiceTest(
 
     @Test
     fun `when journey-pattern-ref not found for one direction`() {
-        populateDatabaseFromDataset("datasets/journey_pattern_ref_100_outbound_only.json")
+        val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
+
+        // Mutate the dataset by removing journey pattern reference for the inbound direction.
+        dataset.getNested("_journey_pattern_refs").remove("route100Inbound")
+
+        populateDatabaseFromDataset(dataset)
 
         val csvToImport: String = readFileAsString("hastus_booking_records/100_both_directions.exp")
 
@@ -94,7 +108,33 @@ class ImportServiceTest(
 
     @Test
     fun `when the stop point labels do not match between Hastus trip and journey-pattern-ref`() {
-        populateDatabaseFromDataset("datasets/journey_pattern_ref_100_with_one_stop_point_label_difference.json")
+        val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
+
+        // Mutate the dataset by only changing the label for one stop point.
+        dataset.getNested("_journey_pattern_refs.route100Outbound")["_stop_points"] =
+            listOf(
+                mapOf(
+                    "scheduled_stop_point_sequence" to 1,
+                    "scheduled_stop_point_label" to "H1001",
+                    "timing_place_label" to "TP001"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 2,
+                    "scheduled_stop_point_label" to "H1011"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 3,
+                    // Only this stop point label differs from the base dataset!
+                    "scheduled_stop_point_label" to "X1021"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 4,
+                    "scheduled_stop_point_label" to "H1031",
+                    "timing_place_label" to "TP002"
+                )
+            )
+
+        populateDatabaseFromDataset(dataset)
 
         val csvToImport: String = readFileAsString("hastus_booking_records/100_both_directions.exp")
 
@@ -108,7 +148,33 @@ class ImportServiceTest(
 
     @Test
     fun `when the timing place labels do not match between Hastus trip and journey-pattern-ref`() {
-        populateDatabaseFromDataset("datasets/journey_pattern_ref_100_with_one_timing_place_label_difference.json")
+        val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
+
+        // Mutate the dataset by only changing the label for one timing place.
+        dataset.getNested("_journey_pattern_refs.route100Outbound")["_stop_points"] =
+            listOf(
+                mapOf(
+                    "scheduled_stop_point_sequence" to 1,
+                    "scheduled_stop_point_label" to "H1001",
+                    "timing_place_label" to "TP001"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 2,
+                    "scheduled_stop_point_label" to "H1011"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 3,
+                    "scheduled_stop_point_label" to "H1021"
+                ),
+                mapOf(
+                    "scheduled_stop_point_sequence" to 4,
+                    "scheduled_stop_point_label" to "H1031",
+                    // Only this timing place label differs from the base dataset!
+                    "timing_place_label" to "TP999"
+                )
+            )
+
+        populateDatabaseFromDataset(dataset)
 
         val csvToImport: String = readFileAsString("hastus_booking_records/100_both_directions.exp")
 
