@@ -110,29 +110,9 @@ class ImportServiceTest(
     fun `when the stop point labels do not match between Hastus trip and journey-pattern-ref`() {
         val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
 
-        // Mutate the dataset by only changing the label for one stop point.
-        dataset.getNested("_journey_pattern_refs.route100Outbound")["_stop_points"] =
-            listOf(
-                mapOf(
-                    "scheduled_stop_point_sequence" to 1,
-                    "scheduled_stop_point_label" to "H1001",
-                    "timing_place_label" to "TP001"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 2,
-                    "scheduled_stop_point_label" to "H1011"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 3,
-                    // Only this stop point label differs from the base dataset!
-                    "scheduled_stop_point_label" to "X1021"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 4,
-                    "scheduled_stop_point_label" to "H1031",
-                    "timing_place_label" to "TP002"
-                )
-            )
+        // Mutate the dataset by only changing the label for the third stop point.
+        dataset.getNested("_journey_pattern_refs.route100Outbound._stop_points[2]")["scheduled_stop_point_label"] =
+            "X1021"
 
         populateDatabaseFromDataset(dataset)
 
@@ -150,29 +130,9 @@ class ImportServiceTest(
     fun `when the timing place labels do not match between Hastus trip and journey-pattern-ref`() {
         val dataset = TimetablesDataset.createFromResource("datasets/journey_pattern_ref_100_starting_2023.json")
 
-        // Mutate the dataset by only changing the label for one timing place.
-        dataset.getNested("_journey_pattern_refs.route100Outbound")["_stop_points"] =
-            listOf(
-                mapOf(
-                    "scheduled_stop_point_sequence" to 1,
-                    "scheduled_stop_point_label" to "H1001",
-                    "timing_place_label" to "TP001"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 2,
-                    "scheduled_stop_point_label" to "H1011"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 3,
-                    "scheduled_stop_point_label" to "H1021"
-                ),
-                mapOf(
-                    "scheduled_stop_point_sequence" to 4,
-                    "scheduled_stop_point_label" to "H1031",
-                    // Only this timing place label differs from the base dataset!
-                    "timing_place_label" to "TP999"
-                )
-            )
+        // Mutate the dataset by only changing the timing place label for the last (4th) stop point.
+        dataset.getNested("_journey_pattern_refs.route100Outbound._stop_points[3]")["timing_place_label"] =
+            "TP999"
 
         populateDatabaseFromDataset(dataset)
 
