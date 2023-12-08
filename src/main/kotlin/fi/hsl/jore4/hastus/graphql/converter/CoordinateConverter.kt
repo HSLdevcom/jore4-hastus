@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.hsl.jore4.hastus.data.format.Coordinate
 
-class LocationScalarConverter : ScalarConverter<Coordinate> {
+class CoordinateConverter : ScalarConverter<Coordinate> {
     override fun toJson(value: Coordinate): ObjectNode {
         val formattedValue = OBJECT_MAPPER.writeValueAsString(
             mapOf(
