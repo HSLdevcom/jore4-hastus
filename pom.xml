@@ -428,7 +428,7 @@
                                 <customScalar>
                                     <scalar>geography</scalar>
                                     <type>fi.hsl.jore4.hastus.data.format.Coordinate</type>
-                                    <converter>fi.hsl.jore4.hastus.graphql.converter.LocationScalarConverter</converter>
+                                    <converter>fi.hsl.jore4.hastus.graphql.converter.CoordinateConverter</converter>
                                 </customScalar>
                                 <customScalar>
                                     <!-- Uses java.time.Duration instead of Kotlin because value classes are not
