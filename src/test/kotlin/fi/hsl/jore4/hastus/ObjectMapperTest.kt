@@ -112,10 +112,11 @@ class ObjectMapperTest {
         @Test
         fun `format UUID as JSON`() {
             val value = UUID.randomUUID()
-            val formatted = objectMapper.writeValueAsString(UUIDFormat(value))
             val expected = """
             {"uuid":"$value"}
             """.trimIndent()
+
+            val formatted = objectMapper.writeValueAsString(UUIDFormat(value))
             assertEquals(expected, formatted)
         }
 
@@ -125,6 +126,7 @@ class ObjectMapperTest {
             val expected = """
             {"uuidList":"{${value[0]},${value[1]}}"}
             """.trimIndent()
+
             val formatted = objectMapper.writeValueAsString(UUIDListFormat(UUIDList(value)))
             assertEquals(expected, formatted)
         }
@@ -135,6 +137,7 @@ class ObjectMapperTest {
             val expected = """
             {"date":"2022-02-02"}
             """.trimIndent()
+
             val formatted = objectMapper.writeValueAsString(DateFormat(value))
             assertEquals(expected, formatted)
         }
@@ -191,6 +194,7 @@ class ObjectMapperTest {
             val expected = """
             {"ijsonb":{"first":"value","second":"other"}}
             """.trimIndent()
+
             val formatted = objectMapper.writeValueAsString(IJsonbFormat(value))
             assertEquals(expected, formatted)
         }
@@ -201,6 +205,7 @@ class ObjectMapperTest {
             val expected = """
             {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.x},${value.y},0.0]}}
             """.trimIndent()
+
             val formatted = objectMapper.writeValueAsString(CoordinateFormat(value))
             assertEquals(expected, formatted)
         }
@@ -211,6 +216,7 @@ class ObjectMapperTest {
             val expected = """
             {"duration":"${value.toIsoString()}"}
             """.trimIndent()
+
             val formatted = objectMapper.writeValueAsString(DurationFormat(value.toJavaDuration()))
             assertEquals(expected, formatted)
         }
