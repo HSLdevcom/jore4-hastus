@@ -203,7 +203,7 @@ class ObjectMapperTest {
         fun `format Coordinate as GeoJSON`() {
             val value = Coordinate(1.0, 2.0)
             val expected = """
-            {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.x},${value.y},0.0]}}
+            {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.longitude},${value.latitude},0.0]}}
             """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(CoordinateFormat(value))
@@ -363,8 +363,8 @@ class ObjectMapperTest {
                         }
                     },
                     "coordinates": [
-                        ${value.x},
-                        ${value.y},
+                        ${value.longitude},
+                        ${value.latitude},
                         0.0
                     ]
                 }

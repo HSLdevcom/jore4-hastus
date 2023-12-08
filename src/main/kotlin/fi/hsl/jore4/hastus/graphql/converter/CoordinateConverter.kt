@@ -19,7 +19,7 @@ class CoordinateConverter : ScalarConverter<Coordinate> {
                                 "name" to "urn:ogc:def:crs:EPSG::4326"
                             )
                     ),
-                "coordinates" to listOf(value.x, value.y, 0.0)
+                "coordinates" to listOf(value.longitude, value.latitude, 0.0)
             )
         )
 
@@ -35,14 +35,14 @@ class CoordinateConverter : ScalarConverter<Coordinate> {
         }
 
         val numbers = rawValue["coordinates"] as ArrayList<*>
-        val x = numbers[0]
-        val y = numbers[1]
+        val longitude = numbers[0]
+        val latitude = numbers[1]
 
-        if (x is Double && y is Double) {
-            return Coordinate(x, y)
+        if (longitude is Double && latitude is Double) {
+            return Coordinate(longitude, latitude)
         }
 
-        throw IllegalArgumentException("Location has non-double coordinates: $x and $y")
+        throw IllegalArgumentException("Location has non-double coordinates: $longitude and $latitude")
     }
 
     companion object {
