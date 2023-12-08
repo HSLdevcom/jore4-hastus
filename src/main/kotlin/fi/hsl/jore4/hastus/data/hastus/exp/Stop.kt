@@ -5,16 +5,17 @@ import fi.hsl.jore4.hastus.data.format.NumberWithAccuracy
 /**
  * Hastus Stop point representing a Jore4 scheduled stop point
  *
- * @property identifier Stop label
- * @property platform Platform number of the stop. Formatted as two numbers NN
- * @property descriptionFinnish Stop name in Finnish
- * @property descriptionSwedish Stop name in Swedish
- * @property streetFinnish Street the stop is located on in Finnish
- * @property streetSwedish Street the stop is located on in Swedish
+ * @property identifier Label of the stop point
+ * @property platform Platform number of the stop point. Formatted as two numbers NN.
+ * @property descriptionFinnish Name of the stop point in Finnish
+ * @property descriptionSwedish Name of the stop point in Swedish
+ * @property streetFinnish Street the stop point is located on in Finnish
+ * @property streetSwedish Street the stop point is located on in Swedish
  * @property place Name of the location specified in Jore4, if there is one. Format as XXXXXX
- * @property gpsX X coordinate of the stop. Formatted as two numbers with 6 point precision NN.NNNNNN
- * @property gpsY Y coordinate of the stop. Formatted as two numbers with 6 point precision NN.NNNNNN
+ * @property latitude Latitude (ordinate) of the stop point. Formatted as two numbers with 6 point precision NN.NNNNNN
+ * @property longitude Longitude (ordinate) of the stop point. Formatted as two numbers with 6 point precision NN.NNNNNN
  * @property shortIdentifier Short identifier from Jore4, combined letter + number. XXNNNN
+ *
  * @constructor Create a Hastus Stop with given values
  */
 data class Stop(
@@ -25,8 +26,8 @@ data class Stop(
     val streetFinnish: String,
     val streetSwedish: String,
     val place: String?,
-    val gpsX: NumberWithAccuracy,
-    val gpsY: NumberWithAccuracy,
+    val latitude: NumberWithAccuracy,
+    val longitude: NumberWithAccuracy,
     val shortIdentifier: String
 ) : IExportableItem {
 
@@ -38,8 +39,8 @@ data class Stop(
         streetFinnish,
         streetSwedish,
         place ?: "",
-        gpsX,
-        gpsY,
+        latitude,
+        longitude,
         shortIdentifier
     )
 }

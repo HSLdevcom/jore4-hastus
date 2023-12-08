@@ -162,8 +162,8 @@ object ConversionsToHastus {
             streetFinnish = stopStreetNameFi,
             streetSwedish = stopStreetNameSv,
             place = joreStopPoint.timingPlaceShortName,
-            gpsX = NumberWithAccuracy(joreStopPoint.location.x, 2, 6),
-            gpsY = NumberWithAccuracy(joreStopPoint.location.y, 2, 6),
+            latitude = NumberWithAccuracy(joreStopPoint.location.latitude, 2, 6),
+            longitude = NumberWithAccuracy(joreStopPoint.location.longitude, 2, 6),
             shortIdentifier = joreStopPoint.label
         )
     }
