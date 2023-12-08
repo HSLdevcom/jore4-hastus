@@ -119,6 +119,28 @@ class ConversionsToHastusTest {
     inner class TestConvertJoreStopPointToHastus {
 
         @Test
+        fun `test coordinate conversion`() {
+            val lat = 60.163918
+            val lng = 24.928327
+
+            val hastusStop: Stop = ConversionsToHastus.convertJoreStopPointToHastus(
+                JoreScheduledStop(
+                    location = Coordinate(longitude = lng, latitude = lat),
+                    label = "H1234",
+                    nameFinnish = "nameFi",
+                    nameSwedish = "NameSv",
+                    streetNameFinnish = "katu",
+                    streetNameSwedish = "gate",
+                    timingPlaceShortName = null,
+                    platform = "00"
+                )
+            )
+
+            assertEquals(lat, hastusStop.latitude.value)
+            assertEquals(lng, hastusStop.longitude.value)
+        }
+
+        @Test
         fun `test truncation of length-limited fields`() {
             val hastusStop: Stop = ConversionsToHastus.convertJoreStopPointToHastus(
                 JoreScheduledStop(

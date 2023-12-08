@@ -216,10 +216,10 @@ class ConversionsToCsvTest {
     @Test
     fun `when converting stops`() {
         val expectedCsv = """
-            stop;H1234;00;kuvaus;beskrivning;katu;gata;1AACKT;24.928327;60.163918;H1234
-            stop;H1235;00;kuvaus2;beskrivning2;katu2;gata2;1ELIMK;24.930490;60.164635;H1235
-            stop;H1236;00;kuvaus3;beskrivning3;katu3;gata3;;24.931746;60.165123;H1236
-            stop;H1237;00;kuvaus4;beskrivning4;katu4;gata4;1AURLA;24.933252;60.165655;H1237
+            stop;H1234;00;kuvaus;beskrivning;katu;gata;1AACKT;60.163918;24.928327;H1234
+            stop;H1235;00;kuvaus2;beskrivning2;katu2;gata2;1ELIMK;60.164635;24.930490;H1235
+            stop;H1236;00;kuvaus3;beskrivning3;katu3;gata3;;60.165123;24.931746;H1236
+            stop;H1237;00;kuvaus4;beskrivning4;katu4;gata4;1AURLA;60.165655;24.933252;H1237
         """.trimIndent()
 
         val stopPoints = listOf(
