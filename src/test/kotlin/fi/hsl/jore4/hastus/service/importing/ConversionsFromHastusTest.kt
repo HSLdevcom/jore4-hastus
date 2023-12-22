@@ -98,24 +98,24 @@ class ConversionsFromHastusTest {
                 generateBookingRecord(hastusBookingRecordName, "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1, "CONTRACT_1"),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop2", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop2", "0520", "", ""),
                 generateTripStopRecord("trip1", "stop3", "0530", "T", ""),
                 generateBlockRecord("block2", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block2", "trip2", "ROUTE-1", "1", direction = 1),
+                generateTripRecord("block2", "trip2", "ROUTE-1", "1", direction = 1, "CONTRACT_1"),
                 generateTripStopRecord("trip2", "stop1", "0655", "T", ""),
                 generateTripStopRecord("trip2", "stop2", "0710", "", ""),
                 generateTripStopRecord("trip2", "stop2", "0720", "", "a"),
                 generateTripStopRecord("trip2", "stop3", "0730", "T", ""),
                 generateBlockRecord("block20", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block20", "trip3", "ROUTE-2", "2", direction = 2),
+                generateTripRecord("block20", "trip3", "ROUTE-2", "2", direction = 2, "CONTRACT_1"),
                 generateTripStopRecord("trip3", "stop21", "0455", "T", ""),
                 generateTripStopRecord("trip3", "stop22", "0520", "", ""),
                 generateTripStopRecord("trip3", "stop23", "0530", "T", ""),
                 generateBlockRecord("block21", "service2", VEHICLE_TYPE_2_KEY),
-                generateTripRecord("block21", "trip4", "ROUTE-2", "2", direction = 2),
+                generateTripRecord("block21", "trip4", "ROUTE-2", "2", direction = 2, "CONTRACT_1"),
                 generateTripStopRecord("trip4", "stop21", "0655", "T", ""),
                 generateTripStopRecord("trip4", "stop22", "0720", "", ""),
                 generateTripStopRecord("trip4", "stop23", "0730", "T", "")
@@ -151,6 +151,7 @@ class ConversionsFromHastusTest {
             val journey1 = block1.vehicleJourneys[0]
 
             assertEquals(3, journey1.passingTimes.size)
+            assertEquals("CONTRACT_1", journey1.contractNumber)
 
             assertEquals(
                 JorePassingTime(
@@ -186,6 +187,7 @@ class ConversionsFromHastusTest {
             val journey2 = block2.vehicleJourneys[0]
 
             assertEquals(3, journey2.passingTimes.size)
+            assertEquals("CONTRACT_1", journey2.contractNumber)
 
             assertEquals(
                 JorePassingTime(
@@ -254,7 +256,7 @@ class ConversionsFromHastusTest {
                 generateBookingRecord("name", "booking", "description"),
                 generateVehicleScheduleRecord(13),
                 generateBlockRecord("block1", "service1", VEHICLE_TYPE_1_KEY),
-                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1),
+                generateTripRecord("block1", "trip1", "ROUTE-1", "1", direction = 1, "CONTRACT_1"),
                 generateTripStopRecord("trip1", "stop1", "0455", "T", ""),
                 generateTripStopRecord("trip1", "stop4", "0510", "", "t"),
                 generateTripStopRecord("trip1", "stop4", "0520", "", ""),
@@ -394,7 +396,8 @@ class ConversionsFromHastusTest {
             tripInternalNumber = "TRIP-1",
             lineLabel = lineLabel,
             variant = variant,
-            direction = 1
+            direction = 1,
+            contract = "DEFAULT_CONTRACT"
         )
 
         fun generateTripRecord(
@@ -402,10 +405,11 @@ class ConversionsFromHastusTest {
             tripInternalNumber: String,
             lineLabel: String,
             variant: String,
-            direction: Int
+            direction: Int,
+            contract: String
         ) =
             TripRecord(
-                "CONTRACT",
+                contract,
                 block,
                 tripInternalNumber,
                 "1595",
