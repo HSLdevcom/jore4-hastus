@@ -79,8 +79,8 @@ class ImportServiceTest(
             // Fails for the first journey-pattern/route encountered that happens to be the outbound
             // direction for the line "100" (as this is the first Hastus trip in the file).
             assertEquals(
-                exception.reason,
-                "Could not find journey pattern reference for Hastus trips with the following route labels and directions: 100 (outbound)"
+                "Could not find journey pattern reference for Hastus trips with the following route labels and directions: 100 (outbound)",
+                exception.reason
             )
         }
     }
@@ -100,8 +100,8 @@ class ImportServiceTest(
             service.importTimetablesFromCsv(csvToImport, getHasuraHeaders())
         }.also { exception ->
             assertEquals(
-                exception.reason,
-                "Could not find journey pattern reference for Hastus trips with the following route labels and directions: 100 (inbound)"
+                "Could not find journey pattern reference for Hastus trips with the following route labels and directions: 100 (inbound)",
+                exception.reason
             )
         }
     }
