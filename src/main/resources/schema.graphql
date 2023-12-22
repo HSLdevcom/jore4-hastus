@@ -44,6 +44,10 @@ type ReplaceTimetablesOutput {
   replacedVehicleScheduleFrameIds: [uuid]!
 }
 
+type ToCombineTargetVehicleScheduleFrameIdOutput {
+  toCombineTargetVehicleScheduleFrameId: uuid!
+}
+
 type ToReplaceVehicleScheduleFrameIdsOutput {
   toReplaceVehicleScheduleFrameIds: [uuid]!
 }
@@ -2560,6 +2564,7 @@ type query_root {
   ): timing_pattern_timing_place_aggregate!
   "fetch data from the table: \"timing_pattern.timing_place\" using primary key columns"
   timing_pattern_timing_place_by_pk(timing_place_id: uuid!): timing_pattern_timing_place
+  toCombineTargetVehicleScheduleFrameId(arg1: ToCombineTargetVehicleScheduleFrameIdInput!): ToCombineTargetVehicleScheduleFrameIdOutput
   toReplaceVehicleScheduleFrameIds(arg1: ToReplaceVehicleScheduleFrameIdsInput!): ToReplaceVehicleScheduleFrameIdsOutput
 }
 
@@ -7970,6 +7975,8 @@ type timetables_vehicle_journey_vehicle_journey {
   block: timetables_vehicle_service_block!
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid!
+  "The contract number for this vehicle journey."
+  contract_number: String!
   "Displayed name of the journey."
   displayed_name: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_end_time\""
@@ -8043,6 +8050,8 @@ type timetables_vehicle_journey_vehicle_journey_aggregate_fields {
 type timetables_vehicle_journey_vehicle_journey_max_fields {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "The contract number for this vehicle journey."
+  contract_number: String
   "Displayed name of the journey."
   displayed_name: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_end_time\""
@@ -8060,6 +8069,8 @@ type timetables_vehicle_journey_vehicle_journey_max_fields {
 type timetables_vehicle_journey_vehicle_journey_min_fields {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "The contract number for this vehicle journey."
+  contract_number: String
   "Displayed name of the journey."
   displayed_name: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_end_time\""
@@ -9926,6 +9937,8 @@ enum timetables_vehicle_journey_vehicle_journey_select_column {
   "column name"
   block_id
   "column name"
+  contract_number
+  "column name"
   displayed_name
   "column name"
   is_backup_journey
@@ -9971,6 +9984,8 @@ enum timetables_vehicle_journey_vehicle_journey_select_column_vehicle_journey_ve
 enum timetables_vehicle_journey_vehicle_journey_update_column {
   "column name"
   block_id
+  "column name"
+  contract_number
   "column name"
   displayed_name
   "column name"
@@ -10286,6 +10301,11 @@ input String_comparison_exp {
   _regex: String
   "does the column match the given SQL regular expression"
   _similar: String
+}
+
+input ToCombineTargetVehicleScheduleFrameIdInput {
+  stagingVehicleScheduleFrameId: uuid!
+  targetPriority: Int!
 }
 
 input ToReplaceVehicleScheduleFrameIdsInput {
@@ -14954,6 +14974,7 @@ input timetables_vehicle_journey_vehicle_journey_bool_exp {
   _or: [timetables_vehicle_journey_vehicle_journey_bool_exp!]
   block: timetables_vehicle_service_block_bool_exp
   block_id: uuid_comparison_exp
+  contract_number: String_comparison_exp
   displayed_name: String_comparison_exp
   end_time: String_comparison_exp
   is_backup_journey: Boolean_comparison_exp
@@ -14994,6 +15015,8 @@ input timetables_vehicle_journey_vehicle_journey_insert_input {
   block: timetables_vehicle_service_block_obj_rel_insert_input
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "The contract number for this vehicle journey."
+  contract_number: String
   "Displayed name of the journey."
   displayed_name: String
   "Is the journey a backup journey."
@@ -15021,6 +15044,8 @@ input timetables_vehicle_journey_vehicle_journey_insert_input {
 input timetables_vehicle_journey_vehicle_journey_max_order_by {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: order_by
+  "The contract number for this vehicle journey."
+  contract_number: order_by
   "Displayed name of the journey."
   displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
@@ -15034,6 +15059,8 @@ input timetables_vehicle_journey_vehicle_journey_max_order_by {
 input timetables_vehicle_journey_vehicle_journey_min_order_by {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: order_by
+  "The contract number for this vehicle journey."
+  contract_number: order_by
   "Displayed name of the journey."
   displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
@@ -15061,6 +15088,7 @@ input timetables_vehicle_journey_vehicle_journey_on_conflict {
 input timetables_vehicle_journey_vehicle_journey_order_by {
   block: timetables_vehicle_service_block_order_by
   block_id: order_by
+  contract_number: order_by
   displayed_name: order_by
   end_time: order_by
   is_backup_journey: order_by
@@ -15092,6 +15120,8 @@ input timetables_vehicle_journey_vehicle_journey_prepend_input {
 input timetables_vehicle_journey_vehicle_journey_set_input {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "The contract number for this vehicle journey."
+  contract_number: String
   "Displayed name of the journey."
   displayed_name: String
   "Is the journey a backup journey."
@@ -15125,6 +15155,8 @@ input timetables_vehicle_journey_vehicle_journey_stream_cursor_input {
 input timetables_vehicle_journey_vehicle_journey_stream_cursor_value_input {
   "The BLOCK to which this VEHICLE JOURNEY belongs"
   block_id: uuid
+  "The contract number for this vehicle journey."
+  contract_number: String
   "Displayed name of the journey."
   displayed_name: String
   "Is the journey a backup journey."
