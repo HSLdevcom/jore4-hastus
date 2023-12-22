@@ -33,6 +33,13 @@ When the submodule is updated, to get the newest version of inserter you need to
 - Install dependencies and build the timetables data inserter with `development.sh`,
   by running either of the `start` tasks or `build:data-inserter`
 
+
+### Updating GraphQL schema
+
+When there are changes to the GraphQL schema, the local schema file must be updated. This can be done using Maven, running the command:
+
+`mvn generate-sources -Pgenerate-graphql`
+
 ## API structure
 
 ### Export feature
