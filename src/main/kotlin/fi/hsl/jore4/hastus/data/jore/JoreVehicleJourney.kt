@@ -8,6 +8,7 @@ import kotlin.time.Duration
  * Jore vehicle journey
  *
  * @property name Displayed name of the vehicle journey
+ * @property contractNumber Identifier for the contract the journey is a part of
  * @property turnaroundTime Turnaround time
  * @property layoverTime Layover time
  * @property journeyType Type of the vehicle journey
@@ -20,6 +21,7 @@ import kotlin.time.Duration
  */
 data class JoreVehicleJourney(
     val name: String,
+    val contractNumber: String,
     val turnaroundTime: Duration,
     val layoverTime: Duration,
     val journeyType: JoreJourneyType,

@@ -209,6 +209,7 @@ object ConversionsFromHastus {
 
         return JoreVehicleJourney(
             hastusTrip.tripNumber,
+            hastusTrip.contract,
             hastusTrip.turnaroundTime.minutes,
             hastusTrip.layoverTime.minutes,
             mapJourneyType(hastusTrip.tripType),
