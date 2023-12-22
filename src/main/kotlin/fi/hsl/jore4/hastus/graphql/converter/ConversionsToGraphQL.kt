@@ -101,6 +101,7 @@ object ConversionsToGraphQL {
     ): timetables_vehicle_journey_vehicle_journey_insert_input {
         return timetables_vehicle_journey_vehicle_journey_insert_input(
             displayed_name = OptionalInput.Defined(vehicleJourney.displayedName),
+            contract_number = OptionalInput.Defined(vehicleJourney.contractNumber),
             is_backup_journey = OptionalInput.Defined(vehicleJourney.isBackupJourney),
             is_extra_journey = OptionalInput.Defined(vehicleJourney.isExtraJourney),
             is_vehicle_type_mandatory = OptionalInput.Defined(vehicleJourney.isVehicleTypeMandatory),
