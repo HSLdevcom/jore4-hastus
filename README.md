@@ -83,13 +83,17 @@ The identifier of the resulting vehicle schedule frame is returned in the JSON r
 }
 ```
 
-In the event of an error, e.g. when no journey pattern reference is found for a Hastus trip, the following error response is returned:
+In the event of an error, e.g. when no journey pattern reference is found for a Hastus trip,
+an error response with failure message and failure type is returned:
 
 ```json
 {
-    "reason": "descriptive error message"
+    "reason": "descriptive error message",
+    "type": "IllegalArgumentError"
 }
 ```
+
+For possible values of the `type` field, see `fi.hsl.jore4.hastus.api.util.HastusApiErrorType`.
 
 ## Technical Documentation
 
