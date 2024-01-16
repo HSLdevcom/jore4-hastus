@@ -33,6 +33,10 @@ class ExportController(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd") val observationDate: LocalDate
     )
 
+    data class ExportRoutesErrorResponse(
+        val reason: String?
+    )
+
     // Headers are not used by this service but passed on to the Hasura API
     @PostMapping("routes", consumes = [MediaType.APPLICATION_JSON_VALUE], produces = [MIME_TYPE_CSV])
     fun exportForRoutes(
@@ -58,15 +62,20 @@ class ExportController(
     }
 
     @ExceptionHandler
-    fun handleExportException(ex: Exception): ResponseEntity<String> {
+    fun handleExportException(ex: Exception): ResponseEntity<ExportRoutesErrorResponse> {
         return when (ex) {
-            is ResponseStatusException -> ResponseEntity.status(ex.statusCode).body(ex.reason)
+            is ResponseStatusException ->
+                ResponseEntity
+                    .status(ex.statusCode)
+                    .body(ExportRoutesErrorResponse(ex.reason))
 
             else -> {
                 LOGGER.error { "Exception during export request:$ex" }
                 LOGGER.error(ex.stackTraceToString())
 
-                ResponseEntity("status", HttpStatus.INTERNAL_SERVER_ERROR)
+                ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ExportRoutesErrorResponse(ex.message))
             }
         }
     }

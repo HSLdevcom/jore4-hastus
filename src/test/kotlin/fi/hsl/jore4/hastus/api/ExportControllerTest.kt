@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -93,8 +94,10 @@ class ExportControllerTest @Autowired constructor(
 
         executeExportRoutesRequest()
             .andExpect(status().isIAmATeapot)
-            .andExpect(content().string(resultErrorMessage))
-            .andExpect(content().contentType("text/plain;charset=iso-8859-1"))
+            .andExpect(
+                constructExpectedErrorBody(resultErrorMessage)
+            )
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 
     @Test
@@ -107,8 +110,22 @@ class ExportControllerTest @Autowired constructor(
 
         executeExportRoutesRequest()
             .andExpect(status().isInternalServerError)
-            // FIXME: should probably return a sensible content.
-            .andExpect(content().string("status"))
-            .andExpect(content().contentType("text/plain;charset=iso-8859-1"))
+            .andExpect(
+                constructExpectedErrorBody(resultErrorMessage)
+            )
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    companion object {
+        private fun constructExpectedErrorBody(errorMessage: String): ResultMatcher {
+            return content().json(
+                """
+                {
+                    "reason": "$errorMessage"
+                }
+                """.trimIndent(),
+                true
+            )
+        }
     }
 }
