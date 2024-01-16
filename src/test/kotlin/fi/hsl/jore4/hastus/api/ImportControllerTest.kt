@@ -2,6 +2,7 @@ package fi.hsl.jore4.hastus.api
 
 import com.ninjasquad.springmockk.MockkBean
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
+import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.config.WebSecurityConfig
 import fi.hsl.jore4.hastus.data.format.JoreRouteDirection
 import fi.hsl.jore4.hastus.data.format.RouteLabelAndDirection
@@ -97,7 +98,10 @@ class ImportControllerTest @Autowired constructor(
         executeImportTimetablesRequest("<invalid_csv_content>")
             .andExpect(status().isBadRequest)
             .andExpect(
-                constructExpectedErrorBody(resultErrorMessage)
+                constructExpectedErrorBody(
+                    HastusApiErrorType.InvalidHastusDataError,
+                    resultErrorMessage
+                )
             )
 
         verify(exactly = 1) {
@@ -120,6 +124,7 @@ class ImportControllerTest @Autowired constructor(
             .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
+                    HastusApiErrorType.CannotFindJourneyPatternRefByRouteLabelAndDirectionError,
                     "Could not find journey pattern reference for Hastus trips with the following route " +
                         "labels and directions: 123 (outbound),456 (inbound)"
                 )
@@ -143,6 +148,7 @@ class ImportControllerTest @Autowired constructor(
             .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
+                    HastusApiErrorType.CannotFindJourneyPatternRefByStopPointLabelsError,
                     """
                     Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
 
@@ -172,6 +178,7 @@ class ImportControllerTest @Autowired constructor(
             .andExpect(status().isBadRequest)
             .andExpect(
                 constructExpectedErrorBody(
+                    HastusApiErrorType.CannotFindJourneyPatternRefByTimingPlaceLabelsError,
                     """
                     Could not find matching journey pattern reference whose timing place labels correspond to the Hastus trip.
 
@@ -201,7 +208,12 @@ class ImportControllerTest @Autowired constructor(
 
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isInternalServerError)
-            .andExpect(constructExpectedErrorBody("encountered an error"))
+            .andExpect(
+                constructExpectedErrorBody(
+                    HastusApiErrorType.ErrorWhileProcessingHastusDataError,
+                    "encountered an error"
+                )
+            )
 
         verify(exactly = 1) {
             importService.importTimetablesFromCsv(any(), any())
@@ -219,7 +231,10 @@ class ImportControllerTest @Autowired constructor(
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isForbidden)
             .andExpect(
-                constructExpectedErrorBody(resultErrorMessage)
+                constructExpectedErrorBody(
+                    HastusApiErrorType.GraphQLAuthenticationFailedError,
+                    resultErrorMessage
+                )
             )
 
         verify(exactly = 1) {
@@ -238,7 +253,10 @@ class ImportControllerTest @Autowired constructor(
         executeImportTimetablesRequest("<csv_content>")
             .andExpect(status().isInternalServerError)
             .andExpect(
-                constructExpectedErrorBody(resultErrorMessage)
+                constructExpectedErrorBody(
+                    HastusApiErrorType.UnknownError,
+                    resultErrorMessage
+                )
             )
 
         verify(exactly = 1) {
@@ -247,11 +265,12 @@ class ImportControllerTest @Autowired constructor(
     }
 
     companion object {
-        private fun constructExpectedErrorBody(errorMessage: String): ResultMatcher {
+        private fun constructExpectedErrorBody(type: HastusApiErrorType, errorMessage: String): ResultMatcher {
             return content().json(
                 """
                 {
-                    "reason": "$errorMessage"
+                    "reason": "$errorMessage",
+                    "type": "$type"
                 }
                 """.trimIndent(),
                 true
