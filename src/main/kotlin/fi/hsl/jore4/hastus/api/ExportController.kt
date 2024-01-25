@@ -2,6 +2,7 @@ package fi.hsl.jore4.hastus.api
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
+import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.service.exporting.ExportService
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
@@ -34,6 +35,7 @@ class ExportController(
     )
 
     data class ExportRoutesErrorResponse(
+        val type: HastusApiErrorType,
         val reason: String?
     )
 
@@ -67,7 +69,7 @@ class ExportController(
             is ResponseStatusException ->
                 ResponseEntity
                     .status(ex.statusCode)
-                    .body(ExportRoutesErrorResponse(ex.reason))
+                    .body(ExportRoutesErrorResponse(HastusApiErrorType.from(ex), ex.reason))
 
             else -> {
                 LOGGER.error { "Exception during export request:$ex" }
@@ -75,7 +77,7 @@ class ExportController(
 
                 ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ExportRoutesErrorResponse(ex.message))
+                    .body(ExportRoutesErrorResponse(HastusApiErrorType.from(ex), ex.message))
             }
         }
     }
