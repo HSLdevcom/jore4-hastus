@@ -2,8 +2,12 @@ package fi.hsl.jore4.hastus.api
 
 import com.ninjasquad.springmockk.MockkBean
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
+import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.config.WebSecurityConfig
 import fi.hsl.jore4.hastus.service.exporting.ExportService
+import fi.hsl.jore4.hastus.service.exporting.validation.FirstStopNotTimingPointException
+import fi.hsl.jore4.hastus.service.exporting.validation.LastStopNotTimingPointException
+import fi.hsl.jore4.hastus.service.exporting.validation.TooFewStopPointsException
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -85,6 +89,57 @@ class ExportControllerTest @Autowired constructor(
     }
 
     @Test
+    fun `returns 400 when validation fails due to first stop not being a timing point`() {
+        every {
+            exportService.exportRoutes(any(), any(), any(), any())
+        } throws FirstStopNotTimingPointException("123")
+
+        executeExportRoutesRequest()
+            .andExpect(status().isBadRequest)
+            .andExpect(
+                constructExpectedErrorBody(
+                    HastusApiErrorType.FirstStopNotTimingPointError,
+                    "The first stop point in the journey pattern for route 123 is not a timing point"
+                )
+            )
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    fun `returns 400 when validation fails due to last stop not being a timing point`() {
+        every {
+            exportService.exportRoutes(any(), any(), any(), any())
+        } throws LastStopNotTimingPointException("123")
+
+        executeExportRoutesRequest()
+            .andExpect(status().isBadRequest)
+            .andExpect(
+                constructExpectedErrorBody(
+                    HastusApiErrorType.LastStopNotTimingPointError,
+                    "The last stop point in the journey pattern for route 123 is not a timing point"
+                )
+            )
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
+    fun `returns 400 when validation fails due to there being too few stop points`() {
+        every {
+            exportService.exportRoutes(any(), any(), any(), any())
+        } throws TooFewStopPointsException("123")
+
+        executeExportRoutesRequest()
+            .andExpect(status().isBadRequest)
+            .andExpect(
+                constructExpectedErrorBody(
+                    HastusApiErrorType.TooFewStopPointsError,
+                    "There are less than two stops points in the journey pattern for route 123"
+                )
+            )
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    }
+
+    @Test
     fun `returns the associated status code when processing fails due to any ResponseStatusException`() {
         val resultErrorMessage = "Something unexpected happened"
 
@@ -95,7 +150,10 @@ class ExportControllerTest @Autowired constructor(
         executeExportRoutesRequest()
             .andExpect(status().isIAmATeapot)
             .andExpect(
-                constructExpectedErrorBody(resultErrorMessage)
+                constructExpectedErrorBody(
+                    HastusApiErrorType.UnknownError,
+                    resultErrorMessage
+                )
             )
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
@@ -111,17 +169,21 @@ class ExportControllerTest @Autowired constructor(
         executeExportRoutesRequest()
             .andExpect(status().isInternalServerError)
             .andExpect(
-                constructExpectedErrorBody(resultErrorMessage)
+                constructExpectedErrorBody(
+                    HastusApiErrorType.UnknownError,
+                    resultErrorMessage
+                )
             )
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
     }
 
     companion object {
-        private fun constructExpectedErrorBody(errorMessage: String): ResultMatcher {
+        private fun constructExpectedErrorBody(type: HastusApiErrorType, errorMessage: String): ResultMatcher {
             return content().json(
                 """
                 {
-                    "reason": "$errorMessage"
+                    "reason": "$errorMessage",
+                    "type": "$type"
                 }
                 """.trimIndent(),
                 true
