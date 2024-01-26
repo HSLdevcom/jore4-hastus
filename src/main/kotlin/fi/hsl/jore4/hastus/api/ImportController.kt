@@ -4,7 +4,6 @@ import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.service.importing.ImportService
 import mu.KotlinLogging
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
@@ -74,7 +73,7 @@ class ImportController(
                 LOGGER.error(ex.stackTraceToString())
 
                 ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .internalServerError()
                     .body(ImportTimetablesFailureResult(HastusApiErrorType.from(ex), ex.message))
             }
         }

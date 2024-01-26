@@ -5,7 +5,6 @@ import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.service.exporting.ExportService
 import mu.KotlinLogging
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -59,7 +58,7 @@ class ExportController(
         LOGGER.info { "Routes request took $elapsed" }
 
         return ResponseEntity
-            .status(HttpStatus.OK)
+            .ok()
             .body(result)
     }
 
@@ -76,7 +75,7 @@ class ExportController(
                 LOGGER.error(ex.stackTraceToString())
 
                 ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .internalServerError()
                     .body(ExportRoutesErrorResponse(HastusApiErrorType.from(ex), ex.message))
             }
         }
