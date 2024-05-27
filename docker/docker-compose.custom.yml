@@ -8,50 +8,42 @@ services:
     build:
       context: ".."
 
-  jore4-db:
-    container_name: "database"
-    extends:
-      service: jore4-testdb
-      file: docker-compose.yml
-    image: "${TESTDB_DOCKER_IMAGE}"
-    ports:
-      - "127.0.0.1:6432:5432"
-
-  jore4-db-test:
+  jore4-testdb-test:
     container_name: "database-test"
     extends:
-      service: jore4-testdb
-      file: docker-compose.yml
+      service: jore4-testdb-base
+      file: docker-compose.base.yml
     image: "${TESTDB_DOCKER_IMAGE}"
     ports:
       - "127.0.0.1:6433:5432"
 
-  jore4-hasura:
-    container_name: "hasura"
-    image: "${HASURA_DOCKER_IMAGE}"
+  jore4-tiamat-test:
+    container_name: "tiamat-test"
     extends:
-      service: jore4-hasura
-      file: docker-compose.yml
-    ports:
-      - "127.0.0.1:3201:8080"
-    # Waiting for database to be ready to avoid startup delay due to hasura crashing at startup if db is offline
-    # Note: this should only be done in development setups as Kubernetes does not allow waiting for services to be ready
-    depends_on:
-      jore4-db:
-        condition: service_healthy
+      service: jore4-tiamat-base
+      file: docker-compose.base.yml
+    image: "${TIAMAT_DOCKER_IMAGE}"
     environment:
-      DB_HOSTNAME: "jore4-db"
+      - TIAMAT_DB_URL=jdbc:postgresql://jore4-db-test:5432/stopdb?stringtype=unspecified
+    depends_on:
+      jore4-testdb-test:
+        condition: service_healthy
 
   jore4-hasura-test:
     container_name: "hasura-test"
     image: "${HASURA_DOCKER_IMAGE}"
     extends:
-      service: jore4-hasura
-      file: docker-compose.yml
+      service: jore4-hasura-base
+      file: docker-compose.base.yml
     ports:
       - "127.0.0.1:3202:8080"
     depends_on:
-      jore4-db-test:
+      jore4-testdb-test:
+        condition: service_healthy
+      jore4-tiamat-test:
         condition: service_healthy
     environment:
-      DB_HOSTNAME: "jore4-db-test"
+      - DB_HOSTNAME=jore4-db-test
+      - SKIP_SET_VARIABLE_SECRET_OVERRIDE=true
+      - TIAMAT_HOSTNAME=jore4-tiamat-test
+      - TIMETABLESAPI_HOSTNAME=jore4-timetablesapi
