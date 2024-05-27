@@ -79,21 +79,21 @@ ensure_hasura_submodule_initialized() {
   echo "jore4-hasura submodule up to date."
 }
 
-# jore4-db - Jore 4 database. This is the database used when starting the application.
-# jore4-db-test - Jore 4 database instance for the integration tests.
+# jore4-testdb - Jore 4 database. This is the database used when starting the application.
+# jore4-testdb-test - Jore 4 database instance for the integration tests.
 # jore4-hasura - Hasura. We have to start Hasura because it ensures that db migrations are run to the Jore 4 database.
 # jore4-hasura-test - Hasura instance used in the integration tests to run db migrations to the Jore 4 database.
 
 function start_all {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
   prepare_timetables_data_inserter
 }
 
 function start_deps {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   prepare_timetables_data_inserter
 }
 
