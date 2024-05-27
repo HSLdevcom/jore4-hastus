@@ -86,14 +86,14 @@ ensure_hasura_submodule_initialized() {
 
 function start_all {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-db-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
   prepare_timetables_data_inserter
 }
 
 function start_deps {
   download_docker_bundle
-  $DOCKER_COMPOSE_CMD up -d jore4-db jore4-hasura jore4-db-test jore4-hasura-test
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-db-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   prepare_timetables_data_inserter
 }
 
