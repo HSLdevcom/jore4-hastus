@@ -24,7 +24,6 @@ private val LOGGER = KotlinLogging.logger {}
 class ImportController(
     private val importService: ImportService
 ) {
-
     data class ImportTimetablesSuccessResult(
         val vehicleScheduleFrameId: UUID?
     )
@@ -39,20 +38,21 @@ class ImportController(
         @RequestBody csv: String,
         @RequestHeader headers: Map<String, String>
     ): ImportTimetablesSuccessResult {
-        val (nullableVehicleScheduleFrameId, elapsed) = measureTimedValue {
-            LOGGER.info("Starting to import timetables from CSV file...")
+        val (nullableVehicleScheduleFrameId, elapsed) =
+            measureTimedValue {
+                LOGGER.info("Starting to import timetables from CSV file...")
 
-            val hasuraHeaders = HeaderUtils.filterInHasuraHeaders(headers)
+                val hasuraHeaders = HeaderUtils.filterInHasuraHeaders(headers)
 
-            importService
-                .importTimetablesFromCsv(csv, hasuraHeaders)
-                .also { nullableUuid ->
-                    if (nullableUuid == null) {
-                        // Should never happen, but record log event if it actually does.
-                        LOGGER.warn("CSV import did not result in vehicle schedule frame")
+                importService
+                    .importTimetablesFromCsv(csv, hasuraHeaders)
+                    .also { nullableUuid ->
+                        if (nullableUuid == null) {
+                            // Should never happen, but record log event if it actually does.
+                            LOGGER.warn("CSV import did not result in vehicle schedule frame")
+                        }
                     }
-                }
-        }
+            }
 
         LOGGER.info { "CSV import processing completed in $elapsed" }
 

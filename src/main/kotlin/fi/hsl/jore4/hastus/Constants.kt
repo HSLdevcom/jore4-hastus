@@ -1,7 +1,6 @@
 package fi.hsl.jore4.hastus
 
 object Constants {
-
     const val LANG_FINNISH = "fi_FI"
     const val LANG_SWEDISH = "sv_SE"
 

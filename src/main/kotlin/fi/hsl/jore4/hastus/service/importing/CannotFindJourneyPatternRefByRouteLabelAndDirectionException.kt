@@ -7,8 +7,8 @@ import org.springframework.web.server.ResponseStatusException
 class CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
     routeIdentifiers: List<RouteLabelAndDirection>
 ) : ResponseStatusException(
-    HttpStatus.BAD_REQUEST,
-    "Could not find journey pattern reference for Hastus trips with the following route labels and directions: ${
-        routeIdentifiers.joinToString(separator = ",")
-    }"
-)
+        HttpStatus.BAD_REQUEST,
+        "Could not find journey pattern reference for Hastus trips with the following route labels and directions: ${
+            routeIdentifiers.joinToString(separator = ",")
+        }"
+    )

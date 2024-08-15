@@ -25,7 +25,6 @@ class ExportService(
     val graphQLServiceFactory: GraphQLServiceFactory,
     val lineValidator: IExportLineValidator
 ) {
-
     private val writer = CsvWriter()
 
     /**

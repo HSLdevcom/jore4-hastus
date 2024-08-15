@@ -20,7 +20,6 @@ data class ApplicationRecord(
     val jobDate: LocalDate,
     val jobTime: LocalTime
 ) : ImportableItem() {
-
     constructor(elements: List<String>) : this(
         hastus = elements[1],
         companyName = elements[2],

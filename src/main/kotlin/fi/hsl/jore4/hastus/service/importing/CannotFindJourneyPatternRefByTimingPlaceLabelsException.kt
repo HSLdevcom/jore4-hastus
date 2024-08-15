@@ -9,21 +9,16 @@ class CannotFindJourneyPatternRefByTimingPlaceLabelsException(
     val stopLabels: List<String>,
     val placeCodes: List<String?>
 ) : ResponseStatusException(
-    HttpStatus.BAD_REQUEST,
-    constructErrorMessage(routeIdentifier, stopLabels, placeCodes)
-) {
+        HttpStatus.BAD_REQUEST,
+        constructErrorMessage(routeIdentifier, stopLabels, placeCodes)
+    ) {
     companion object {
         private fun constructErrorMessage(
             routeIdentifier: RouteLabelAndDirection,
             stopLabels: List<String>,
             placeCodes: List<String?>
         ): String {
-            return """
-            Could not find matching journey pattern reference whose timing place labels correspond to the Hastus trip.
-    
-            Trip label: ${routeIdentifier.routeLabel},
-            Trip direction: ${routeIdentifier.direction.wellKnownNumber},
-            Stop points with place codes: ${
+            val stopPointPlaceCodes =
                 stopLabels
                     .zip(placeCodes)
                     .map { (stopLabel, nullablePlaceCode) ->
@@ -31,8 +26,14 @@ class CannotFindJourneyPatternRefByTimingPlaceLabelsException(
                             ?.let { "$stopLabel:$it" }
                             ?: stopLabel
                     }
-            }
-            """.trimIndent()
+
+            return """
+                Could not find matching journey pattern reference whose timing place labels correspond to the Hastus trip.
+                
+                Trip label: ${routeIdentifier.routeLabel},
+                Trip direction: ${routeIdentifier.direction.wellKnownNumber},
+                Stop points with place codes: $stopPointPlaceCodes
+                """.trimIndent()
         }
     }
 }

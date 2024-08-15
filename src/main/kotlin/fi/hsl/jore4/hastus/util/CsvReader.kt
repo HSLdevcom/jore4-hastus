@@ -12,7 +12,6 @@ import mu.KotlinLogging
 class CsvReader(
     private val separator: String = ";"
 ) {
-
     fun parseCsv(file: String): List<ImportableItem> {
         return file.split("\n").mapNotNull { parseLine(it) }
     }

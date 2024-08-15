@@ -22,7 +22,6 @@ fun main(args: Array<String>) {
 @SpringBootApplication
 @EnableConfigurationProperties(HasuraConfiguration::class)
 class HastusApplication {
-
     @Bean
     @Primary
     fun objectMapper(): ObjectMapper {

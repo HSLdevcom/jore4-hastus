@@ -5,7 +5,6 @@ import fi.hsl.jore4.hastus.graphql.UUIDList
 import java.util.UUID
 
 class UUIDListScalarConverter : ScalarConverter<UUIDList> {
-
     override fun toJson(value: UUIDList): String {
         return value.content.joinToString(
             transform = { it.toString() },

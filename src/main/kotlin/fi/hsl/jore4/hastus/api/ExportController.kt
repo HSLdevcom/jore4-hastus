@@ -26,7 +26,6 @@ private val LOGGER = KotlinLogging.logger {}
 class ExportController(
     private val exportService: ExportService
 ) {
-
     data class ExportRoutesRequest(
         val uniqueLabels: List<String>,
         val priority: Int,
@@ -44,16 +43,17 @@ class ExportController(
         @RequestBody request: ExportRoutesRequest,
         @RequestHeader headers: Map<String, String>
     ): ResponseEntity<String> {
-        val (result, elapsed) = measureTimedValue {
-            LOGGER.debug { "Routes export request" }
+        val (result, elapsed) =
+            measureTimedValue {
+                LOGGER.debug { "Routes export request" }
 
-            exportService.exportRoutes(
-                request.uniqueLabels,
-                request.priority,
-                request.observationDate,
-                HeaderUtils.filterInHasuraHeaders(headers)
-            )
-        }
+                exportService.exportRoutes(
+                    request.uniqueLabels,
+                    request.priority,
+                    request.observationDate,
+                    HeaderUtils.filterInHasuraHeaders(headers)
+                )
+            }
 
         LOGGER.info { "Routes request took $elapsed" }
 

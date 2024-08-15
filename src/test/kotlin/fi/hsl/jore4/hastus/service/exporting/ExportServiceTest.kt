@@ -22,7 +22,6 @@ import kotlin.test.assertFailsWith
 
 @ExtendWith(MockKExtension::class)
 class ExportServiceTest : ExportTestDataCreator {
-
     // Validator is spied in order to verify interactions.
     val lineValidator: IExportLineValidator = spyk(ExportStopPointsValidator(true))
 
@@ -38,7 +37,7 @@ class ExportServiceTest : ExportTestDataCreator {
     fun setupServiceUnderTest() {
         every {
             graphQLServiceFactory.createForSession(any())
-        } /* then */ returns graphQLService
+        } returns graphQLService
 
         exportService = ExportService(graphQLServiceFactory, lineValidator)
     }
@@ -46,19 +45,18 @@ class ExportServiceTest : ExportTestDataCreator {
     @DisplayName("Validate deep-fetched routes got from GraphQLService.deepFetchRoutes(...)")
     @Nested
     inner class ValidateDeepFetchedRoutes {
-
         private fun mockGraphQLService(line: JoreLine) {
             val fetchRoutesResult = FetchRoutesResult(listOf(line), emptyList(), emptyList(), emptyList())
 
             // given
             every {
                 graphQLService.deepFetchRoutes(any(), any(), any())
-            } /* then */ returns fetchRoutesResult
+            } returns fetchRoutesResult
 
             // given
             every {
                 graphQLService.createJourneyPatternReferences(any(), any(), any())
-            } /* then */ returns emptyList()
+            } returns emptyList()
         }
 
         private fun invokeExportRoutes() {
@@ -69,10 +67,11 @@ class ExportServiceTest : ExportTestDataCreator {
 
         @Test
         fun `validation should succeed when the first and the last stop points are timing points`() {
-            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
-                createFirstStopPoint("1KALA"),
-                createLastStopPoint(2, "1ELIEL")
-            )
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> =
+                listOf(
+                    createFirstStopPoint("1KALA"),
+                    createLastStopPoint(2, "1ELIEL")
+                )
             val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             mockGraphQLService(line)
@@ -84,10 +83,11 @@ class ExportServiceTest : ExportTestDataCreator {
 
         @Test
         fun `validation should fail when the first or the last stop point is not a timing point`() {
-            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> = listOf(
-                createFirstStopPoint(null, false),
-                createLastStopPoint(2, "1ELIEL", true)
-            )
+            val stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern> =
+                listOf(
+                    createFirstStopPoint(null, false),
+                    createLastStopPoint(2, "1ELIEL", true)
+                )
             val line: JoreLine = createLine(stopPointsInJourneyPattern)
 
             mockGraphQLService(line)

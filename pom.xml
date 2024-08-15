@@ -28,7 +28,7 @@
         <build-helper-plugin.version>3.3.0</build-helper-plugin.version>
         <build-properties-plugin.version>1.1.0</build-properties-plugin.version>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
-        <ktlint-plugin.version>1.16.0</ktlint-plugin.version>
+        <ktlint-plugin.version>3.2.0</ktlint-plugin.version>
 
         <!-- Library versions -->
         <kotlin-logging-jvm.version>3.0.5</kotlin-logging-jvm.version>

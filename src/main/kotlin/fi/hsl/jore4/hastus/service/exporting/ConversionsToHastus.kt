@@ -21,14 +21,14 @@ import fi.hsl.jore4.hastus.data.jore.JoreStopPointInJourneyPattern
 import fi.hsl.jore4.hastus.data.jore.JoreTimingPlace
 
 object ConversionsToHastus {
-
-    fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IExportableItem> = lines.flatMap { joreLine ->
-        listOf(
-            convertJoreLineToHastus(joreLine)
-        ).plus(
-            convertJoreRoutesToHastusRouteVariants(joreLine.routes, joreLine.label)
-        )
-    }
+    fun convertJoreLinesToHastus(lines: List<JoreLine>): List<IExportableItem> =
+        lines.flatMap { joreLine ->
+            listOf(
+                convertJoreLineToHastus(joreLine)
+            ).plus(
+                convertJoreRoutesToHastusRouteVariants(joreLine.routes, joreLine.label)
+            )
+        }
 
     internal fun convertJoreLineToHastus(joreLine: JoreLine): Route {
         // The cut is done due to length limit in Hastus.
@@ -114,21 +114,22 @@ object ConversionsToHastus {
         //   converted in such a way that we calculate for each timing point the distance from the
         //   previous timing point.
         return joreStopPointsInJourneyPattern.map { stop ->
-            val specTpDistance: NumberWithAccuracy? = if (stop.isUsedAsTimingPoint) {
-                val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
+            val specTpDistance: NumberWithAccuracy? =
+                if (stop.isUsedAsTimingPoint) {
+                    val distanceFromPreviousTimingPoint = accumulatedDistanceFromPreviousTimingPoint
 
-                firstTimingPointEncountered = true
-                accumulatedDistanceFromPreviousTimingPoint = stop.distanceToNextStop
+                    firstTimingPointEncountered = true
+                    accumulatedDistanceFromPreviousTimingPoint = stop.distanceToNextStop
 
-                NumberWithAccuracy(distanceFromPreviousTimingPoint / 1000.0, 1, 3)
-            } else {
-                if (firstTimingPointEncountered) {
-                    accumulatedDistanceFromPreviousTimingPoint += stop.distanceToNextStop
+                    NumberWithAccuracy(distanceFromPreviousTimingPoint / 1000.0, 1, 3)
+                } else {
+                    if (firstTimingPointEncountered) {
+                        accumulatedDistanceFromPreviousTimingPoint += stop.distanceToNextStop
+                    }
+
+                    // This is not timing point, so no distance is given.
+                    null
                 }
-
-                // This is not timing point, so no distance is given.
-                null
-            }
 
             RouteVariantPoint(
                 place = stop.effectiveTimingPlaceCode,
@@ -168,9 +169,7 @@ object ConversionsToHastus {
         )
     }
 
-    fun convertJoreTimingPlacesToHastus(
-        joreTimingPlaces: List<JoreTimingPlace>
-    ): List<Place> {
+    fun convertJoreTimingPlacesToHastus(joreTimingPlaces: List<JoreTimingPlace>): List<Place> {
         return joreTimingPlaces.map {
             Place(
                 identifier = it.label,
@@ -179,9 +178,7 @@ object ConversionsToHastus {
         }
     }
 
-    fun convertDistancesBetweenStopPointsToHastus(
-        distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>
-    ): List<StopDistance> {
+    fun convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
         return distancesBetweenStopPoints.map {
             StopDistance(
                 stopStart = it.startLabel,

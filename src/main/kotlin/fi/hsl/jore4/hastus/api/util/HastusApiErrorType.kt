@@ -24,18 +24,19 @@ enum class HastusApiErrorType {
     UnknownError;
 
     companion object {
-        fun from(exception: Exception): HastusApiErrorType = when (exception) {
-            is CannotFindJourneyPatternRefByRouteLabelAndDirectionException -> CannotFindJourneyPatternRefByRouteLabelAndDirectionError
-            is CannotFindJourneyPatternRefByStopPointLabelsException -> CannotFindJourneyPatternRefByStopPointLabelsError
-            is CannotFindJourneyPatternRefByTimingPlaceLabelsException -> CannotFindJourneyPatternRefByTimingPlaceLabelsError
-            is ErrorWhileProcessingHastusDataException -> ErrorWhileProcessingHastusDataError
-            is FirstStopNotTimingPointException -> FirstStopNotTimingPointError
-            is GraphQLAuthenticationFailedException -> GraphQLAuthenticationFailedError
-            is IllegalArgumentException -> IllegalArgumentError
-            is InvalidHastusDataException -> InvalidHastusDataError
-            is LastStopNotTimingPointException -> LastStopNotTimingPointError
-            is TooFewStopPointsException -> TooFewStopPointsError
-            else -> UnknownError
-        }
+        fun from(exception: Exception): HastusApiErrorType =
+            when (exception) {
+                is CannotFindJourneyPatternRefByRouteLabelAndDirectionException -> CannotFindJourneyPatternRefByRouteLabelAndDirectionError
+                is CannotFindJourneyPatternRefByStopPointLabelsException -> CannotFindJourneyPatternRefByStopPointLabelsError
+                is CannotFindJourneyPatternRefByTimingPlaceLabelsException -> CannotFindJourneyPatternRefByTimingPlaceLabelsError
+                is ErrorWhileProcessingHastusDataException -> ErrorWhileProcessingHastusDataError
+                is FirstStopNotTimingPointException -> FirstStopNotTimingPointError
+                is GraphQLAuthenticationFailedException -> GraphQLAuthenticationFailedError
+                is IllegalArgumentException -> IllegalArgumentError
+                is InvalidHastusDataException -> InvalidHastusDataError
+                is LastStopNotTimingPointException -> LastStopNotTimingPointError
+                is TooFewStopPointsException -> TooFewStopPointsError
+                else -> UnknownError
+            }
     }
 }

@@ -8,13 +8,13 @@ data class JoreTimingPlace(
     val description: String
 ) {
     companion object {
-
         fun from(timingPlace: timing_pattern_timing_place): JoreTimingPlace {
-            val description: String = timingPlace
-                .description
-                ?.content
-                ?.get(Constants.LANG_FINNISH)
-                ?: timingPlace.label // Use label as description if one is not provided
+            val description: String =
+                timingPlace
+                    .description
+                    ?.content
+                    ?.get(Constants.LANG_FINNISH)
+                    ?: timingPlace.label // Use label as description if one is not provided
 
             return JoreTimingPlace(timingPlace.label, description)
         }

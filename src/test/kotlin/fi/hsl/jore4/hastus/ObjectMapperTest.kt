@@ -40,7 +40,6 @@ import kotlin.time.toKotlinDuration
 
 @DisplayName("Test JacksonObjectMapper")
 class ObjectMapperTest {
-
     private val objectMapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
     data class UUIDFormat(
@@ -89,13 +88,14 @@ class ObjectMapperTest {
     @Test
     @DisplayName("When parsing parameters for export routes request JSON")
     fun testParsingExportRouteRequestJson() {
-        val jsonString = """
+        val jsonString =
+            """
         {
             "uniqueLabels": ["65x", "65y"],
             "priority": 20,
             "observationDate": "2022-10-24"
         }
-        """.trimMargin()
+            """.trimMargin()
 
         val request: ExportController.ExportRoutesRequest = objectMapper.readValue(jsonString)
 
@@ -108,13 +108,13 @@ class ObjectMapperTest {
     @Nested
     @DisplayName("Test serialising Object types to JSON")
     inner class TestSerialisingObjectTypesToJson {
-
         @Test
         fun `format UUID as JSON`() {
             val value = UUID.randomUUID()
-            val expected = """
-            {"uuid":"$value"}
-            """.trimIndent()
+            val expected =
+                """
+                {"uuid":"$value"}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(UUIDFormat(value))
             assertEquals(expected, formatted)
@@ -123,9 +123,10 @@ class ObjectMapperTest {
         @Test
         fun `format UUIDList as JSON`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
-            val expected = """
-            {"uuidList":"{${value[0]},${value[1]}}"}
-            """.trimIndent()
+            val expected =
+                """
+                {"uuidList":"{${value[0]},${value[1]}}"}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(UUIDListFormat(UUIDList(value)))
             assertEquals(expected, formatted)
@@ -134,9 +135,10 @@ class ObjectMapperTest {
         @Test
         fun `format LocalDate as JSON`() {
             val value = LocalDate.of(2022, 2, 2)
-            val expected = """
-            {"date":"2022-02-02"}
-            """.trimIndent()
+            val expected =
+                """
+                {"date":"2022-02-02"}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(DateFormat(value))
             assertEquals(expected, formatted)
@@ -145,8 +147,10 @@ class ObjectMapperTest {
         @Nested
         @DisplayName("format OffsetDateTime as JSON")
         inner class TestSerialisingOffsetDateTimeToJson {
-
-            private fun doAssert(expected: String, timestamp: OffsetDateTime) {
+            private fun doAssert(
+                expected: String,
+                timestamp: OffsetDateTime
+            ) {
                 assertEquals(
                     """
                     {"offsetDateTime":"$expected"}
@@ -191,9 +195,10 @@ class ObjectMapperTest {
         @Test
         fun `format IJSONB as JSON`() {
             val value = IJSONB(mapOf("first" to "value", "second" to "other"))
-            val expected = """
-            {"ijsonb":{"first":"value","second":"other"}}
-            """.trimIndent()
+            val expected =
+                """
+                {"ijsonb":{"first":"value","second":"other"}}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(IJsonbFormat(value))
             assertEquals(expected, formatted)
@@ -202,9 +207,10 @@ class ObjectMapperTest {
         @Test
         fun `format Coordinate as GeoJSON`() {
             val value = Coordinate(1.0, 2.0)
-            val expected = """
-            {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.longitude},${value.latitude},0.0]}}
-            """.trimIndent()
+            val expected =
+                """
+                {"coordinate":{"type":"Point","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::4326"}},"coordinates":[${value.longitude},${value.latitude},0.0]}}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(CoordinateFormat(value))
             assertEquals(expected, formatted)
@@ -213,9 +219,10 @@ class ObjectMapperTest {
         @Test
         fun `format Duration as JSON`() {
             val value: Duration = 4.hours
-            val expected = """
-            {"duration":"${value.toIsoString()}"}
-            """.trimIndent()
+            val expected =
+                """
+                {"duration":"${value.toIsoString()}"}
+                """.trimIndent()
 
             val formatted = objectMapper.writeValueAsString(DurationFormat(value.toJavaDuration()))
             assertEquals(expected, formatted)
@@ -225,15 +232,15 @@ class ObjectMapperTest {
     @Nested
     @DisplayName("Test deserialising Object types from JSON")
     inner class TestDeserialisingObjectTypesFromJson() {
-
         @Test
         fun `parse UUID from JSON`() {
             val value = UUID.randomUUID()
-            val jsonString = """
-            {
-                "uuid": "$value"
-            }
-            """.trimIndent()
+            val jsonString =
+                """
+                {
+                    "uuid": "$value"
+                }
+                """.trimIndent()
             val parsed: UUIDFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.uuid)
         }
@@ -241,11 +248,12 @@ class ObjectMapperTest {
         @Test
         fun `parse UUIDList from JSON`() {
             val value = listOf(UUID.randomUUID(), UUID.randomUUID())
-            val jsonString = """
-            {
-                "uuidList": "{${value[0]}, ${value[1]}}"
-            }
-            """.trimIndent()
+            val jsonString =
+                """
+                {
+                    "uuidList": "{${value[0]}, ${value[1]}}"
+                }
+                """.trimIndent()
             val parsed: UUIDListFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.uuidList.content)
         }
@@ -253,11 +261,12 @@ class ObjectMapperTest {
         @Test
         fun `parse LocalDate from JSON`() {
             val value = LocalDate.of(2022, 2, 2)
-            val jsonString = """
-            {
-                "date": "2022-02-02"
-            }
-            """.trimIndent()
+            val jsonString =
+                """
+                {
+                    "date": "2022-02-02"
+                }
+                """.trimIndent()
             val parsed: DateFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.date)
         }
@@ -265,8 +274,10 @@ class ObjectMapperTest {
         @Nested
         @DisplayName("parse OffsetDateTime from JSON")
         inner class TestDeserialisingOffsetDateTimeFromJSON {
-
-            private fun doAssert(expected: OffsetDateTime, timestamp: String) {
+            private fun doAssert(
+                expected: OffsetDateTime,
+                timestamp: String
+            ) {
                 assertEquals(
                     expected,
                     objectMapper.readValue<OffsetDateTimeFormat>(
@@ -278,9 +289,9 @@ class ObjectMapperTest {
             @Nested
             @DisplayName("with UTC timezone")
             inner class WithUtcTimezone {
-
-                private fun createOffsetDateTime(nanoOfSecond: Int) = OffsetDateTime
-                    .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, ZoneOffset.UTC)
+                private fun createOffsetDateTime(nanoOfSecond: Int) =
+                    OffsetDateTime
+                        .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, ZoneOffset.UTC)
 
                 @Test
                 fun `without fractions of seconds`() {
@@ -306,11 +317,11 @@ class ObjectMapperTest {
             @Nested
             @DisplayName("with offset timezone")
             inner class WithOffsetTimezone {
-
                 private val zoneOffset = ZoneOffset.of("+03:00")
 
-                private fun createOffsetDateTime(nanoOfSecond: Int) = OffsetDateTime
-                    .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, zoneOffset)
+                private fun createOffsetDateTime(nanoOfSecond: Int) =
+                    OffsetDateTime
+                        .of(2022, 2, 2, 1, 2, 3, nanoOfSecond, zoneOffset)
 
                 @Test
                 fun `without fractions of seconds`() {
@@ -337,14 +348,15 @@ class ObjectMapperTest {
         @Test
         fun `parse IJSONB from JSON`() {
             val value = mapOf("first" to "value", "second" to "other")
-            val jsonString = """
-            {
-                "ijsonb": {
-                    "first": "value",
-                    "second": "other"
+            val jsonString =
+                """
+                {
+                    "ijsonb": {
+                        "first": "value",
+                        "second": "other"
+                    }
                 }
-            }
-            """.trimIndent()
+                """.trimIndent()
             val parsed: IJsonbFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.ijsonb.content)
         }
@@ -352,24 +364,25 @@ class ObjectMapperTest {
         @Test
         fun `parse Coordinate from GeoJSON`() {
             val value = Coordinate(1.0, 2.0)
-            val jsonString = """
-             {
-                "coordinate": {
-                    "type": "Point",
-                    "crs": {
-                        "type": "name",
-                        "properties": {
-                            "name": "urn:ogc:def:crs:EPSG::4326"
-                        }
-                    },
-                    "coordinates": [
-                        ${value.longitude},
-                        ${value.latitude},
-                        0.0
-                    ]
+            val jsonString =
+                """
+                 {
+                    "coordinate": {
+                        "type": "Point",
+                        "crs": {
+                            "type": "name",
+                            "properties": {
+                                "name": "urn:ogc:def:crs:EPSG::4326"
+                            }
+                        },
+                        "coordinates": [
+                            ${value.longitude},
+                            ${value.latitude},
+                            0.0
+                        ]
+                    }
                 }
-            }
-            """.trimIndent()
+                """.trimIndent()
             val parsed: CoordinateFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.coordinate)
         }
@@ -377,11 +390,12 @@ class ObjectMapperTest {
         @Test
         fun `parse Duration from JSON`() {
             val value: Duration = 4.hours
-            val jsonString = """
-            {
-                "duration": "${value.toIsoString()}"
-            }
-            """.trimIndent()
+            val jsonString =
+                """
+                {
+                    "duration": "${value.toIsoString()}"
+                }
+                """.trimIndent()
             val parsed: DurationFormat = objectMapper.readValue(jsonString)
             assertEquals(value, parsed.duration.toKotlinDuration())
         }

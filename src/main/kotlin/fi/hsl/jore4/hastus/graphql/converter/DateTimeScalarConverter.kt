@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 
 class DateTimeScalarConverter : ScalarConverter<OffsetDateTime> {
-
     override fun toJson(value: OffsetDateTime): String = value.format(dateTimeFormatterForSerialising)
 
     override fun toScalar(rawValue: Any): OffsetDateTime {
@@ -19,7 +18,6 @@ class DateTimeScalarConverter : ScalarConverter<OffsetDateTime> {
     }
 
     companion object {
-
         private const val DATETIME_FORMAT_MILLISECONDS = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
 
         private val dateTimeFormatterForSerialising = DateTimeFormatter.ofPattern(DATETIME_FORMAT_MILLISECONDS)
@@ -31,10 +29,11 @@ class DateTimeScalarConverter : ScalarConverter<OffsetDateTime> {
          * deserialising in such a way that variable number of digits in the decimal part is
          * supported.
          */
-        private val dateTimeFormatterForDeserialising: DateTimeFormatter = DateTimeFormatterBuilder()
-            .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 3, true)
-            .appendOffset("+HH:MM", "Z")
-            .toFormatter()
+        private val dateTimeFormatterForDeserialising: DateTimeFormatter =
+            DateTimeFormatterBuilder()
+                .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+                .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 3, true)
+                .appendOffset("+HH:MM", "Z")
+                .toFormatter()
     }
 }

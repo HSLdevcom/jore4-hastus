@@ -25,7 +25,6 @@ import java.util.UUID
 import kotlin.time.toJavaDuration
 
 object ConversionsToGraphQL {
-
     fun mapToGraphQL(stop: JoreStopPointInJourneyPattern) =
         timetables_service_pattern_scheduled_stop_point_in_journey_pattern_ref_insert_input(
             scheduled_stop_point_label = OptionalInput.Defined(stop.stopLabel),
@@ -49,13 +48,14 @@ object ConversionsToGraphQL {
             priority = OptionalInput.Defined(Constants.VEHICLE_SCHEDULE_FRAME_PRIORITY_STAGING),
             validity_start = OptionalInput.Defined(vehicleScheduleFrame.validityStart),
             validity_end = OptionalInput.Defined(vehicleScheduleFrame.validityEnd),
-            vehicle_services = OptionalInput.Defined(
-                timetables_vehicle_service_vehicle_service_arr_rel_insert_input(
-                    vehicleScheduleFrame.vehicleServices.map { vs ->
-                        mapToGraphQL(vs, journeyPatternRefIndex)
-                    }
+            vehicle_services =
+                OptionalInput.Defined(
+                    timetables_vehicle_service_vehicle_service_arr_rel_insert_input(
+                        vehicleScheduleFrame.vehicleServices.map { vs ->
+                            mapToGraphQL(vs, journeyPatternRefIndex)
+                        }
+                    )
                 )
-            )
         )
     }
 
@@ -66,11 +66,12 @@ object ConversionsToGraphQL {
         return timetables_vehicle_service_vehicle_service_insert_input(
             day_type_id = OptionalInput.Defined(vehicleService.dayType),
             name_i18n = mapToFiJson(vehicleService.name),
-            blocks = OptionalInput.Defined(
-                timetables_vehicle_service_block_arr_rel_insert_input(
-                    vehicleService.blocks.map { mapToGraphQL(it, journeyPatternRefIndex) }
+            blocks =
+                OptionalInput.Defined(
+                    timetables_vehicle_service_block_arr_rel_insert_input(
+                        vehicleService.blocks.map { mapToGraphQL(it, journeyPatternRefIndex) }
+                    )
                 )
-            )
         )
     }
 
@@ -82,16 +83,17 @@ object ConversionsToGraphQL {
             finishing_time = OptionalInput.Defined(block.finishingTime.toJavaDuration()),
             preparing_time = OptionalInput.Defined(block.preparingTime.toJavaDuration()),
             vehicle_type_id = OptionalInput.Defined(block.vehicleTypeId),
-            vehicle_journeys = OptionalInput.Defined(
-                timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input(
-                    block.vehicleJourneys.map { vehicleJourney ->
-                        val journeyPatternRefId: UUID = vehicleJourney.journeyPatternRefId
-                        val journeyPatternRef: JoreJourneyPatternRef = journeyPatternRefIndex[journeyPatternRefId]!!
+            vehicle_journeys =
+                OptionalInput.Defined(
+                    timetables_vehicle_journey_vehicle_journey_arr_rel_insert_input(
+                        block.vehicleJourneys.map { vehicleJourney ->
+                            val journeyPatternRefId: UUID = vehicleJourney.journeyPatternRefId
+                            val journeyPatternRef: JoreJourneyPatternRef = journeyPatternRefIndex[journeyPatternRefId]!!
 
-                        mapToGraphQL(vehicleJourney, journeyPatternRef)
-                    }
+                            mapToGraphQL(vehicleJourney, journeyPatternRef)
+                        }
+                    )
                 )
-            )
         )
     }
 
@@ -110,11 +112,12 @@ object ConversionsToGraphQL {
             layover_time = OptionalInput.Defined(vehicleJourney.layoverTime.toJavaDuration()),
             turnaround_time = OptionalInput.Defined(vehicleJourney.turnaroundTime.toJavaDuration()),
             journey_pattern_ref_id = OptionalInput.Defined(associatedJourneyPatternRef.journeyPatternRefId),
-            timetabled_passing_times = OptionalInput.Defined(
-                timetables_passing_times_timetabled_passing_time_arr_rel_insert_input(
-                    vehicleJourney.passingTimes.zip(associatedJourneyPatternRef.stops).map { mapToGraphQL(it) }
+            timetabled_passing_times =
+                OptionalInput.Defined(
+                    timetables_passing_times_timetabled_passing_time_arr_rel_insert_input(
+                        vehicleJourney.passingTimes.zip(associatedJourneyPatternRef.stops).map { mapToGraphQL(it) }
+                    )
                 )
-            )
         )
     }
 

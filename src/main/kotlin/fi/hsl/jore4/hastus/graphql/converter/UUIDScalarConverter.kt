@@ -5,6 +5,7 @@ import java.util.UUID
 
 class UUIDScalarConverter : ScalarConverter<UUID> {
     override fun toJson(value: UUID) = value.toString()
+
     override fun toScalar(rawValue: Any): UUID {
         if (rawValue is String) {
             return UUID.fromString(rawValue)

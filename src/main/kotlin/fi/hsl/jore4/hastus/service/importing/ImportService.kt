@@ -19,7 +19,6 @@ private val LOGGER = KotlinLogging.logger {}
 
 @Service
 class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
-
     fun importTimetablesFromCsv(
         csv: String,
         hasuraHeaders: Map<String, String>
@@ -32,14 +31,16 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         val hastusTrips: List<TripRecord> = hastusItems.filterIsInstance<TripRecord>()
         val hastusTripStops: List<TripStopRecord> = hastusItems.filterIsInstance<TripStopRecord>()
 
-        val uniqueRouteLabels: List<String> = hastusTrips
-            .map(ConversionsFromHastus::extractRouteLabel)
-            .distinct() // TODO: is distinct operation really required?
+        val uniqueRouteLabels: List<String> =
+            hastusTrips
+                .map(ConversionsFromHastus::extractRouteLabel)
+                .distinct() // TODO: is distinct operation really required?
 
-        val journeyPatternRefs: List<JoreJourneyPatternRef> = graphQLService.getJourneyPatternReferences(
-            uniqueRouteLabels,
-            hastusBookingRecord.startDate
-        )
+        val journeyPatternRefs: List<JoreJourneyPatternRef> =
+            graphQLService.getJourneyPatternReferences(
+                uniqueRouteLabels,
+                hastusBookingRecord.startDate
+            )
         LOGGER.debug { "Fetched journey pattern references: $journeyPatternRefs" }
 
         val vehicleTypeIndex: Map<Int, UUID> = graphQLService.getVehicleTypes()
@@ -51,12 +52,13 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
         val journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef> =
             findMatchingJourneyPatternRefForEachHastusTrip(journeyPatternRefs, hastusTrips, hastusTripStops)
 
-        val vehicleScheduleFrame: JoreVehicleScheduleFrame = ConversionsFromHastus.convertHastusDataToJore(
-            hastusItems,
-            vehicleTypeIndex,
-            dayTypeIndex,
-            journeyPatternRefIndex
-        )
+        val vehicleScheduleFrame: JoreVehicleScheduleFrame =
+            ConversionsFromHastus.convertHastusDataToJore(
+                hastusItems,
+                vehicleTypeIndex,
+                dayTypeIndex,
+                journeyPatternRefIndex
+            )
 
         val selectedJourneyPatternRefs: Collection<JoreJourneyPatternRef> = journeyPatternRefIndex.values
 
@@ -66,7 +68,6 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
     private fun getHastusDataItems(csv: String): List<ImportableItem> = filterOutDeadRunItems(READER.parseCsv(csv))
 
     companion object {
-
         private val READER = CsvReader(";")
 
         internal fun findMatchingJourneyPatternRefForEachHastusTrip(
@@ -128,10 +129,11 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                         }
 
                 if (journeyPatternRefsMatchedByStopPointLabels.isEmpty()) {
-                    val exception = CannotFindJourneyPatternRefByStopPointLabelsException(
-                        hastusRouteLabelAndDirection,
-                        hastusStopPointLabels
-                    )
+                    val exception =
+                        CannotFindJourneyPatternRefByStopPointLabelsException(
+                            hastusRouteLabelAndDirection,
+                            hastusStopPointLabels
+                        )
                     LOGGER.warn(exception.reason)
                     throw exception
                 }
@@ -145,29 +147,31 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                     }
 
                 if (journeyPatternRefsMatchedByTimingPlaceLabels.isEmpty()) {
-                    val exception = CannotFindJourneyPatternRefByTimingPlaceLabelsException(
-                        hastusRouteLabelAndDirection,
-                        hastusStopPointLabels,
-                        hastusPlaceLabels
-                    )
+                    val exception =
+                        CannotFindJourneyPatternRefByTimingPlaceLabelsException(
+                            hastusRouteLabelAndDirection,
+                            hastusStopPointLabels,
+                            hastusPlaceLabels
+                        )
                     LOGGER.warn(exception.reason)
                     throw exception
                 }
 
-                val bestJourneyPatternRefMatch: JoreJourneyPatternRef = journeyPatternRefsMatchedByTimingPlaceLabels
-                    .sortedWith(
-                        compareByDescending<JoreJourneyPatternRef> {
-                            // By choosing the one with the latest validity start date, we are
-                            // effectively choosing the route/journey-pattern that is currently
-                            // active or was most recently active among the candidates.
-                            it.routeValidityStart
-                        }.thenByDescending {
-                            // The last exported item with the most up-to-date route information is
-                            // picked.
-                            it.snapshotTime
-                        }
-                    )
-                    .first()
+                val bestJourneyPatternRefMatch: JoreJourneyPatternRef =
+                    journeyPatternRefsMatchedByTimingPlaceLabels
+                        .sortedWith(
+                            compareByDescending<JoreJourneyPatternRef> {
+                                // By choosing the one with the latest validity start date, we are
+                                // effectively choosing the route/journey-pattern that is currently
+                                // active or was most recently active among the candidates.
+                                it.routeValidityStart
+                            }.thenByDescending {
+                                // The last exported item with the most up-to-date route information is
+                                // picked.
+                                it.snapshotTime
+                            }
+                        )
+                        .first()
 
                 results[hastusRouteLabelAndDirection] = bestJourneyPatternRefMatch
             }
@@ -179,34 +183,37 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
             hastusTrips: Set<RouteLabelAndDirection>,
             routesFromJourneyPatternRefs: Set<RouteLabelAndDirection>
         ) {
-            val missingRouteLabelsAndDirections: List<RouteLabelAndDirection> = hastusTrips
-                .subtract(routesFromJourneyPatternRefs)
-                .sorted()
+            val missingRouteLabelsAndDirections: List<RouteLabelAndDirection> =
+                hastusTrips
+                    .subtract(routesFromJourneyPatternRefs)
+                    .sorted()
 
             if (missingRouteLabelsAndDirections.isNotEmpty()) {
-                val exception = CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
-                    missingRouteLabelsAndDirections
-                )
+                val exception =
+                    CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
+                        missingRouteLabelsAndDirections
+                    )
                 LOGGER.warn(exception.reason)
                 throw exception
             }
         }
 
         private fun filterOutDeadRunItems(hastusItems: List<ImportableItem>): List<ImportableItem> {
-            val internalNumbersOfDeadRuns: List<String> = hastusItems
-                .filterIsInstance<TripRecord>()
-                .filter { trip ->
-                    // Null direction denotes a dead run which is not imported to Jore4.
-                    trip.direction == null
-                }
-                .map {
-                    it.tripInternalNumber.also {
-                        LOGGER.info {
-                            "Found a dead run trip with internal number $it. " +
-                                "Discarding the trip and the related stop points."
+            val internalNumbersOfDeadRuns: List<String> =
+                hastusItems
+                    .filterIsInstance<TripRecord>()
+                    .filter { trip ->
+                        // Null direction denotes a dead run which is not imported to Jore4.
+                        trip.direction == null
+                    }
+                    .map {
+                        it.tripInternalNumber.also {
+                            LOGGER.info {
+                                "Found a dead run trip with internal number $it. " +
+                                    "Discarding the trip and the related stop points."
+                            }
                         }
                     }
-                }
 
             return hastusItems
                 .filter { item ->

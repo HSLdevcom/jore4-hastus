@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.hsl.jore4.hastus.graphql.IJSONB
 
 class JsonbScalarConverter : ScalarConverter<IJSONB> {
-
     override fun toJson(value: IJSONB): Any {
         val formattedValue = jacksonObjectMapper().writeValueAsString(value.content)
         return jacksonObjectMapper().readTree(formattedValue) as ObjectNode

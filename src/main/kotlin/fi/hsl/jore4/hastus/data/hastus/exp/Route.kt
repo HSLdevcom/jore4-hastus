@@ -17,6 +17,5 @@ data class Route(
     val direction: Int = 0,
     val serviceMode: Int
 ) : IExportableItem {
-
     override fun getFields(): List<Any> = listOf(identifier, description, serviceType, direction, serviceMode)
 }

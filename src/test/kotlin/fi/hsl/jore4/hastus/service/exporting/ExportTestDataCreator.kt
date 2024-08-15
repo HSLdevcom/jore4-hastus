@@ -8,7 +8,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface ExportTestDataCreator {
-
     fun createLine(stopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern>): JoreLine {
         val typeOfLine = "stopping_bus_service"
 

@@ -33,7 +33,6 @@ data class TripStopRecord(
     val stopType: String,
     val note: String
 ) : ImportableItem() {
-
     val isUsedAsTimingPoint: Boolean
         get() = stopType == "T" || stopType == "R"
 

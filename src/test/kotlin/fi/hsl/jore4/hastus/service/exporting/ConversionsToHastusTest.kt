@@ -22,11 +22,9 @@ import kotlin.test.assertEquals
 
 @DisplayName("Test type conversions from Jore to Hastus")
 class ConversionsToHastusTest {
-
     @DisplayName("Test method: getHastusRouteVariantId")
     @Nested
     inner class TestGetHastusRouteVariantId {
-
         @Test
         fun `with basic route`() {
             assertEquals("1", getHastusRouteVariantId("123", "123", null, JoreRouteDirection.OUTBOUND))
@@ -67,20 +65,20 @@ class ConversionsToHastusTest {
     @DisplayName("Test method: convertJoreLineToHastus")
     @Nested
     inner class TestConvertJoreLineToHastus {
-
         @Test
         fun `test truncation of length-limited fields`() {
             val name = "1234567890".repeat(MAX_LENGTH_HASTUS_ROUTE_DESCRIPTION / 10 * 20)
 
-            val hastusRoute: Route = ConversionsToHastus.convertJoreLineToHastus(
-                JoreLine(
-                    label = "123",
-                    name = name,
-                    typeOfLine = "stopping_bus_service",
-                    vehicleMode = 0,
-                    routes = emptyList()
+            val hastusRoute: Route =
+                ConversionsToHastus.convertJoreLineToHastus(
+                    JoreLine(
+                        label = "123",
+                        name = name,
+                        typeOfLine = "stopping_bus_service",
+                        vehicleMode = 0,
+                        routes = emptyList()
+                    )
                 )
-            )
 
             assertEquals("12345678901234567890123456789012345678901234567890", hastusRoute.description)
         }
@@ -89,26 +87,26 @@ class ConversionsToHastusTest {
     @DisplayName("Test method: convertJoreRouteToHastusRouteVariant")
     @Nested
     inner class TestConvertJoreRouteToHastusRouteVariant {
-
         @Test
         fun `test truncation of length-limited fields`() {
             val name = "1234567890".repeat(MAX_LENGTH_HASTUS_ROUTE_VARIANT_DESCRIPTION / 10 * 20)
 
-            val hastusRouteVariant: RouteVariant = ConversionsToHastus.convertJoreRouteToHastusRouteVariant(
-                JoreRoute(
-                    label = "123B",
-                    variant = null,
-                    name = name,
-                    direction = JoreRouteDirection.OUTBOUND,
-                    reversible = false,
-                    validityStart = LocalDate.of(2023, 1, 1),
-                    validityEnd = LocalDate.of(2050, 12, 31),
-                    typeOfLine = "stopping_bus_service",
-                    journeyPatternId = UUID.randomUUID(),
-                    stopPointsInJourneyPattern = emptyList()
-                ),
-                "123"
-            )
+            val hastusRouteVariant: RouteVariant =
+                ConversionsToHastus.convertJoreRouteToHastusRouteVariant(
+                    JoreRoute(
+                        label = "123B",
+                        variant = null,
+                        name = name,
+                        direction = JoreRouteDirection.OUTBOUND,
+                        reversible = false,
+                        validityStart = LocalDate.of(2023, 1, 1),
+                        validityEnd = LocalDate.of(2050, 12, 31),
+                        typeOfLine = "stopping_bus_service",
+                        journeyPatternId = UUID.randomUUID(),
+                        stopPointsInJourneyPattern = emptyList()
+                    ),
+                    "123"
+                )
 
             assertEquals("123456789012345678901234567890123456789012345678901234567890", hastusRouteVariant.description)
         }
@@ -117,24 +115,24 @@ class ConversionsToHastusTest {
     @DisplayName("Test method: convertJoreStopPointToHastus")
     @Nested
     inner class TestConvertJoreStopPointToHastus {
-
         @Test
         fun `test coordinate conversion`() {
             val lat = 60.163918
             val lng = 24.928327
 
-            val hastusStop: Stop = ConversionsToHastus.convertJoreStopPointToHastus(
-                JoreScheduledStop(
-                    location = Coordinate(longitude = lng, latitude = lat),
-                    label = "H1234",
-                    nameFinnish = "nameFi",
-                    nameSwedish = "NameSv",
-                    streetNameFinnish = "katu",
-                    streetNameSwedish = "gate",
-                    timingPlaceShortName = null,
-                    platform = "00"
+            val hastusStop: Stop =
+                ConversionsToHastus.convertJoreStopPointToHastus(
+                    JoreScheduledStop(
+                        location = Coordinate(longitude = lng, latitude = lat),
+                        label = "H1234",
+                        nameFinnish = "nameFi",
+                        nameSwedish = "NameSv",
+                        streetNameFinnish = "katu",
+                        streetNameSwedish = "gate",
+                        timingPlaceShortName = null,
+                        platform = "00"
+                    )
                 )
-            )
 
             assertEquals(lat, hastusStop.latitude.value)
             assertEquals(lng, hastusStop.longitude.value)
@@ -142,18 +140,19 @@ class ConversionsToHastusTest {
 
         @Test
         fun `test truncation of length-limited fields`() {
-            val hastusStop: Stop = ConversionsToHastus.convertJoreStopPointToHastus(
-                JoreScheduledStop(
-                    label = "H1234",
-                    platform = "00",
-                    nameFinnish = "1234567890".repeat(MAX_LENGTH_HASTUS_STOP_NAME / 10 * 20),
-                    nameSwedish = "9876543210".repeat(MAX_LENGTH_HASTUS_STOP_NAME / 10 * 20),
-                    streetNameFinnish = "ABCDEFGHIJ".repeat(MAX_LENGTH_HASTUS_STOP_STREET_NAME / 10 * 20),
-                    streetNameSwedish = "JIHGFEDCBA".repeat(MAX_LENGTH_HASTUS_STOP_STREET_NAME / 10 * 20),
-                    timingPlaceShortName = "1AACKT",
-                    location = Coordinate(24.928327, 60.163918)
+            val hastusStop: Stop =
+                ConversionsToHastus.convertJoreStopPointToHastus(
+                    JoreScheduledStop(
+                        label = "H1234",
+                        platform = "00",
+                        nameFinnish = "1234567890".repeat(MAX_LENGTH_HASTUS_STOP_NAME / 10 * 20),
+                        nameSwedish = "9876543210".repeat(MAX_LENGTH_HASTUS_STOP_NAME / 10 * 20),
+                        streetNameFinnish = "ABCDEFGHIJ".repeat(MAX_LENGTH_HASTUS_STOP_STREET_NAME / 10 * 20),
+                        streetNameSwedish = "JIHGFEDCBA".repeat(MAX_LENGTH_HASTUS_STOP_STREET_NAME / 10 * 20),
+                        timingPlaceShortName = "1AACKT",
+                        location = Coordinate(24.928327, 60.163918)
+                    )
                 )
-            )
 
             assertEquals(
                 "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
