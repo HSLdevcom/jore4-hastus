@@ -43,7 +43,8 @@
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
 
-        <maven-enforcer.plugin.mvn-min-version>3.9.9</maven-enforcer.plugin.mvn-min-version>
+        <!-- 3.8.8 is the lates version available in Github Actions -->
+        <maven-enforcer.plugin.mvn-min-version>3.8.8</maven-enforcer.plugin.mvn-min-version>
     </properties>
 
     <profiles>
@@ -233,7 +234,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <message>You are running an older version of Maven. Maven >= ${maven-enforcer.plugin.mvn-min-version} is required</message>
+                                    <message>You are running an older version of Maven. Maven >= ${maven-enforcer.plugin.mvn-min-version} is required, but ${maven.version} was used"</message>
                                     <version>[${maven-enforcer.plugin.mvn-min-version},)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
