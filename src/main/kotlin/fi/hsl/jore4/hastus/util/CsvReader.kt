@@ -7,14 +7,12 @@ import fi.hsl.jore4.hastus.data.hastus.imp.ImportableItem
 import fi.hsl.jore4.hastus.data.hastus.imp.TripRecord
 import fi.hsl.jore4.hastus.data.hastus.imp.TripStopRecord
 import fi.hsl.jore4.hastus.data.hastus.imp.VehicleScheduleRecord
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 class CsvReader(
     private val separator: String = ";"
 ) {
-    fun parseCsv(file: String): List<ImportableItem> {
-        return file.split("\n").mapNotNull { parseLine(it) }
-    }
+    fun parseCsv(file: String): List<ImportableItem> = file.split("\n").mapNotNull { parseLine(it) }
 
     private fun parseLine(line: String): ImportableItem? {
         val values = line.trim().split(separator)

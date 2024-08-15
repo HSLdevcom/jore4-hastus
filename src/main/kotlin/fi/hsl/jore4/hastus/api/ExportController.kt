@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.service.exporting.ExportService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -63,8 +63,8 @@ class ExportController(
     }
 
     @ExceptionHandler
-    fun handleExportException(ex: Exception): ResponseEntity<ExportRoutesErrorResponse> {
-        return when (ex) {
+    fun handleExportException(ex: Exception): ResponseEntity<ExportRoutesErrorResponse> =
+        when (ex) {
             is ResponseStatusException ->
                 ResponseEntity
                     .status(ex.statusCode)
@@ -79,5 +79,4 @@ class ExportController(
                     .body(ExportRoutesErrorResponse(HastusApiErrorType.from(ex), ex.message))
             }
         }
-    }
 }

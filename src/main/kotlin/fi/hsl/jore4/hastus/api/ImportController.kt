@@ -3,7 +3,7 @@ package fi.hsl.jore4.hastus.api
 import fi.hsl.jore4.hastus.Constants.MIME_TYPE_CSV
 import fi.hsl.jore4.hastus.api.util.HastusApiErrorType
 import fi.hsl.jore4.hastus.service.importing.ImportService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.PostMapping
@@ -60,8 +60,8 @@ class ImportController(
     }
 
     @ExceptionHandler
-    fun handleExportException(ex: Exception): ResponseEntity<ImportTimetablesFailureResult> {
-        return when (ex) {
+    fun handleExportException(ex: Exception): ResponseEntity<ImportTimetablesFailureResult> =
+        when (ex) {
             is ResponseStatusException -> {
                 ResponseEntity
                     .status(ex.statusCode)
@@ -77,5 +77,4 @@ class ImportController(
                     .body(ImportTimetablesFailureResult(HastusApiErrorType.from(ex), ex.message))
             }
         }
-    }
 }

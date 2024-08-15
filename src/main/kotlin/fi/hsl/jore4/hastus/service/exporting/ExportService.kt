@@ -13,7 +13,7 @@ import fi.hsl.jore4.hastus.service.exporting.validation.IExportLineValidator
 import fi.hsl.jore4.hastus.util.CsvWriter
 import fi.hsl.jore4.hastus.util.DateTimeUtil
 import fi.hsl.jore4.hastus.util.DateTimeUtil.toOffsetDateTimeAtDefaultZone
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.OffsetDateTime

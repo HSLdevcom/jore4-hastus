@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.test
 
 import fi.hsl.jore4.hastus.test.TimetablesDatasetExtensions.extractChildProperties
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.regex.Pattern
 
 private val LOGGER = KotlinLogging.logger {}
@@ -42,8 +42,7 @@ object TimetablesDatasetExtensions {
                     childElem
                         .mapIndexed { index: Int, elem: Any? ->
                             index.toString() to elem
-                        }
-                        .toMap()
+                        }.toMap()
                         .toMutableMap()
                 }
             }
