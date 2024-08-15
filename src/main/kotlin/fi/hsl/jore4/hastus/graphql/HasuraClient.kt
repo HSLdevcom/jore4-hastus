@@ -7,6 +7,7 @@ import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
@@ -15,7 +16,6 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
-import mu.KotlinLogging
 import java.net.URL
 
 private val LOGGER = KotlinLogging.logger {}
@@ -50,8 +50,8 @@ class HasuraClient(
     fun <T : Any> sendRequest(
         request: GraphQLClientRequest<T>,
         httpHeaders: Map<String, String>
-    ): T {
-        return runBlocking {
+    ): T =
+        runBlocking {
             LOGGER.debug {
                 "GraphQL request:\n${request.query},\nvariables: ${request.variables}"
             }
@@ -82,8 +82,7 @@ class HasuraClient(
 
                                 "authentication request failed" in error.message ||
                                     error.extensions?.let { it["code"] == "access-denied" } ?: false
-                            }
-                            ?.message
+                            }?.message
 
                     if (authenticationFailedMessage != null) {
                         LOGGER.warn("Authentication failed for GraphQL request")
@@ -98,5 +97,4 @@ class HasuraClient(
             queryResponse.data
                 ?: throw IllegalStateException("GraphQL response did not contain data even when no errors were present")
         }
-    }
 }

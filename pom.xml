@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.2</version>
         <relativePath/>
     </parent>
 
@@ -25,20 +25,25 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Maven build plugins and their dependencies -->
-        <build-helper-plugin.version>3.3.0</build-helper-plugin.version>
-        <build-properties-plugin.version>1.1.0</build-properties-plugin.version>
-        <surefire-plugin.version>2.22.2</surefire-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+        <build-helper-plugin.version>3.6.0</build-helper-plugin.version>
+        <build-properties-plugin.version>1.2.1</build-properties-plugin.version>
+        <surefire-plugin.version>3.3.1</surefire-plugin.version>
         <ktlint-plugin.version>3.2.0</ktlint-plugin.version>
 
         <!-- Library versions -->
-        <kotlin-logging-jvm.version>3.0.5</kotlin-logging-jvm.version>
+        <kotlin-logging-jvm.version>7.0.0</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
-        <graphql-kotlin.version>7.0.1</graphql-kotlin.version>
-        <ktor.version>2.3.4</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
-        <mockk.version>1.13.7</mockk.version>
+        <graphql-kotlin.version>7.1.4</graphql-kotlin.version>
+        <ktor.version>2.3.12</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
+        <mockk.version>1.13.12</mockk.version>
+        <springmockk.version>4.0.2</springmockk.version>
 
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
+
+        <maven-enforcer.plugin.mvn-min-version>3.9.9</maven-enforcer.plugin.mvn-min-version>
     </properties>
 
     <profiles>
@@ -218,7 +223,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
@@ -228,11 +233,11 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <message>You are running an older version of Maven. Maven >= 3.3.9 is required</message>
-                                    <version>[3.3.9,)</version>
+                                    <message>You are running an older version of Maven. Maven >= ${maven-enforcer.plugin.mvn-min-version} is required</message>
+                                    <version>[${maven-enforcer.plugin.mvn-min-version},)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <message>You are running an incompatible version of Java. JDK {java.version} is required</message>
+                                    <message>You are running an incompatible version of Java. JDK ${java.version} is required</message>
                                     <version>${java.version}</version>
                                 </requireJavaVersion>
                             </rules>
@@ -312,7 +317,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -500,7 +505,7 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.microutils</groupId>
+            <groupId>io.github.oshai</groupId>
             <artifactId>kotlin-logging-jvm</artifactId>
             <version>${kotlin-logging-jvm.version}</version>
         </dependency>
@@ -547,7 +552,7 @@
         <dependency>
             <groupId>com.ninja-squad</groupId>
             <artifactId>springmockk</artifactId>
-            <version>4.0.2</version>
+            <version>${springmockk.version}</version>
             <scope>test</scope>
         </dependency>
 

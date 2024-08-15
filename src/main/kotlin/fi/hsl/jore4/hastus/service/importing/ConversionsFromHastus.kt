@@ -16,7 +16,7 @@ import fi.hsl.jore4.hastus.data.jore.JorePassingTime
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleJourney
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleScheduleFrame
 import fi.hsl.jore4.hastus.data.jore.JoreVehicleService
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.UUID
@@ -134,8 +134,8 @@ object ConversionsFromHastus {
         dayTypeId: UUID,
         hastusBlockIndex: Map<BlockRecord, Map<TripRecord, List<TripStopRecord>>>,
         journeyPatternRefIndex: Map<RouteLabelAndDirection, JoreJourneyPatternRef>
-    ): JoreVehicleService {
-        return JoreVehicleService(
+    ): JoreVehicleService =
+        JoreVehicleService(
             vehicleServiceName,
             dayTypeId,
             hastusBlockIndex.map {
@@ -147,7 +147,6 @@ object ConversionsFromHastus {
                 )
             }
         )
-    }
 
     private fun mapToJoreBlock(
         hastusBlock: BlockRecord,
@@ -326,14 +325,13 @@ object ConversionsFromHastus {
         return "$lineLabel$trimmedVariant"
     }
 
-    fun extractRouteDirection(trip: TripRecord): JoreRouteDirection {
-        return when (trip.direction) {
+    fun extractRouteDirection(trip: TripRecord): JoreRouteDirection =
+        when (trip.direction) {
             1 -> JoreRouteDirection.OUTBOUND
             2 -> JoreRouteDirection.INBOUND
             null -> throw IllegalArgumentException("Null route direction encountered (dead run)")
             else -> throw IllegalArgumentException("Unknown Hastus route direction: ${trip.direction}")
         }
-    }
 
     fun extractRouteLabelAndDirection(trip: TripRecord) =
         RouteLabelAndDirection(
