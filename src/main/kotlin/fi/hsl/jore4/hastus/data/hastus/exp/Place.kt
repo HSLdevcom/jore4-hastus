@@ -11,6 +11,5 @@ data class Place(
     val identifier: String,
     val description: String
 ) : IExportableItem {
-
     override fun getFields(): List<Any> = listOf(identifier, description)
 }

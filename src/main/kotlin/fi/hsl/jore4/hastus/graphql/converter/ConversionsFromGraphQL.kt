@@ -12,11 +12,11 @@ import fi.hsl.jore4.hastus.generated.routeswithhastusdata.route_route
 import fi.hsl.jore4.hastus.generated.routeswithhastusdata.service_pattern_scheduled_stop_point
 
 object ConversionsFromGraphQL {
-
-    private fun convertVehicleMode(vehicleMode: String): Int = when (vehicleMode) {
-        "train" -> 2
-        else -> 0
-    }
+    private fun convertVehicleMode(vehicleMode: String): Int =
+        when (vehicleMode) {
+            "train" -> 2
+            else -> 0
+        }
 
     fun mapToJoreLineAndRoutes(
         line: route_line,
@@ -51,16 +51,17 @@ object ConversionsFromGraphQL {
 
         val stopLabel: String = stopInJourneyPattern.scheduled_stop_point_label
 
-        val maxPriorityStopPoint: service_pattern_scheduled_stop_point = stopInJourneyPattern
-            .scheduled_stop_points
-            .maxByOrNull { it.priority }
-            ?: run {
-                // In this case, there is probably something wrong with the GraphQL query, because the
-                // Jore4 database constraints should not allow this.
-                throw IllegalStateException(
-                    "Scheduled stop point (in journey pattern) not found for label: $stopLabel"
-                )
-            }
+        val maxPriorityStopPoint: service_pattern_scheduled_stop_point =
+            stopInJourneyPattern
+                .scheduled_stop_points
+                .maxByOrNull { it.priority }
+                ?: run {
+                    // In this case, there is probably something wrong with the GraphQL query, because the
+                    // Jore4 database constraints should not allow this.
+                    throw IllegalStateException(
+                        "Scheduled stop point (in journey pattern) not found for label: $stopLabel"
+                    )
+                }
 
         return JoreStopPointInJourneyPattern(
             stopLabel,
@@ -106,15 +107,16 @@ object ConversionsFromGraphQL {
             validityEnd = route.validity_end,
             typeOfLine = typeOfLine.lowercase(),
             journeyPatternId = journeyPattern.journey_pattern_id,
-            stopPointsInJourneyPattern = journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
-                val currentStopLabel = journeyPatternStop.scheduled_stop_point_label
-                val getDistanceKey = Pair(currentStopLabel, nextStopLabel)
+            stopPointsInJourneyPattern =
+                journeyPatternStopsWithNextLabel.map { (journeyPatternStop, nextStopLabel) ->
+                    val currentStopLabel = journeyPatternStop.scheduled_stop_point_label
+                    val getDistanceKey = Pair(currentStopLabel, nextStopLabel)
 
-                mapToJoreRouteScheduledStop(
-                    journeyPatternStop,
-                    distancesBetweenStops.getOrDefault(getDistanceKey, 0.0)
-                )
-            }
+                    mapToJoreRouteScheduledStop(
+                        journeyPatternStop,
+                        distancesBetweenStops.getOrDefault(getDistanceKey, 0.0)
+                    )
+                }
         )
     }
 }

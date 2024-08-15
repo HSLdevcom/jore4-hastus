@@ -24,7 +24,6 @@ data class RouteVariantPoint(
     val stopLabel: String,
     val routeIdAndVariantId: String
 ) : IExportableItem {
-
     init {
         if (isTimingPoint) {
             require(place != null) { "Hastus place must be given in case of timing point" }
@@ -35,13 +34,14 @@ data class RouteVariantPoint(
         }
     }
 
-    override fun getFields(): List<Any> = listOf(
-        place ?: "", // null to empty string
-        specTpDistance ?: "", // empty string instead of decimal number if distance not given
-        isTimingPoint,
-        allowLoadTime,
-        regulatedTp,
-        stopLabel,
-        routeIdAndVariantId
-    )
+    override fun getFields(): List<Any> =
+        listOf(
+            place ?: "", // null to empty string
+            specTpDistance ?: "", // empty string instead of decimal number if distance not given
+            isTimingPoint,
+            allowLoadTime,
+            regulatedTp,
+            stopLabel,
+            routeIdAndVariantId
+        )
 }

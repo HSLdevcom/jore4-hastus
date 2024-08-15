@@ -8,20 +8,21 @@ import fi.hsl.jore4.hastus.data.format.Coordinate
 
 class CoordinateConverter : ScalarConverter<Coordinate> {
     override fun toJson(value: Coordinate): ObjectNode {
-        val formattedValue = OBJECT_MAPPER.writeValueAsString(
-            mapOf(
-                "type" to "Point",
-                "crs" to
-                    mapOf(
-                        "type" to "name",
-                        "properties" to
-                            mapOf(
-                                "name" to "urn:ogc:def:crs:EPSG::4326"
-                            )
-                    ),
-                "coordinates" to listOf(value.longitude, value.latitude, 0.0)
+        val formattedValue =
+            OBJECT_MAPPER.writeValueAsString(
+                mapOf(
+                    "type" to "Point",
+                    "crs" to
+                        mapOf(
+                            "type" to "name",
+                            "properties" to
+                                mapOf(
+                                    "name" to "urn:ogc:def:crs:EPSG::4326"
+                                )
+                        ),
+                    "coordinates" to listOf(value.longitude, value.latitude, 0.0)
+                )
             )
-        )
 
         return OBJECT_MAPPER.readTree(formattedValue) as ObjectNode
     }

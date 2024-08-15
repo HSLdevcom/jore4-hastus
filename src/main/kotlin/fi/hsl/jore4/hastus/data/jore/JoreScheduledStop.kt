@@ -14,16 +14,16 @@ data class JoreScheduledStop(
     val location: Coordinate
 ) {
     companion object {
-
-        fun from(stop: service_pattern_scheduled_stop_point) = JoreScheduledStop(
-            stop.label,
-            "00", // TODO
-            "kuvaus", // TODO
-            "beskrivning", // TODO
-            "katu", // TODO
-            "gata", // TODO
-            stop.timing_place?.label,
-            stop.measured_location
-        )
+        fun from(stop: service_pattern_scheduled_stop_point) =
+            JoreScheduledStop(
+                stop.label,
+                "00", // TODO
+                "kuvaus", // TODO
+                "beskrivning", // TODO
+                "katu", // TODO
+                "gata", // TODO
+                stop.timing_place?.label,
+                stop.measured_location
+            )
     }
 }

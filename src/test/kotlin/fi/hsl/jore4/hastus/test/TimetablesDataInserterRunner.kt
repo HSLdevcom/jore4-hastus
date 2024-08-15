@@ -19,10 +19,11 @@ class TimetablesDataInserterRunner(
         // Note: this performs DB truncation internally.
         val command = "yarn --silent timetables-data-inserter:cli insert hsl ${buildDatabaseArguments()}"
 
-        val process = ProcessBuilder(*command.split(" ").toTypedArray())
-            .directory(File(inserterWorkDirectory))
-            .redirectError(ProcessBuilder.Redirect.INHERIT)
-            .start()
+        val process =
+            ProcessBuilder(*command.split(" ").toTypedArray())
+                .directory(File(inserterWorkDirectory))
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
 
         process.outputStream.use {
             val writer = it.bufferedWriter()
@@ -38,11 +39,14 @@ class TimetablesDataInserterRunner(
         return process.inputStream.bufferedReader().use(Reader::readText)
     }
 
-    private fun buildDatabaseArguments(): String =
-        databaseProperties.run { buildDatabaseArguments(url, username, password) }
+    private fun buildDatabaseArguments(): String = databaseProperties.run { buildDatabaseArguments(url, username, password) }
 
     companion object {
-        private fun buildDatabaseArguments(jdbcUrl: String, username: String, password: String): String {
+        private fun buildDatabaseArguments(
+            jdbcUrl: String,
+            username: String,
+            password: String
+        ): String {
             val cleanJdbcUri: String = jdbcUrl.substringAfter("jdbc:") // Strip leading "jdbc:"
 
             return URI.create(cleanJdbcUri)

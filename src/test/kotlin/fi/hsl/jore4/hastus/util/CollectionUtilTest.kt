@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class CollectionUtilTest {
-
     @Nested
     @DisplayName("Method: filterOutConsecutiveDuplicates")
     inner class FilterOutConsecutiveDuplicates {
-
         @Test
         fun `test empty`() {
             assertEquals(

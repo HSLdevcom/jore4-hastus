@@ -8,21 +8,21 @@ class CannotFindJourneyPatternRefByStopPointLabelsException(
     val routeIdentifier: RouteLabelAndDirection,
     val stopLabels: List<String>
 ) : ResponseStatusException(
-    HttpStatus.BAD_REQUEST,
-    constructErrorMessage(routeIdentifier, stopLabels)
-) {
+        HttpStatus.BAD_REQUEST,
+        constructErrorMessage(routeIdentifier, stopLabels)
+    ) {
     companion object {
         private fun constructErrorMessage(
             routeIdentifier: RouteLabelAndDirection,
             stopLabels: List<String>
         ): String {
             return """
-            Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
-    
-            Trip label: ${routeIdentifier.routeLabel},
-            Trip direction: ${routeIdentifier.direction.wellKnownNumber},
-            Stop points: $stopLabels
-            """.trimIndent()
+                Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
+                
+                Trip label: ${routeIdentifier.routeLabel},
+                Trip direction: ${routeIdentifier.direction.wellKnownNumber},
+                Stop points: $stopLabels
+                """.trimIndent()
         }
     }
 }

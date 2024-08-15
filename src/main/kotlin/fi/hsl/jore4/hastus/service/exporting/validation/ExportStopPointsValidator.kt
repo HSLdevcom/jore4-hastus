@@ -19,7 +19,6 @@ private val LOGGER = KotlinLogging.logger {}
 class ExportStopPointsValidator(
     @Value("\${failOnTimingPointValidation}") val failOnTimingPointValidation: Boolean
 ) : IExportLineValidator {
-
     /**
      * Validates stop points from the given line before they are exported.
      *

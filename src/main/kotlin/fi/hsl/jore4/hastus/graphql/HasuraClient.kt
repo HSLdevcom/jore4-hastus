@@ -31,19 +31,21 @@ class HasuraClient(
     config: HasuraConfiguration,
     private val objectMapper: ObjectMapper
 ) {
-    private val gqlClient = GraphQLKtorClient(
-        url = URL(config.url),
-        httpClient = HttpClient {
-            defaultRequest {
-                contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
-            }
-            install(Logging) {
-                // Can be changed to HEADERS for debugging purposes
-                level = LogLevel.INFO
-            }
-        },
-        serializer = GraphQLClientJacksonSerializer()
-    )
+    private val gqlClient =
+        GraphQLKtorClient(
+            url = URL(config.url),
+            httpClient =
+                HttpClient {
+                    defaultRequest {
+                        contentType(ContentType.Application.Json.withParameter("charset", "utf-8"))
+                    }
+                    install(Logging) {
+                        // Can be changed to HEADERS for debugging purposes
+                        level = LogLevel.INFO
+                    }
+                },
+            serializer = GraphQLClientJacksonSerializer()
+        )
 
     fun <T : Any> sendRequest(
         request: GraphQLClientRequest<T>,
@@ -54,9 +56,10 @@ class HasuraClient(
                 "GraphQL request:\n${request.query},\nvariables: ${request.variables}"
             }
 
-            val queryResponse: GraphQLClientResponse<T> = gqlClient.execute(request) {
-                httpHeaders.map { header(it.key, it.value) }
-            }
+            val queryResponse: GraphQLClientResponse<T> =
+                gqlClient.execute(request) {
+                    httpHeaders.map { header(it.key, it.value) }
+                }
 
             LOGGER.debug {
                 "GraphQL ${request.operationName} response: ${

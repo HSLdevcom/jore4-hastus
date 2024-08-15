@@ -15,7 +15,6 @@ class CsvWriter(
     private val separator: String = ";",
     decimal: Char = '.'
 ) {
-
     private val decimalFormat: DecimalFormat
 
     init {

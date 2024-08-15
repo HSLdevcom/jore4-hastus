@@ -23,7 +23,6 @@ data class BookingRecord(
     val endDate: LocalDate,
     val contract: String
 ) : ImportableItem() {
-
     constructor(elements: List<String>) : this(
         booking = elements[1],
         bookingDescription = elements[2],

@@ -7,7 +7,6 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 object DateTimeUtil {
-
     fun currentDateTimeAtDefaultZone(): OffsetDateTime = OffsetDateTime.now(getDefaultZoneId())
 
     /**

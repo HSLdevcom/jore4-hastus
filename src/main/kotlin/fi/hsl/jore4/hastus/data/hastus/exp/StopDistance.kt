@@ -15,11 +15,11 @@ data class StopDistance(
     val baseInService: Boolean = true,
     val editedDistance: Int
 ) : IExportableItem {
-
-    override fun getFields(): List<Any> = listOf(
-        stopStart,
-        stopEnd,
-        baseInService,
-        editedDistance
-    )
+    override fun getFields(): List<Any> =
+        listOf(
+            stopStart,
+            stopEnd,
+            baseInService,
+            editedDistance
+        )
 }

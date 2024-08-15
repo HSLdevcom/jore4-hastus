@@ -51,7 +51,6 @@ data class TripRecord(
     val isBackupTrip: Boolean,
     val isExtraTrip: Boolean
 ) : ImportableItem() {
-
     constructor(elements: List<String>) : this(
         contract = elements[1],
         blockNumber = elements[2],

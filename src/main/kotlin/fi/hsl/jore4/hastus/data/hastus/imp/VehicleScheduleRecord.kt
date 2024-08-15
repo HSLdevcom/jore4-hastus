@@ -26,7 +26,6 @@ data class VehicleScheduleRecord(
     val editDate: LocalDate,
     val editTime: LocalTime
 ) : ImportableItem() {
-
     constructor(elements: List<String>) : this(
         name = elements[1],
         scheduleType = parseToInt(elements[2]),

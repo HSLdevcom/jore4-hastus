@@ -14,10 +14,10 @@ import kotlin.test.assertEquals
 
 @DisplayName("Test the CSV reader")
 class CsvReaderTest {
-
     @Test
     fun `when reading CSV`() {
-        val csv = """
+        val csv =
+            """
             1;HASTUS;HSL;1.04;20190502;212157
             2;19SYK;Syksy 2019 - Kevät 2020;4571;05;20190812;20200614;CONTRACT
             3;4571;05;00;HSL;20190812;20200614;20190430;113855
@@ -28,141 +28,151 @@ class CsvReaderTest {
             6;12766047;1AACKT;H1236;;;;;0506;334.0;R;t
             6;12766047;1AACKT;H1236;;;;;0507;334.0;R;a
             6;12766047;1AURLA;H1237;;;;;0508;179.0;T;
-        """.trimIndent()
+            """.trimIndent()
 
-        val expectedApplicationRecord = ApplicationRecord(
-            "HASTUS",
-            "HSL",
-            1.04,
-            LocalDate.of(2019, 5, 2),
-            LocalTime.of(21, 21, 57)
-        )
+        val expectedApplicationRecord =
+            ApplicationRecord(
+                "HASTUS",
+                "HSL",
+                1.04,
+                LocalDate.of(2019, 5, 2),
+                LocalTime.of(21, 21, 57)
+            )
 
-        val expectedBookingRecord = BookingRecord(
-            "19SYK",
-            "Syksy 2019 - Kevät 2020",
-            "4571",
-            5,
-            LocalDate.of(2019, 8, 12),
-            LocalDate.of(2020, 6, 14),
-            "CONTRACT"
-        )
+        val expectedBookingRecord =
+            BookingRecord(
+                "19SYK",
+                "Syksy 2019 - Kevät 2020",
+                "4571",
+                5,
+                LocalDate.of(2019, 8, 12),
+                LocalDate.of(2020, 6, 14),
+                "CONTRACT"
+            )
 
-        val expectedVehicleScheduleRecord = VehicleScheduleRecord(
-            "4571",
-            5,
-            0,
-            "HSL",
-            LocalDate.of(2019, 8, 12),
-            LocalDate.of(2020, 6, 14),
-            LocalDate.of(2019, 4, 30),
-            LocalTime.of(11, 38, 55)
-        )
+        val expectedVehicleScheduleRecord =
+            VehicleScheduleRecord(
+                "4571",
+                5,
+                0,
+                "HSL",
+                LocalDate.of(2019, 8, 12),
+                LocalDate.of(2020, 6, 14),
+                LocalDate.of(2019, 4, 30),
+                LocalTime.of(11, 38, 55)
+            )
 
-        val expectedBlockRecord = BlockRecord(
-            "1462351",
-            "4571- 1",
-            1,
-            "4VARIS",
-            "1AURLA",
-            "4571",
-            3,
-            0,
-            0
-        )
+        val expectedBlockRecord =
+            BlockRecord(
+                "1462351",
+                "4571- 1",
+                1,
+                "4VARIS",
+                "1AURLA",
+                "4571",
+                3,
+                0,
+                0
+            )
 
-        val expectedTripRecord = TripRecord(
-            "CONTRACT",
-            "1462351",
-            "12766047",
-            "1595",
-            0,
-            "4571",
-            "4571",
-            "2",
-            "05:04",
-            "05:08",
-            10,
-            0,
-            4,
-            0.513,
-            "0",
-            "p",
-            "note2",
-            1,
-            2,
-            isVehicleTypeMandatory = false,
-            isBackupTrip = false,
-            isExtraTrip = false
-        )
+        val expectedTripRecord =
+            TripRecord(
+                "CONTRACT",
+                "1462351",
+                "12766047",
+                "1595",
+                0,
+                "4571",
+                "4571",
+                "2",
+                "05:04",
+                "05:08",
+                10,
+                0,
+                4,
+                0.513,
+                "0",
+                "p",
+                "note2",
+                1,
+                2,
+                isVehicleTypeMandatory = false,
+                isBackupTrip = false,
+                isExtraTrip = false
+            )
 
-        val expectedTripStopRecord1 = TripStopRecord(
-            "12766047",
-            "4VARIS",
-            "H1234",
-            "",
-            "",
-            "",
-            "",
-            "0504",
-            0.0,
-            "T",
-            ""
-        )
+        val expectedTripStopRecord1 =
+            TripStopRecord(
+                "12766047",
+                "4VARIS",
+                "H1234",
+                "",
+                "",
+                "",
+                "",
+                "0504",
+                0.0,
+                "T",
+                ""
+            )
 
-        val expectedTripStopRecord2 = TripStopRecord(
-            "12766047",
-            null,
-            "H1235",
-            "",
-            "",
-            "",
-            "",
-            "0505",
-            null,
-            "",
-            ""
-        )
+        val expectedTripStopRecord2 =
+            TripStopRecord(
+                "12766047",
+                null,
+                "H1235",
+                "",
+                "",
+                "",
+                "",
+                "0505",
+                null,
+                "",
+                ""
+            )
 
-        val expectedTripStopRecord3 = TripStopRecord(
-            "12766047",
-            "1AACKT",
-            "H1236",
-            "",
-            "",
-            "",
-            "",
-            "0506",
-            334.0,
-            "R",
-            "t"
-        )
-        val expectedTripStopRecord4 = TripStopRecord(
-            "12766047",
-            "1AACKT",
-            "H1236",
-            "",
-            "",
-            "",
-            "",
-            "0507",
-            334.0,
-            "R",
-            "a"
-        )
-        val expectedTripStopRecord5 = TripStopRecord(
-            "12766047",
-            "1AURLA",
-            "H1237",
-            "",
-            "",
-            "",
-            "",
-            "0508",
-            179.0,
-            "T",
-            ""
-        )
+        val expectedTripStopRecord3 =
+            TripStopRecord(
+                "12766047",
+                "1AACKT",
+                "H1236",
+                "",
+                "",
+                "",
+                "",
+                "0506",
+                334.0,
+                "R",
+                "t"
+            )
+        val expectedTripStopRecord4 =
+            TripStopRecord(
+                "12766047",
+                "1AACKT",
+                "H1236",
+                "",
+                "",
+                "",
+                "",
+                "0507",
+                334.0,
+                "R",
+                "a"
+            )
+        val expectedTripStopRecord5 =
+            TripStopRecord(
+                "12766047",
+                "1AURLA",
+                "H1237",
+                "",
+                "",
+                "",
+                "",
+                "0508",
+                179.0,
+                "T",
+                ""
+            )
 
         val csvReader = CsvReader(";")
 

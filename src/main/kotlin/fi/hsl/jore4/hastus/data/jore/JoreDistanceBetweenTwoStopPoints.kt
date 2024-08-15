@@ -15,11 +15,11 @@ data class JoreDistanceBetweenTwoStopPoints(
     val distance: Double
 ) {
     companion object {
-
-        fun from(distance: service_pattern_distance_between_stops_calculation) = JoreDistanceBetweenTwoStopPoints(
-            distance.start_stop_label,
-            distance.end_stop_label,
-            distance.distance_in_metres.toDouble() // transform decimal number from String format to Double
-        )
+        fun from(distance: service_pattern_distance_between_stops_calculation) =
+            JoreDistanceBetweenTwoStopPoints(
+                distance.start_stop_label,
+                distance.end_stop_label,
+                distance.distance_in_metres.toDouble() // transform decimal number from String format to Double
+            )
     }
 }

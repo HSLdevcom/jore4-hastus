@@ -19,7 +19,5 @@ data class RouteVariant(
     val routeIdAndVariantId: String,
     val routeId: String
 ) : IExportableItem {
-
-    override fun getFields(): List<Any> =
-        listOf(identifier, description, direction, reversible, routeIdAndVariantId, routeId)
+    override fun getFields(): List<Any> = listOf(identifier, description, direction, reversible, routeIdAndVariantId, routeId)
 }

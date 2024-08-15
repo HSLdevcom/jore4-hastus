@@ -43,45 +43,48 @@ data class JoreJourneyPatternRef(
         get() = RouteLabelAndDirection(routeUniqueLabel, routeDirection)
 
     companion object {
+        fun from(gql: get_journey_pattern_ref) =
+            JoreJourneyPatternRef(
+                journeyPatternRefId = gql.journey_pattern_ref_id,
+                journeyPatternId = gql.journey_pattern_id,
+                routeUniqueLabel = gql.route_label,
+                routeDirection = JoreRouteDirection.from(gql.route_direction),
+                routeValidityStart = gql.route_validity_start,
+                routeValidityEnd = gql.route_validity_end,
+                typeOfLine = gql.type_of_line,
+                snapshotTime = gql.snapshot_timestamp,
+                observationTime = gql.observation_timestamp,
+                stops =
+                    gql.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
+                        JoreJourneyPatternStopRef(
+                            id = stop.scheduled_stop_point_in_journey_pattern_ref_id,
+                            stopSequenceNumber = stop.scheduled_stop_point_sequence,
+                            stopLabel = stop.scheduled_stop_point_label,
+                            timingPlaceCode = stop.timing_place_label
+                        )
+                    }
+            )
 
-        fun from(gql: get_journey_pattern_ref) = JoreJourneyPatternRef(
-            journeyPatternRefId = gql.journey_pattern_ref_id,
-            journeyPatternId = gql.journey_pattern_id,
-            routeUniqueLabel = gql.route_label,
-            routeDirection = JoreRouteDirection.from(gql.route_direction),
-            routeValidityStart = gql.route_validity_start,
-            routeValidityEnd = gql.route_validity_end,
-            typeOfLine = gql.type_of_line,
-            snapshotTime = gql.snapshot_timestamp,
-            observationTime = gql.observation_timestamp,
-            stops = gql.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
-                JoreJourneyPatternStopRef(
-                    id = stop.scheduled_stop_point_in_journey_pattern_ref_id,
-                    stopSequenceNumber = stop.scheduled_stop_point_sequence,
-                    stopLabel = stop.scheduled_stop_point_label,
-                    timingPlaceCode = stop.timing_place_label
-                )
-            }
-        )
-
-        fun from(gql: insert_journey_pattern_ref) = JoreJourneyPatternRef(
-            journeyPatternRefId = gql.journey_pattern_ref_id,
-            journeyPatternId = gql.journey_pattern_id,
-            routeUniqueLabel = gql.route_label,
-            routeDirection = JoreRouteDirection.from(gql.route_direction),
-            routeValidityStart = gql.route_validity_start,
-            routeValidityEnd = gql.route_validity_end,
-            typeOfLine = gql.type_of_line,
-            snapshotTime = gql.snapshot_timestamp,
-            observationTime = gql.observation_timestamp,
-            stops = gql.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
-                JoreJourneyPatternStopRef(
-                    id = stop.scheduled_stop_point_in_journey_pattern_ref_id,
-                    stopSequenceNumber = stop.scheduled_stop_point_sequence,
-                    stopLabel = stop.scheduled_stop_point_label,
-                    timingPlaceCode = stop.timing_place_label
-                )
-            }
-        )
+        fun from(gql: insert_journey_pattern_ref) =
+            JoreJourneyPatternRef(
+                journeyPatternRefId = gql.journey_pattern_ref_id,
+                journeyPatternId = gql.journey_pattern_id,
+                routeUniqueLabel = gql.route_label,
+                routeDirection = JoreRouteDirection.from(gql.route_direction),
+                routeValidityStart = gql.route_validity_start,
+                routeValidityEnd = gql.route_validity_end,
+                typeOfLine = gql.type_of_line,
+                snapshotTime = gql.snapshot_timestamp,
+                observationTime = gql.observation_timestamp,
+                stops =
+                    gql.scheduled_stop_point_in_journey_pattern_refs.map { stop ->
+                        JoreJourneyPatternStopRef(
+                            id = stop.scheduled_stop_point_in_journey_pattern_ref_id,
+                            stopSequenceNumber = stop.scheduled_stop_point_sequence,
+                            stopLabel = stop.scheduled_stop_point_label,
+                            timingPlaceCode = stop.timing_place_label
+                        )
+                    }
+            )
     }
 }

@@ -25,7 +25,6 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 
 object ConversionsFromHastus {
-
     private val LOGGER = KotlinLogging.logger {}
 
     fun convertHastusDataToJore(
@@ -52,27 +51,30 @@ object ConversionsFromHastus {
             }
 
         // Collect the names for all included vehicle services.
-        val vehicleServiceNames: List<String> = hastusBlockIndex
-            .keys
-            .map { it.vehicleServiceName }
-            .distinct()
+        val vehicleServiceNames: List<String> =
+            hastusBlockIndex
+                .keys
+                .map { it.vehicleServiceName }
+                .distinct()
 
-        val dayTypeId: UUID = determineIdOfDayType(
-            hastusBookingRecord.startDate,
-            hastusBookingRecord.endDate,
-            hastusVehicleScheduleRecord.scheduleType,
-            dayTypeIndex
-        )
-
-        val vehicleServices: List<JoreVehicleService> = vehicleServiceNames.map { vehicleServiceName ->
-            mapToJoreVehicleService(
-                vehicleServiceName,
-                vehicleTypeIndex,
-                dayTypeId,
-                hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
-                journeyPatternRefIndex
+        val dayTypeId: UUID =
+            determineIdOfDayType(
+                hastusBookingRecord.startDate,
+                hastusBookingRecord.endDate,
+                hastusVehicleScheduleRecord.scheduleType,
+                dayTypeIndex
             )
-        }
+
+        val vehicleServices: List<JoreVehicleService> =
+            vehicleServiceNames.map { vehicleServiceName ->
+                mapToJoreVehicleService(
+                    vehicleServiceName,
+                    vehicleTypeIndex,
+                    dayTypeId,
+                    hastusBlockIndex.filter { block -> block.key.vehicleServiceName == vehicleServiceName },
+                    journeyPatternRefIndex
+                )
+            }
 
         return JoreVehicleScheduleFrame(
             hastusBookingRecord.name,
@@ -92,31 +94,32 @@ object ConversionsFromHastus {
         day: Int,
         dayTypeIndex: Map<String, UUID>
     ): UUID {
-        val key = if (hastusBookingRecordStartDate == hastusBookingRecordEndDate) {
-            when (hastusBookingRecordStartDate.dayOfWeek) {
-                DayOfWeek.MONDAY -> "MA"
-                DayOfWeek.TUESDAY -> "TI"
-                DayOfWeek.WEDNESDAY -> "KE"
-                DayOfWeek.THURSDAY -> "TO"
-                DayOfWeek.FRIDAY -> "PE"
-                DayOfWeek.SATURDAY -> "LA"
-                DayOfWeek.SUNDAY -> "SU"
-                else -> throw IllegalStateException("StartDate had a null day of week")
+        val key =
+            if (hastusBookingRecordStartDate == hastusBookingRecordEndDate) {
+                when (hastusBookingRecordStartDate.dayOfWeek) {
+                    DayOfWeek.MONDAY -> "MA"
+                    DayOfWeek.TUESDAY -> "TI"
+                    DayOfWeek.WEDNESDAY -> "KE"
+                    DayOfWeek.THURSDAY -> "TO"
+                    DayOfWeek.FRIDAY -> "PE"
+                    DayOfWeek.SATURDAY -> "LA"
+                    DayOfWeek.SUNDAY -> "SU"
+                    else -> throw IllegalStateException("StartDate had a null day of week")
+                }
+            } else {
+                when (day) {
+                    0 -> "MP"
+                    25 -> "MT"
+                    13 -> "MA"
+                    14 -> "TI"
+                    11 -> "KE"
+                    3 -> "TO"
+                    4 -> "PE"
+                    5 -> "LA"
+                    6 -> "SU"
+                    else -> ""
+                }
             }
-        } else {
-            when (day) {
-                0 -> "MP"
-                25 -> "MT"
-                13 -> "MA"
-                14 -> "TI"
-                11 -> "KE"
-                3 -> "TO"
-                4 -> "PE"
-                5 -> "LA"
-                6 -> "SU"
-                else -> ""
-            }
-        }
 
         if (!dayTypeIndex.containsKey(key)) {
             throw IllegalArgumentException("Unknown schedule type $day when converting to Jore day type")
@@ -173,37 +176,39 @@ object ConversionsFromHastus {
         val routeLabelAndDirection: RouteLabelAndDirection = extractRouteLabelAndDirection(hastusTrip)
         val hastusStopLabels = hastusStops.map { it.stopId }.distinct()
 
-        val journeyPatternRef: JoreJourneyPatternRef = journeyPatternRefIndex[routeLabelAndDirection]
-            ?: run {
-                // Should never happen during application runtime because journeyPatternRefIndex is
-                // expected to be complete at this point. Possible failures should have occurred
-                // earlier in the processing chain. Hence, logging as an error.
-                val exception =
-                    CannotFindJourneyPatternRefByRouteLabelAndDirectionException(listOf(routeLabelAndDirection))
-                LOGGER.error(exception.message)
-                throw exception
-            }
-
-        val journeyPatternStopRefsIndexedByLabel: Map<String, JoreJourneyPatternStopRef> = journeyPatternRef
-            .stops
-            .associateBy { it.stopLabel }
-            .also { resultMap: Map<String, JoreJourneyPatternStopRef> ->
-
-                val stopLabelsExtractedFromJourneyPatternStopRefs: Set<String> = resultMap.keys
-
-                if (!stopLabelsExtractedFromJourneyPatternStopRefs.containsAll(hastusStopLabels)) {
-                    // Should never happen during application runtime because journeyPatternStopRefs
-                    // are expected to be complete at this point. The failure should have occurred
-                    // in the earlier stages of the processing chain. Hence, logging as an error.
-                    val unknownStopLabels = hastusStopLabels.subtract(stopLabelsExtractedFromJourneyPatternStopRefs)
-                    val errorMessage =
-                        "Hastus trip '$routeLabelAndDirection' contains unknown stop points along the route: ${
-                            unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
-                        }"
-                    LOGGER.error(errorMessage)
-                    throw ErrorWhileProcessingHastusDataException(errorMessage)
+        val journeyPatternRef: JoreJourneyPatternRef =
+            journeyPatternRefIndex[routeLabelAndDirection]
+                ?: run {
+                    // Should never happen during application runtime because journeyPatternRefIndex is
+                    // expected to be complete at this point. Possible failures should have occurred
+                    // earlier in the processing chain. Hence, logging as an error.
+                    val exception =
+                        CannotFindJourneyPatternRefByRouteLabelAndDirectionException(listOf(routeLabelAndDirection))
+                    LOGGER.error(exception.message)
+                    throw exception
                 }
-            }
+
+        val journeyPatternStopRefsIndexedByLabel: Map<String, JoreJourneyPatternStopRef> =
+            journeyPatternRef
+                .stops
+                .associateBy { it.stopLabel }
+                .also { resultMap: Map<String, JoreJourneyPatternStopRef> ->
+
+                    val stopLabelsExtractedFromJourneyPatternStopRefs: Set<String> = resultMap.keys
+
+                    if (!stopLabelsExtractedFromJourneyPatternStopRefs.containsAll(hastusStopLabels)) {
+                        // Should never happen during application runtime because journeyPatternStopRefs
+                        // are expected to be complete at this point. The failure should have occurred
+                        // in the earlier stages of the processing chain. Hence, logging as an error.
+                        val unknownStopLabels = hastusStopLabels.subtract(stopLabelsExtractedFromJourneyPatternStopRefs)
+                        val errorMessage =
+                            "Hastus trip '$routeLabelAndDirection' contains unknown stop points along the route: ${
+                                unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
+                            }"
+                        LOGGER.error(errorMessage)
+                        throw ErrorWhileProcessingHastusDataException(errorMessage)
+                    }
+                }
 
         val journeyPatternRefId = journeyPatternRef.journeyPatternRefId
 
@@ -230,11 +235,12 @@ object ConversionsFromHastus {
         )
     }
 
-    private fun mapJourneyType(type: Int) = when (type) {
-        1, 2 -> JoreJourneyType.SERVICE_JOURNEY
-        3 -> JoreJourneyType.DRY_RUN
-        else -> JoreJourneyType.STANDARD
-    }
+    private fun mapJourneyType(type: Int) =
+        when (type) {
+            1, 2 -> JoreJourneyType.SERVICE_JOURNEY
+            3 -> JoreJourneyType.DRY_RUN
+            else -> JoreJourneyType.STANDARD
+        }
 
     private fun mapToJorePassingTimes(
         hastusStop: List<TripStopRecord>,
@@ -244,19 +250,21 @@ object ConversionsFromHastus {
     ): JorePassingTime {
         val passingDefinition = getTime(hastusStop.firstOrNull { it.note == "" }?.passingTime)
 
-        val arrivalDefinition = if (isFirstStop) {
-            null
-        } else {
-            getTime(hastusStop.firstOrNull { it.note == "t" }?.passingTime)
-                ?: passingDefinition // Stops with note 't' are arrival times
-        }
+        val arrivalDefinition =
+            if (isFirstStop) {
+                null
+            } else {
+                getTime(hastusStop.firstOrNull { it.note == "t" }?.passingTime)
+                    ?: passingDefinition // Stops with note 't' are arrival times
+            }
 
-        val departureDefinition = if (isLastStop) {
-            null
-        } else {
-            getTime(hastusStop.firstOrNull { it.note == "a" }?.passingTime)
-                ?: passingDefinition // Stops with note 'a' are departure times
-        }
+        val departureDefinition =
+            if (isLastStop) {
+                null
+            } else {
+                getTime(hastusStop.firstOrNull { it.note == "a" }?.passingTime)
+                    ?: passingDefinition // Stops with note 'a' are departure times
+            }
 
         return JorePassingTime(
             journeyPatternStopRefId,
@@ -327,8 +335,9 @@ object ConversionsFromHastus {
         }
     }
 
-    fun extractRouteLabelAndDirection(trip: TripRecord) = RouteLabelAndDirection(
-        extractRouteLabel(trip),
-        extractRouteDirection(trip)
-    )
+    fun extractRouteLabelAndDirection(trip: TripRecord) =
+        RouteLabelAndDirection(
+            extractRouteLabel(trip),
+            extractRouteDirection(trip)
+        )
 }

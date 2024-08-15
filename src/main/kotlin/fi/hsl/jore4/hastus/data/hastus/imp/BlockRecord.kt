@@ -25,7 +25,6 @@ data class BlockRecord(
     val prepInTime: Int,
     val vehicleType: Int
 ) : ImportableItem() {
-
     constructor(elements: List<String>) : this(
         internalNumber = elements[1],
         vehicleServiceName = elements[2],

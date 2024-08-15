@@ -30,17 +30,17 @@ data class Stop(
     val longitude: NumberWithAccuracy,
     val shortIdentifier: String
 ) : IExportableItem {
-
-    override fun getFields(): List<Any> = listOf(
-        identifier,
-        platform,
-        descriptionFinnish,
-        descriptionSwedish,
-        streetFinnish,
-        streetSwedish,
-        place ?: "",
-        latitude,
-        longitude,
-        shortIdentifier
-    )
+    override fun getFields(): List<Any> =
+        listOf(
+            identifier,
+            platform,
+            descriptionFinnish,
+            descriptionSwedish,
+            streetFinnish,
+            streetSwedish,
+            place ?: "",
+            latitude,
+            longitude,
+            shortIdentifier
+        )
 }
