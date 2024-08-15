@@ -11,14 +11,16 @@ import fi.hsl.jore4.hastus.graphql.GraphQLService
 import fi.hsl.jore4.hastus.graphql.GraphQLServiceFactory
 import fi.hsl.jore4.hastus.util.CollectionUtil.filterOutConsecutiveDuplicates
 import fi.hsl.jore4.hastus.util.CsvReader
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 private val LOGGER = KotlinLogging.logger {}
 
 @Service
-class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
+class ImportService(
+    private val graphQLServiceFactory: GraphQLServiceFactory
+) {
     fun importTimetablesFromCsv(
         csv: String,
         hasuraHeaders: Map<String, String>
@@ -170,8 +172,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                                 // picked.
                                 it.snapshotTime
                             }
-                        )
-                        .first()
+                        ).first()
 
                 results[hastusRouteLabelAndDirection] = bestJourneyPatternRefMatch
             }
@@ -205,8 +206,7 @@ class ImportService(private val graphQLServiceFactory: GraphQLServiceFactory) {
                     .filter { trip ->
                         // Null direction denotes a dead run which is not imported to Jore4.
                         trip.direction == null
-                    }
-                    .map {
+                    }.map {
                         it.tripInternalNumber.also {
                             LOGGER.info {
                                 "Found a dead run trip with internal number $it. " +

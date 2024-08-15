@@ -7,7 +7,7 @@ import fi.hsl.jore4.hastus.test.IntTest
 import fi.hsl.jore4.hastus.test.TimetablesDataInserterRunner
 import fi.hsl.jore4.hastus.test.TimetablesDataset
 import fi.hsl.jore4.hastus.test.getNested
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
