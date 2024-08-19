@@ -183,7 +183,7 @@ object ConversionsFromHastus {
                     // earlier in the processing chain. Hence, logging as an error.
                     val exception =
                         CannotFindJourneyPatternRefByRouteLabelAndDirectionException(listOf(routeLabelAndDirection))
-                    LOGGER.error(exception.message)
+                    LOGGER.error { exception.message }
                     throw exception
                 }
 
@@ -204,7 +204,7 @@ object ConversionsFromHastus {
                             "Hastus trip '$routeLabelAndDirection' contains unknown stop points along the route: ${
                                 unknownStopLabels.joinToString(prefix = "'", separator = ",", postfix = "'")
                             }"
-                        LOGGER.error(errorMessage)
+                        LOGGER.error { errorMessage }
                         throw ErrorWhileProcessingHastusDataException(errorMessage)
                     }
                 }
