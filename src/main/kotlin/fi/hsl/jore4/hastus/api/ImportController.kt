@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.util.UUID
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
 private val LOGGER = KotlinLogging.logger {}
 
-@OptIn(ExperimentalTime::class)
 @RestController
 @RequestMapping("import")
 class ImportController(
@@ -40,7 +38,7 @@ class ImportController(
     ): ImportTimetablesSuccessResult {
         val (nullableVehicleScheduleFrameId, elapsed) =
             measureTimedValue {
-                LOGGER.info("Starting to import timetables from CSV file...")
+                LOGGER.info { "Starting to import timetables from CSV file..." }
 
                 val hasuraHeaders = HeaderUtils.filterInHasuraHeaders(headers)
 
@@ -49,7 +47,7 @@ class ImportController(
                     .also { nullableUuid ->
                         if (nullableUuid == null) {
                             // Should never happen, but record log event if it actually does.
-                            LOGGER.warn("CSV import did not result in vehicle schedule frame")
+                            LOGGER.warn { "CSV import did not result in vehicle schedule frame" }
                         }
                     }
             }
@@ -70,7 +68,7 @@ class ImportController(
 
             else -> {
                 LOGGER.error { "Exception during import request:$ex" }
-                LOGGER.error(ex.stackTraceToString())
+                LOGGER.error { ex.stackTraceToString() }
 
                 ResponseEntity
                     .internalServerError()

@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDate
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
 
 private val LOGGER = KotlinLogging.logger {}
 
-@OptIn(ExperimentalTime::class)
 @RestController
 @RequestMapping("export/")
 class ExportController(
@@ -72,7 +70,7 @@ class ExportController(
 
             else -> {
                 LOGGER.error { "Exception during export request:$ex" }
-                LOGGER.error(ex.stackTraceToString())
+                LOGGER.error { ex.stackTraceToString() }
 
                 ResponseEntity
                     .internalServerError()

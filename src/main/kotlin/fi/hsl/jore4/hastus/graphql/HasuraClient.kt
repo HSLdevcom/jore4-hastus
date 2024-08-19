@@ -85,7 +85,7 @@ class HasuraClient(
                             }?.message
 
                     if (authenticationFailedMessage != null) {
-                        LOGGER.warn("Authentication failed for GraphQL request")
+                        LOGGER.warn { "Authentication failed for GraphQL request" }
                         throw GraphQLAuthenticationFailedException(authenticationFailedMessage)
                     } else {
                         LOGGER.warn { "Got errors in GraphQL response: $errorList" }

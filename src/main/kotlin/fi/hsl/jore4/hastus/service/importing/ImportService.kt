@@ -102,7 +102,7 @@ class ImportService(
                         ?: run {
                             val errorMessage =
                                 "No trip stop records found for Hastus trip: $hastusRouteLabelAndDirection"
-                            LOGGER.warn(errorMessage)
+                            LOGGER.warn { errorMessage }
                             throw InvalidHastusDataException(errorMessage)
                         }
 
@@ -136,7 +136,7 @@ class ImportService(
                             hastusRouteLabelAndDirection,
                             hastusStopPointLabels
                         )
-                    LOGGER.warn(exception.reason)
+                    LOGGER.warn { exception.reason }
                     throw exception
                 }
 
@@ -155,7 +155,7 @@ class ImportService(
                             hastusStopPointLabels,
                             hastusPlaceLabels
                         )
-                    LOGGER.warn(exception.reason)
+                    LOGGER.warn { exception.reason }
                     throw exception
                 }
 
@@ -194,7 +194,7 @@ class ImportService(
                     CannotFindJourneyPatternRefByRouteLabelAndDirectionException(
                         missingRouteLabelsAndDirections
                     )
-                LOGGER.warn(exception.reason)
+                LOGGER.warn { exception.reason }
                 throw exception
             }
         }

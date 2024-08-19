@@ -24,7 +24,7 @@ class CsvReader(
             "5" -> TripRecord(values)
             "6" -> TripStopRecord(values)
             else -> {
-                LOGGER.info("CSV parser ignored line $line")
+                LOGGER.info { "CSV parser ignored line $line" }
                 null
             }
         }
