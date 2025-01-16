@@ -1,0 +1,22 @@
+services:
+  jore4-testdb-test:
+    extends:
+      file: docker-compose.base.yml
+      service: jore4-testdb-base
+    container_name: "testdb-test"
+    ports:
+      - "127.0.0.1:6433:5432"
+
+  jore4-hasura-test:
+    extends:
+      file: docker-compose.base.yml
+      service: jore4-hasura-base
+    container_name: "hasura-test"
+    ports:
+      - "127.0.0.1:3202:8080"
+    environment:
+      - SKIP_SET_VARIABLE_SECRET_OVERRIDE=true
+      - DB_HOSTNAME=jore4-testdb-test
+    depends_on:
+      jore4-testdb-test:
+        condition: service_healthy
