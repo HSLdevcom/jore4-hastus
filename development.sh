@@ -6,45 +6,17 @@ set -euo pipefail
 WD=$(dirname "$0")
 cd "${WD}"
 
-DOCKER_COMPOSE_CMD="docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
+# Define a Docker Compose project name to distinguish the Docker environment of
+# this project from others.
+export COMPOSE_PROJECT_NAME=jore4-hastus
 
-# utility to manipulate YAML files
-exec_yq() {
-  # Run yq locally if it exists in the path; otherwise, run yq in Docker
-  # container.
-  if ! command -v yq &> /dev/null
-  then
-    docker run --rm -v "${WD}/docker":/docker -w / mikefarah/yq -i -e "$@"
-  else
-    yq -i -e "$@"
-  fi
-}
+DOCKER_COMPOSE_CMD="docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
 
 download_docker_compose_bundle() {
   # based on https://github.com/HSLdevcom/jore4-tools#download-docker-bundlesh
 
   echo "Downloading latest version of E2E docker-compose package..."
   curl https://raw.githubusercontent.com/HSLdevcom/jore4-tools/main/docker/download-docker-bundle.sh | bash
-
-  # Remove port number for database service definition because the port number
-  # is overridden in the custom configuration and we don't want to bind two
-  # ports (as this is multi-valued property in docker-compose).
-  echo "Removing database port number from docker-compose base file..."
-  exec_yq 'del(.services.jore4-testdb.ports)' ./docker/docker-compose.yml
-
-  # Remove port number for Hasura service definition because the port number
-  # is overridden in the custom configuration and we don't want to bind two
-  # ports (as this is multi-valued property in docker-compose).
-  echo "Removing Hasura port number from docker-compose base file..."
-  exec_yq 'del(.services.jore4-hasura.ports)' ./docker/docker-compose.yml
-
-  # Remove database hostname for Hasura service definition because the hostname
-  # is overridden in the custom configuration and we don't want to bind two
-  # values (as this is multi-valued property in docker-compose).
-  echo "Removing Hasura hostname from docker-compose base file..."
-  exec_yq 'del(.services.jore4-hasura.secrets.[] | select(.source == "hasura-db-hostname"))' ./docker/docker-compose.yml
-
-  echo "Finished removing properties to be overridden from docker-compose base file."
 }
 
 prepare_timetables_data_inserter() {
@@ -82,20 +54,20 @@ ensure_hasura_submodule_initialized() {
 # jore4-hasura-test - Hasura instance used in the integration tests to run db migrations to the Jore 4 database.
 
 start_all() {
-  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
+  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
 }
 
 start_deps() {
-  $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
+  $DOCKER_COMPOSE_CMD -f ./docker/docker-compose.test.yml up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test
 }
 
 stop_all() {
-  $DOCKER_COMPOSE_CMD stop
+  docker compose --project-name "$COMPOSE_PROJECT_NAME" stop
 }
 
 remove_all() {
-  $DOCKER_COMPOSE_CMD down
+  docker compose --project-name "$COMPOSE_PROJECT_NAME" down
 }
 
 build() {
