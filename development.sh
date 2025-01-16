@@ -114,31 +114,32 @@ run_tests() {
 
 print_usage() {
   echo "
-  Usage $0 <command>
+  Usage: $(basename "$0") <command>
 
   build
-    Build the Hastus service locally
+    Build the Hastus service locally.
 
   build:data-inserter
-    Build the Data-Inserter for integration tests (Git submodule)
+    Build the Data-Inserter for integration tests (Git submodule).
 
   start
-    Start Hastus service in Docker container
+    Start Hastus service in Docker container.
 
   start:deps
-    Start only the Docker containers that are dependencies of the Hastus service
+    Start only the Docker containers that are dependencies of the Hastus
+    service.
 
   stop
-    Stop all Docker containers
+    Stop all Docker containers.
 
   remove
-    Stop and remove all Docker containers
+    Stop and remove all Docker containers.
 
   test
-    Run tests locally
+    Run tests locally.
 
   help
-    Show this usage information
+    Show this usage information.
   "
 }
 
