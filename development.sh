@@ -82,25 +82,19 @@ ensure_hasura_submodule_initialized() {
 # jore4-hasura-test - Hasura instance used in the integration tests to run db migrations to the Jore 4 database.
 
 start_all() {
-  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
-  prepare_timetables_data_inserter
 }
 
 start_deps() {
-  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
-  prepare_timetables_data_inserter
 }
 
 stop_all() {
-  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD stop
 }
 
 remove_all() {
-  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD down
 }
 
@@ -143,44 +137,54 @@ print_usage() {
   "
 }
 
-if [[ -z ${1} ]]; then
+COMMAND=${1:-}
+
+if [[ -z $COMMAND ]]; then
   print_usage
-else
-  case $1 in
-  build)
-    build
-    ;;
-
-  build:data-inserter)
-    prepare_timetables_data_inserter
-    ;;
-
-  start)
-    start_all
-    ;;
-
-  start:deps)
-    start_deps
-    ;;
-
-  stop)
-    stop_all
-    ;;
-
-  remove)
-    remove_all
-    ;;
-
-  test)
-    run_tests
-    ;;
-
-  help)
-    print_usage
-    ;;
-
-  *)
-    print_usage
-    ;;
-  esac
+  exit 1
 fi
+
+case $COMMAND in
+build)
+  build
+  ;;
+
+build:data-inserter)
+  prepare_timetables_data_inserter
+  ;;
+
+start)
+  download_docker_compose_bundle
+  start_all
+  prepare_timetables_data_inserter
+  ;;
+
+start:deps)
+  download_docker_compose_bundle
+  start_deps
+  prepare_timetables_data_inserter
+  ;;
+
+stop)
+  stop_all
+  ;;
+
+remove)
+  remove_all
+  ;;
+
+test)
+  run_tests
+  ;;
+
+help)
+  print_usage
+  ;;
+
+*)
+  echo ""
+  echo "Unknown command: '${COMMAND}'"
+  print_usage
+  exit 1
+  ;;
+esac
