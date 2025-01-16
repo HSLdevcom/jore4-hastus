@@ -1,49 +1,33 @@
----
-version: "3.8"
 services:
   # build and run the local image instead
   # note: it's currently expose on port 3008
   jore4-hastus:
-    container_name: "hastus-processor"
     build:
       context: ".."
+      network: host
+    ports:
+      - "127.0.0.1:3008:8080"
+    networks:
+      - jore4
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      SECRET_STORE_BASE_PATH: "/mnt/secrets-store"
 
-  jore4-testdb-test:
-    container_name: "database-test"
+  jore4-testdb:
     extends:
+      file: docker-compose.base.yml
       service: jore4-testdb-base
-      file: docker-compose.base.yml
-    image: "${TESTDB_DOCKER_IMAGE}"
+    container_name: "testdb"
     ports:
-      - "127.0.0.1:6433:5432"
+      - "127.0.0.1:6432:5432"
 
-  jore4-tiamat-test:
-    container_name: "tiamat-test"
-    extends:
-      service: jore4-tiamat-base
-      file: docker-compose.base.yml
-    image: "${TIAMAT_DOCKER_IMAGE}"
-    environment:
-      - TIAMAT_DB_URL=jdbc:postgresql://jore4-testdb-test:5432/stopdb?stringtype=unspecified
-    depends_on:
-      jore4-testdb-test:
-        condition: service_healthy
-
-  jore4-hasura-test:
-    container_name: "hasura-test"
-    image: "${HASURA_DOCKER_IMAGE}"
-    extends:
-      service: jore4-hasura-base
-      file: docker-compose.base.yml
+  jore4-hasura:
+    container_name: "hasura"
     ports:
-      - "127.0.0.1:3202:8080"
+      - "127.0.0.1:3201:8080"
+    # Waiting for database to be ready to avoid startup delay due to hasura crashing at startup if db is offline
+    # Note: this should only be done in development setups as Kubernetes does not allow waiting for services to be ready
     depends_on:
-      jore4-testdb-test:
+      jore4-testdb:
         condition: service_healthy
-      jore4-tiamat-test:
-        condition: service_healthy
-    environment:
-      - DB_HOSTNAME=jore4-testdb-test
-      - SKIP_SET_VARIABLE_SECRET_OVERRIDE=true
-      - TIAMAT_HOSTNAME=jore4-tiamat-test
-      - TIMETABLESAPI_HOSTNAME=jore4-timetablesapi
