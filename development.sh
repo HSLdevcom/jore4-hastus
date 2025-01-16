@@ -23,7 +23,7 @@ function exec_yq() {
   fi
 }
 
-function download_docker_bundle {
+function download_docker_compose_bundle {
   # based on https://github.com/HSLdevcom/jore4-tools#download-docker-bundlesh
 
   echo "Downloading latest version of E2E docker-compose package..."
@@ -85,25 +85,25 @@ ensure_hasura_submodule_initialized() {
 # jore4-hasura-test - Hasura instance used in the integration tests to run db migrations to the Jore 4 database.
 
 function start_all {
-  download_docker_bundle
+  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
   prepare_timetables_data_inserter
 }
 
 function start_deps {
-  download_docker_bundle
+  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   prepare_timetables_data_inserter
 }
 
 function stop_all {
-  download_docker_bundle
+  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD stop
 }
 
 function remove_all {
-  download_docker_bundle
+  download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD down
 }
 
@@ -115,7 +115,7 @@ function run_tests {
   mvn test
 }
 
-function usage {
+function print_usage {
   echo "
   Usage $0 <command>
 
@@ -146,7 +146,7 @@ function usage {
 }
 
 if [[ -z ${1} ]]; then
-  usage
+  print_usage
 else
   case $1 in
   build)
@@ -178,11 +178,11 @@ else
     ;;
 
   help)
-    usage
+    print_usage
     ;;
 
   *)
-    usage
+    print_usage
     ;;
   esac
 fi
