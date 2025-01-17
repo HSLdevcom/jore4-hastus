@@ -114,7 +114,7 @@ ensure_hasura_submodule_initialized() {
   fi
 
   echo "jore4-hasura submodule: updating..."
-  git submodule update
+  git submodule update --remote
   echo "jore4-hasura submodule up to date."
 }
 
