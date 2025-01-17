@@ -12,7 +12,7 @@ mkdir -p ./docker
 DOCKER_COMPOSE_CMD="docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose.custom.yml"
 
 # utility to manipulate YAML files
-function exec_yq() {
+exec_yq() {
   # Run yq locally if it exists in the path; otherwise, run yq in Docker
   # container.
   if ! command -v yq &> /dev/null
@@ -23,7 +23,7 @@ function exec_yq() {
   fi
 }
 
-function download_docker_compose_bundle {
+download_docker_compose_bundle() {
   # based on https://github.com/HSLdevcom/jore4-tools#download-docker-bundlesh
 
   echo "Downloading latest version of E2E docker-compose package..."
@@ -84,38 +84,38 @@ ensure_hasura_submodule_initialized() {
 # jore4-hasura - Hasura. We have to start Hasura because it ensures that db migrations are run to the Jore 4 database.
 # jore4-hasura-test - Hasura instance used in the integration tests to run db migrations to the Jore 4 database.
 
-function start_all {
+start_all() {
   download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   $DOCKER_COMPOSE_CMD up --build -d jore4-hastus
   prepare_timetables_data_inserter
 }
 
-function start_deps {
+start_deps() {
   download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD up -d jore4-testdb jore4-hasura jore4-testdb-test jore4-hasura-test jore4-tiamat jore4-tiamat-test
   prepare_timetables_data_inserter
 }
 
-function stop_all {
+stop_all() {
   download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD stop
 }
 
-function remove_all {
+remove_all() {
   download_docker_compose_bundle
   $DOCKER_COMPOSE_CMD down
 }
 
-function build {
+build() {
   mvn install
 }
 
-function run_tests {
+run_tests() {
   mvn test
 }
 
-function print_usage {
+print_usage() {
   echo "
   Usage $0 <command>
 
