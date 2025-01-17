@@ -28,7 +28,7 @@ jobs:
           java-package: jdk
           architecture: x64
           distribution: temurin
-          cahce: maven
+          cache: maven
 
       - name: Run tests and try building a package
         run: |
