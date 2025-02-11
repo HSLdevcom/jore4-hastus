@@ -29,15 +29,15 @@
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <build-helper-plugin.version>3.6.0</build-helper-plugin.version>
         <build-properties-plugin.version>1.2.1</build-properties-plugin.version>
-        <surefire-plugin.version>3.3.1</surefire-plugin.version>
-        <ktlint-plugin.version>3.2.0</ktlint-plugin.version>
+        <surefire-plugin.version>3.5.2</surefire-plugin.version>
+        <ktlint-plugin.version>3.5.0</ktlint-plugin.version>
 
         <!-- Library versions -->
-        <kotlin-logging-jvm.version>7.0.0</kotlin-logging-jvm.version>
+        <kotlin-logging-jvm.version>7.0.4</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
-        <graphql-kotlin.version>7.1.4</graphql-kotlin.version>
-        <ktor.version>2.3.12</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
-        <mockk.version>1.13.12</mockk.version>
+        <graphql-kotlin.version>8.3.0</graphql-kotlin.version>
+        <ktor.version>3.1.0</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
+        <mockk.version>1.13.16</mockk.version>
         <springmockk.version>4.0.2</springmockk.version>
 
         <!-- Other properties -->
