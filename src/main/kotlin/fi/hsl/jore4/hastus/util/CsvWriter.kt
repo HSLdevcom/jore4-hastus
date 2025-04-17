@@ -24,17 +24,14 @@ class CsvWriter(
         decimalFormat.isGroupingUsed = false
     }
 
-    fun transformToCsv(data: List<IExportableItem>): String {
-        return data.joinToString(System.lineSeparator()) { transformToCsvLine(it) }
-    }
+    fun transformToCsv(data: List<IExportableItem>): String = data.joinToString(System.lineSeparator()) { transformToCsvLine(it) }
 
-    fun transformToCsvLine(data: IExportableItem): String {
-        return (listOf(hastusFieldName(data)) + data.getFields())
+    fun transformToCsvLine(data: IExportableItem): String =
+        (listOf(hastusFieldName(data)) + data.getFields())
             .joinToString(separator = separator, transform = { safeStringTransform(it) })
-    }
 
-    private fun hastusFieldName(data: IExportableItem): String {
-        return when (data) {
+    private fun hastusFieldName(data: IExportableItem): String =
+        when (data) {
             is Place -> "place"
             is Route -> "route"
             is RouteVariant -> "rvariant"
@@ -42,7 +39,6 @@ class CsvWriter(
             is Stop -> "stop"
             is StopDistance -> "stpdist"
         }
-    }
 
     // Use pre specified decimal point
     private fun safeNumberTransform(number: Number): String {
@@ -50,9 +46,7 @@ class CsvWriter(
         return decimalFormat.format(number)
     }
 
-    private fun booleanTransform(value: Boolean): String {
-        return if (value) "1" else "0"
-    }
+    private fun booleanTransform(value: Boolean): String = if (value) "1" else "0"
 
     private fun formattedNumberTransform(number: NumberWithAccuracy): String {
         decimalFormat.applyLocalizedPattern(number.getPattern())
@@ -60,12 +54,11 @@ class CsvWriter(
     }
 
     // Remove all separators from strings which would break the CSV
-    private fun safeStringTransform(item: Any): String {
-        return when (item) {
+    private fun safeStringTransform(item: Any): String =
+        when (item) {
             is Boolean -> booleanTransform(item)
             is Number -> safeNumberTransform(item)
             is NumberWithAccuracy -> formattedNumberTransform(item)
             else -> item.toString().replace(separator, "")
         }
-    }
 }

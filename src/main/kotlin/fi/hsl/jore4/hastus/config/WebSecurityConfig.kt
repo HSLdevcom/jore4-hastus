@@ -13,8 +13,8 @@ import org.springframework.security.web.SecurityFilterChain
 class WebSecurityConfig {
     @Bean
     @Throws(Exception::class)
-    fun configure(httpSecurity: HttpSecurity): SecurityFilterChain {
-        return httpSecurity
+    fun configure(httpSecurity: HttpSecurity): SecurityFilterChain =
+        httpSecurity
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.NEVER) }
             .csrf { it.disable() }
             .cors {}
@@ -32,8 +32,7 @@ class WebSecurityConfig {
                         "/export/routes"
                     ).permitAll()
                     // other
-                    .anyRequest().denyAll()
-            }
-            .build()
-    }
+                    .anyRequest()
+                    .denyAll()
+            }.build()
 }

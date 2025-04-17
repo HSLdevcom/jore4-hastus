@@ -46,8 +46,8 @@ object ConversionsToHastus {
     private fun convertJoreRoutesToHastusRouteVariants(
         joreRoutes: List<JoreRoute>,
         joreLineLabel: String
-    ): List<IExportableItem> {
-        return joreRoutes.flatMap { joreRoute ->
+    ): List<IExportableItem> =
+        joreRoutes.flatMap { joreRoute ->
             val hastusRouteVariant = convertJoreRouteToHastusRouteVariant(joreRoute, joreLineLabel)
 
             val hastusRouteVariantPoints: List<RouteVariantPoint> =
@@ -58,7 +58,6 @@ object ConversionsToHastus {
 
             listOf(hastusRouteVariant) + hastusRouteVariantPoints
         }
-    }
 
     internal fun convertJoreRouteToHastusRouteVariant(
         joreRoute: JoreRoute,
@@ -95,10 +94,9 @@ object ConversionsToHastus {
         return "$majorVariant$minorVariant$routeDirection"
     }
 
-    private fun getRouteDirectionAsNumberOrThrow(routeDirection: JoreRouteDirection): Int {
-        return routeDirection.wellKnownNumber
+    private fun getRouteDirectionAsNumberOrThrow(routeDirection: JoreRouteDirection): Int =
+        routeDirection.wellKnownNumber
             ?: throw IllegalArgumentException("Cannot convert Jore4 route direction to Hastus: $routeDirection")
-    }
 
     private fun convertJoreStopPointsInJourneyPatternToHastusRouteVariantPoints(
         joreStopPointsInJourneyPattern: List<JoreStopPointInJourneyPattern>,
@@ -169,22 +167,20 @@ object ConversionsToHastus {
         )
     }
 
-    fun convertJoreTimingPlacesToHastus(joreTimingPlaces: List<JoreTimingPlace>): List<Place> {
-        return joreTimingPlaces.map {
+    fun convertJoreTimingPlacesToHastus(joreTimingPlaces: List<JoreTimingPlace>): List<Place> =
+        joreTimingPlaces.map {
             Place(
                 identifier = it.label,
                 description = it.description
             )
         }
-    }
 
-    fun convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> {
-        return distancesBetweenStopPoints.map {
+    fun convertDistancesBetweenStopPointsToHastus(distancesBetweenStopPoints: List<JoreDistanceBetweenTwoStopPoints>): List<StopDistance> =
+        distancesBetweenStopPoints.map {
             StopDistance(
                 stopStart = it.startLabel,
                 stopEnd = it.endLabel,
                 editedDistance = it.distance.toInt()
             )
         }
-    }
 }

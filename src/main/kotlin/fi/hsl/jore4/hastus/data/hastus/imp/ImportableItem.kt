@@ -21,14 +21,10 @@ sealed class ImportableItem {
         protected fun timeFormatter(): DateTimeFormatter = TIME_FORMATTER
 
         @JvmStatic
-        protected fun parseToDouble(string: String): Double {
-            return string.trim().toDoubleOrNull() ?: 0.0
-        }
+        protected fun parseToDouble(string: String): Double = string.trim().toDoubleOrNull() ?: 0.0
 
         @JvmStatic
-        protected fun parseToInt(string: String): Int {
-            return string.trim().toIntOrNull() ?: 0
-        }
+        protected fun parseToInt(string: String): Int = string.trim().toIntOrNull() ?: 0
 
         @JvmStatic
         protected fun parseToBoolean(string: String) = parseToInt(string) > 0

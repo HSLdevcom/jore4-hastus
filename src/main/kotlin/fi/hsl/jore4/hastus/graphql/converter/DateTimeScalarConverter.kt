@@ -9,13 +9,12 @@ import java.time.temporal.ChronoField
 class DateTimeScalarConverter : ScalarConverter<OffsetDateTime> {
     override fun toJson(value: OffsetDateTime): String = value.format(dateTimeFormatterForSerialising)
 
-    override fun toScalar(rawValue: Any): OffsetDateTime {
-        return when (rawValue) {
+    override fun toScalar(rawValue: Any): OffsetDateTime =
+        when (rawValue) {
             is String -> OffsetDateTime.parse(rawValue, dateTimeFormatterForDeserialising)
 
             else -> throw IllegalArgumentException("Error parsing $rawValue as OffsetDateTime")
         }
-    }
 
     companion object {
         private const val DATETIME_FORMAT_MILLISECONDS = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"

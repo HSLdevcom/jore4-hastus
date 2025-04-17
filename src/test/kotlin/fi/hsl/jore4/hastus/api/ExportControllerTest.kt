@@ -79,8 +79,7 @@ class ExportControllerTest
                 .andExpect(status().isOk)
                 .andExpect(
                     content().string("<some_csv_content>")
-                )
-                .andExpect(content().contentType(MIME_TYPE_CSV))
+                ).andExpect(content().contentType(MIME_TYPE_CSV))
 
             verify {
                 exportService.exportRoutes(listOf("123", "456"), 10, LocalDate.of(2023, 1, 23), mapOf())
@@ -103,8 +102,7 @@ class ExportControllerTest
                         HastusApiErrorType.FirstStopNotTimingPointError,
                         "The first stop point in the journey pattern for route 123 is not a timing point"
                     )
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         @Test
@@ -120,8 +118,7 @@ class ExportControllerTest
                         HastusApiErrorType.LastStopNotTimingPointError,
                         "The last stop point in the journey pattern for route 123 is not a timing point"
                     )
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         @Test
@@ -137,8 +134,7 @@ class ExportControllerTest
                         HastusApiErrorType.TooFewStopPointsError,
                         "There are less than two stops points in the journey pattern for route 123"
                     )
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         @Test
@@ -156,8 +152,7 @@ class ExportControllerTest
                         HastusApiErrorType.UnknownError,
                         resultErrorMessage
                     )
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         @Test
@@ -175,16 +170,15 @@ class ExportControllerTest
                         HastusApiErrorType.UnknownError,
                         resultErrorMessage
                     )
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         companion object {
             private fun constructExpectedErrorBody(
                 type: HastusApiErrorType,
                 errorMessage: String
-            ): ResultMatcher {
-                return content().json(
+            ): ResultMatcher =
+                content().json(
                     """
                     {
                         "reason": "$errorMessage",
@@ -193,6 +187,5 @@ class ExportControllerTest
                     """.trimIndent(),
                     true
                 )
-            }
         }
     }

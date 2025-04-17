@@ -15,14 +15,13 @@ class CannotFindJourneyPatternRefByStopPointLabelsException(
         private fun constructErrorMessage(
             routeIdentifier: RouteLabelAndDirection,
             stopLabels: List<String>
-        ): String {
-            return """
-                Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
-                
-                Trip label: ${routeIdentifier.routeLabel},
-                Trip direction: ${routeIdentifier.direction.wellKnownNumber},
-                Stop points: $stopLabels
-                """.trimIndent()
-        }
+        ): String =
+            """
+            Could not find matching journey pattern reference whose stop points correspond to the Hastus trip.
+            
+            Trip label: ${routeIdentifier.routeLabel},
+            Trip direction: ${routeIdentifier.direction.wellKnownNumber},
+            Stop points: $stopLabels
+            """.trimIndent()
     }
 }

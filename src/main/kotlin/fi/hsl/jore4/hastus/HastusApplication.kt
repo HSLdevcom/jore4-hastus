@@ -24,12 +24,13 @@ fun main(args: Array<String>) {
 class HastusApplication {
     @Bean
     @Primary
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
+    fun objectMapper(): ObjectMapper =
+        ObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .registerModule(JavaTimeModule())
             .registerModule(
-                KotlinModule.Builder()
+                KotlinModule
+                    .Builder()
                     .withReflectionCacheSize(512)
                     .configure(KotlinFeature.NullToEmptyCollection, false)
                     .configure(KotlinFeature.NullToEmptyMap, false)
@@ -38,5 +39,4 @@ class HastusApplication {
                     .configure(KotlinFeature.StrictNullChecks, true)
                     .build()
             )
-    }
 }

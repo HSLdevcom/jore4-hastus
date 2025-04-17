@@ -59,8 +59,7 @@ class ImportControllerTest
                         .headers(hasuraHeaders)
                         .contentType(MIME_TYPE_CSV)
                         .content(csv)
-                )
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                ).andExpect(content().contentType(MediaType.APPLICATION_JSON))
         }
 
         @Test
@@ -273,8 +272,8 @@ class ImportControllerTest
             private fun constructExpectedErrorBody(
                 type: HastusApiErrorType,
                 errorMessage: String
-            ): ResultMatcher {
-                return content().json(
+            ): ResultMatcher =
+                content().json(
                     """
                     {
                         "reason": "$errorMessage",
@@ -283,6 +282,5 @@ class ImportControllerTest
                     """.trimIndent(),
                     true
                 )
-            }
         }
     }

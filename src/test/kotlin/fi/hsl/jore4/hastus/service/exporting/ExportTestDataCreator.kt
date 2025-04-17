@@ -36,8 +36,8 @@ interface ExportTestDataCreator {
     fun createFirstStopPoint(
         timingPlaceShortName: String?,
         isUsedAsTimingPoint: Boolean = true
-    ): JoreStopPointInJourneyPattern {
-        return JoreStopPointInJourneyPattern(
+    ): JoreStopPointInJourneyPattern =
+        JoreStopPointInJourneyPattern(
             stopLabel = "H1000",
             stopSequenceNumber = 1,
             timingPlaceCode = timingPlaceShortName,
@@ -46,14 +46,13 @@ interface ExportTestDataCreator {
             isAllowedLoad = false,
             distanceToNextStop = 123.0
         )
-    }
 
     fun createLastStopPoint(
         stopSequenceNumber: Int,
         timingPlaceShortName: String?,
         isUsedAsTimingPoint: Boolean = true
-    ): JoreStopPointInJourneyPattern {
-        return JoreStopPointInJourneyPattern(
+    ): JoreStopPointInJourneyPattern =
+        JoreStopPointInJourneyPattern(
             stopLabel = "H9999",
             stopSequenceNumber = stopSequenceNumber,
             timingPlaceCode = timingPlaceShortName,
@@ -62,5 +61,4 @@ interface ExportTestDataCreator {
             isAllowedLoad = false,
             distanceToNextStop = 0.0
         )
-    }
 }
