@@ -159,8 +159,7 @@ class GraphQLService(
             ?.timetables_vehicle_type_vehicle_type
             ?.associate {
                 it.hsl_id.toInt() to it.vehicle_type_id
-            }
-            .orEmpty()
+            }.orEmpty()
     }
 
     fun getDayTypes(): Map<String, UUID> {

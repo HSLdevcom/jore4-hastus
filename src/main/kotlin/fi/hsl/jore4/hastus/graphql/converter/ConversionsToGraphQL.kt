@@ -62,8 +62,8 @@ object ConversionsToGraphQL {
     private fun mapToGraphQL(
         vehicleService: JoreVehicleService,
         journeyPatternRefIndex: Map<UUID, JoreJourneyPatternRef>
-    ): timetables_vehicle_service_vehicle_service_insert_input {
-        return timetables_vehicle_service_vehicle_service_insert_input(
+    ): timetables_vehicle_service_vehicle_service_insert_input =
+        timetables_vehicle_service_vehicle_service_insert_input(
             day_type_id = OptionalInput.Defined(vehicleService.dayType),
             name_i18n = mapToFiJson(vehicleService.name),
             blocks =
@@ -73,13 +73,12 @@ object ConversionsToGraphQL {
                     )
                 )
         )
-    }
 
     private fun mapToGraphQL(
         block: JoreBlock,
         journeyPatternRefIndex: Map<UUID, JoreJourneyPatternRef>
-    ): timetables_vehicle_service_block_insert_input {
-        return timetables_vehicle_service_block_insert_input(
+    ): timetables_vehicle_service_block_insert_input =
+        timetables_vehicle_service_block_insert_input(
             finishing_time = OptionalInput.Defined(block.finishingTime.toJavaDuration()),
             preparing_time = OptionalInput.Defined(block.preparingTime.toJavaDuration()),
             vehicle_type_id = OptionalInput.Defined(block.vehicleTypeId),
@@ -95,13 +94,12 @@ object ConversionsToGraphQL {
                     )
                 )
         )
-    }
 
     private fun mapToGraphQL(
         vehicleJourney: JoreVehicleJourney,
         associatedJourneyPatternRef: JoreJourneyPatternRef
-    ): timetables_vehicle_journey_vehicle_journey_insert_input {
-        return timetables_vehicle_journey_vehicle_journey_insert_input(
+    ): timetables_vehicle_journey_vehicle_journey_insert_input =
+        timetables_vehicle_journey_vehicle_journey_insert_input(
             displayed_name = OptionalInput.Defined(vehicleJourney.displayedName),
             contract_number = OptionalInput.Defined(vehicleJourney.contractNumber),
             is_backup_journey = OptionalInput.Defined(vehicleJourney.isBackupJourney),
@@ -119,7 +117,6 @@ object ConversionsToGraphQL {
                     )
                 )
         )
-    }
 
     private fun mapToGraphQL(pair: Pair<JorePassingTime, JoreJourneyPatternStopRef>) =
         timetables_passing_times_timetabled_passing_time_insert_input(

@@ -231,7 +231,7 @@ class ObjectMapperTest {
 
     @Nested
     @DisplayName("Test deserialising Object types from JSON")
-    inner class TestDeserialisingObjectTypesFromJson() {
+    inner class TestDeserialisingObjectTypesFromJson {
         @Test
         fun `parse UUID from JSON`() {
             val value = UUID.randomUUID()
@@ -280,9 +280,10 @@ class ObjectMapperTest {
             ) {
                 assertEquals(
                     expected,
-                    objectMapper.readValue<OffsetDateTimeFormat>(
-                        """{"offsetDateTime": "$timestamp"}"""
-                    ).offsetDateTime
+                    objectMapper
+                        .readValue<OffsetDateTimeFormat>(
+                            """{"offsetDateTime": "$timestamp"}"""
+                        ).offsetDateTime
                 )
             }
 

@@ -49,7 +49,8 @@ class TimetablesDataInserterRunner(
         ): String {
             val cleanJdbcUri: String = jdbcUrl.substringAfter("jdbc:") // Strip leading "jdbc:"
 
-            return URI.create(cleanJdbcUri)
+            return URI
+                .create(cleanJdbcUri)
                 .let { uri ->
                     val databaseName: String = uri.path.substringAfter("/") // Strip leading "/"
 

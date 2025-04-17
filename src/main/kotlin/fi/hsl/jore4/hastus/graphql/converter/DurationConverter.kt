@@ -6,11 +6,10 @@ import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration
 
 class DurationConverter : ScalarConverter<Duration> {
-    override fun toJson(value: Duration): String {
-        return value.toKotlinDuration().toIsoString()
-    }
+    override fun toJson(value: Duration): String = value.toKotlinDuration().toIsoString()
 
-    override fun toScalar(rawValue: Any): Duration {
-        return kotlin.time.Duration.parseIsoString(rawValue.toString()).toJavaDuration()
-    }
+    override fun toScalar(rawValue: Any): Duration =
+        kotlin.time.Duration
+            .parseIsoString(rawValue.toString())
+            .toJavaDuration()
 }

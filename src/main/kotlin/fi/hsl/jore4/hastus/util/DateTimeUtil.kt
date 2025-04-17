@@ -13,11 +13,10 @@ object DateTimeUtil {
      * Converts [LocalDate] to a [OffsetDateTime] at start of day using application's default time
      * zone.
      */
-    fun LocalDate.toOffsetDateTimeAtDefaultZone(): OffsetDateTime {
-        return ZonedDateTime
+    fun LocalDate.toOffsetDateTimeAtDefaultZone(): OffsetDateTime =
+        ZonedDateTime
             .of(atStartOfDay(), getDefaultZoneId())
             .toOffsetDateTime()
-    }
 
     fun getDefaultZoneId(): ZoneId = ZoneId.of(Constants.DEFAULT_TIMEZONE)
 }
