@@ -36,7 +36,7 @@
         <kotlin-logging-jvm.version>7.0.7</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
         <graphql-kotlin.version>8.6.0</graphql-kotlin.version>
-        <ktor.version>2.3.12</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
+        <ktor.version>3.1.2</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
         <mockk.version>1.14.0</mockk.version>
         <springmockk.version>4.0.2</springmockk.version>
 
