@@ -89,12 +89,9 @@ jobs:
     runs-on: ubuntu-24.04
     needs:
       - run_java_tests
-      - publish_docker_image_to_docker_hub
+      - publish_docker_image_to_acr
     steps:
-      - name: Extract metadata to env variables
-        uses: HSLdevcom/jore4-tools/github-actions/extract-metadata@extract-metadata-v1
-
-      - name: Start e2e env
+      - name: Run e2e tests
         uses: HSLdevcom/jore4-tools/github-actions/run-ci@main
         with:
-          hastus_version: "${{ env.IMAGE_NAME }}:${{ env.COMMIT_ID }}"
+          hastus_version: "${{ needs.publish_docker_image_to_acr.outputs.docker_image }}"
