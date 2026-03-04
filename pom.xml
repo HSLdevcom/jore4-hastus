@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.0</version>
+        <version>4.0.3</version>
         <relativePath/>
     </parent>
 
@@ -25,20 +25,20 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Maven build plugins and their dependencies -->
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
-        <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
-        <build-helper-plugin.version>3.6.0</build-helper-plugin.version>
-        <build-properties-plugin.version>1.2.1</build-properties-plugin.version>
-        <surefire-plugin.version>3.5.3</surefire-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+        <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+        <build-helper-plugin.version>3.6.1</build-helper-plugin.version>
+        <build-properties-plugin.version>1.3.0</build-properties-plugin.version>
+        <surefire-plugin.version>3.5.5</surefire-plugin.version>
         <ktlint-plugin.version>3.5.0</ktlint-plugin.version>
 
         <!-- Library versions -->
-        <kotlin-logging-jvm.version>7.0.7</kotlin-logging-jvm.version>
+        <kotlin-logging-jvm.version>8.0.01</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
-        <graphql-kotlin.version>8.6.0</graphql-kotlin.version>
-        <ktor.version>2.3.12</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
-        <mockk.version>1.14.0</mockk.version>
-        <springmockk.version>4.0.2</springmockk.version>
+        <graphql-kotlin.version>9.0.0</graphql-kotlin.version>
+        <ktor.version>3.0.3</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
+        <mockk.version>1.14.9</mockk.version>
+        <springmockk.version>5.0.1</springmockk.version>
 
         <!-- Other properties -->
         <start.class>fi.hsl.jore4.hastus.HastusApplicationKt</start.class>
@@ -280,6 +280,8 @@
                         <arg>-Xjsr305=strict</arg>
                         <!-- Because we are using @OptIn annotation. -->
                         <arg>-opt-in=kotlin.RequiresOptIn</arg>
+                        <!-- Keep current behavior stable across Kotlin default-target migration. -->
+                        <arg>-Xannotation-default-target=param-property</arg>
                     </args>
                 </configuration>
                 <executions>
@@ -532,6 +534,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
 

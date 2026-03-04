@@ -141,7 +141,11 @@ remove_all() {
 }
 
 build() {
-  mvn install
+  if [[ "${1:-}" == "-Dclean" ]]; then
+    mvn clean install
+  else
+    mvn install
+  fi
 }
 
 run_tests() {
@@ -154,6 +158,9 @@ print_usage() {
 
   build
     Build the Hastus service locally.
+
+  build:clean
+    Build the Hastus service locally, cleaning previous builds.
 
   build:data-inserter
     Build the Data-Inserter for integration tests (Git submodule).
@@ -199,6 +206,10 @@ fi
 case $COMMAND in
 build)
   build
+  ;;
+
+build:clean)
+  build -Dclean
   ;;
 
 build:data-inserter)
