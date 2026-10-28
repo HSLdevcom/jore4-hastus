@@ -22,4 +22,4 @@ jobs:
     with:
       languages: '["actions", "java-kotlin"]'
       java_build_command: "cp profiles/dev/config.properties profiles/dev/config.runner.properties && mvn clean install -DskipTests"
-      java_version: "17"
+      java_version: "25"

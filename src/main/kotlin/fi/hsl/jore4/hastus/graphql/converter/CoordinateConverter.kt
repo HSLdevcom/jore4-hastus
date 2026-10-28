@@ -1,10 +1,10 @@
 package fi.hsl.jore4.hastus.graphql.converter
 
 import com.expediagroup.graphql.client.converter.ScalarConverter
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import fi.hsl.jore4.hastus.data.format.Coordinate
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class CoordinateConverter : ScalarConverter<Coordinate> {
     override fun toJson(value: Coordinate): ObjectNode {
@@ -44,7 +44,9 @@ class CoordinateConverter : ScalarConverter<Coordinate> {
                 throw IllegalArgumentException("'coordinates' contains non-double values: $lng and $lat")
             }
 
-            else -> throw IllegalArgumentException("'coordinates' is not a List: $coordinatesObj")
+            else -> {
+                throw IllegalArgumentException("'coordinates' is not a List: $coordinatesObj")
+            }
         }
     }
 

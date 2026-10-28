@@ -4,7 +4,6 @@ import com.expediagroup.graphql.client.jackson.GraphQLClientJacksonSerializer
 import com.expediagroup.graphql.client.ktor.GraphQLKtorClient
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import fi.hsl.jore4.hastus.graphql.converter.GraphQLAuthenticationFailedException
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -16,7 +15,8 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.runBlocking
-import java.net.URL
+import tools.jackson.databind.json.JsonMapper
+import java.net.URI
 
 private val LOGGER = KotlinLogging.logger {}
 
@@ -25,15 +25,15 @@ private val LOGGER = KotlinLogging.logger {}
  * [GraphQLKtorClient].
  *
  * @param[config] Configuration information used to set up GraphQL connections
- * @param[objectMapper] The JSON serializer used to print log messages
+ * @param[jsonMapper] The JSON serializer used to print log messages
  */
 class HasuraClient(
     config: HasuraConfiguration,
-    private val objectMapper: ObjectMapper
+    private val jsonMapper: JsonMapper
 ) {
     private val gqlClient =
         GraphQLKtorClient(
-            url = URL(config.url),
+            url = URI(config.url).toURL(),
             httpClient =
                 HttpClient {
                     defaultRequest {
@@ -63,7 +63,7 @@ class HasuraClient(
 
             LOGGER.debug {
                 "GraphQL ${request.operationName} response: ${
-                    objectMapper
+                    jsonMapper
                         // .writerWithDefaultPrettyPrinter() // disable commenting to get pretty-printed output
                         .writeValueAsString(queryResponse)
                 }"

@@ -1,7 +1,7 @@
 package fi.hsl.jore4.hastus.test
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.core.type.TypeReference
+import tools.jackson.databind.ObjectMapper
 
 class TimetablesDataset : MutableMap<String, Any?> by mutableMapOf() {
     fun toJSONString(): String = OBJECT_MAPPER.writeValueAsString(this)

@@ -270,6 +270,6 @@ class GraphQLService(
 
     companion object {
         // used for synchronized block
-        private val SYNC_LOCK_OBJECT = Object()
+        private val SYNC_LOCK_OBJECT = Any()
     }
 }

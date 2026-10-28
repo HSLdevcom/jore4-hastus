@@ -1,16 +1,15 @@
 package fi.hsl.jore4.hastus
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.KotlinFeature
+import tools.jackson.module.kotlin.KotlinModule
 
 fun main(args: Array<String>) {
     runApplication<HastusApplication>(*args)
@@ -24,11 +23,12 @@ fun main(args: Array<String>) {
 class HastusApplication {
     @Bean
     @Primary
-    fun objectMapper(): ObjectMapper =
-        ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .registerModule(JavaTimeModule())
-            .registerModule(
+    fun jsonMapper(): JsonMapper =
+        JsonMapper
+            .builder()
+            .changeDefaultPropertyInclusion({ incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL) })
+            .changeDefaultPropertyInclusion({ incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL) })
+            .addModule(
                 KotlinModule
                     .Builder()
                     .withReflectionCacheSize(512)
@@ -38,5 +38,5 @@ class HastusApplication {
                     .configure(KotlinFeature.SingletonSupport, false)
                     .configure(KotlinFeature.StrictNullChecks, true)
                     .build()
-            )
+            ).build()
 }

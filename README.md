@@ -7,9 +7,9 @@ A spring boot server application which acts as a converter between jore4 and Has
 ### Necessary tools
 
 - Maven
-- JDK17+
-- Node.js >= 18.18.2
-- Yarn 1.x
+- JDK25+
+- Node.js >= 26.12.1
+- Yarn 4.x
 
 Uses maven to build the project, use `mvn install` to build the server. You can also run the generated .jar file locally to test the server on port 8080.
 

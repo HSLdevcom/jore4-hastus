@@ -1,12 +1,6 @@
 package fi.hsl.jore4.hastus
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import fi.hsl.jore4.hastus.api.ExportController
 import fi.hsl.jore4.hastus.data.format.Coordinate
 import fi.hsl.jore4.hastus.generated.scalars.AnyToCoordinateConverter
@@ -28,6 +22,11 @@ import fi.hsl.jore4.hastus.graphql.UUIDList
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.annotation.JsonDeserialize
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.readValue
 import java.time.LocalDate
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -40,7 +39,7 @@ import kotlin.time.toKotlinDuration
 
 @DisplayName("Test JacksonObjectMapper")
 class ObjectMapperTest {
-    private val objectMapper: ObjectMapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+    private val objectMapper: ObjectMapper = jacksonObjectMapper()
 
     data class UUIDFormat(
         @JsonSerialize(converter = UUIDToAnyConverter::class)

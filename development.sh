@@ -93,7 +93,7 @@ prepare_timetables_data_inserter() {
   ensure_hasura_submodule_initialized
 
   cd jore4-hasura/test/hasura
-  yarn install
+  yarn install --immutable
   yarn timetables-data-inserter:build
   cd -
 }

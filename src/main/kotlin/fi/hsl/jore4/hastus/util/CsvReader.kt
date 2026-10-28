@@ -17,12 +17,30 @@ class CsvReader(
     private fun parseLine(line: String): ImportableItem? {
         val values = line.trim().split(separator)
         return when (values[0]) {
-            "1" -> ApplicationRecord(values)
-            "2" -> BookingRecord(values)
-            "3" -> VehicleScheduleRecord(values)
-            "4" -> BlockRecord(values)
-            "5" -> TripRecord(values)
-            "6" -> TripStopRecord(values)
+            "1" -> {
+                ApplicationRecord(values)
+            }
+
+            "2" -> {
+                BookingRecord(values)
+            }
+
+            "3" -> {
+                VehicleScheduleRecord(values)
+            }
+
+            "4" -> {
+                BlockRecord(values)
+            }
+
+            "5" -> {
+                TripRecord(values)
+            }
+
+            "6" -> {
+                TripStopRecord(values)
+            }
+
             else -> {
                 LOGGER.info { "CSV parser ignored line $line" }
                 null

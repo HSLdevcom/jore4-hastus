@@ -1,15 +1,15 @@
 package fi.hsl.jore4.hastus.graphql
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import fi.hsl.jore4.hastus.config.HasuraConfiguration
 import org.springframework.stereotype.Component
+import tools.jackson.databind.json.JsonMapper
 
 @Component
 class GraphQLServiceFactory(
     hasuraConfig: HasuraConfiguration,
-    objectMapper: ObjectMapper
+    jsonMapper: JsonMapper
 ) {
-    private val hasuraClient = HasuraClient(hasuraConfig, objectMapper)
+    private val hasuraClient = HasuraClient(hasuraConfig, jsonMapper)
 
     /**
      * Creates a [GraphQLService] instance for one HTTP(S) session, i.e. single request-response

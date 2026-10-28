@@ -17,7 +17,7 @@ class TimetablesDataInserterRunner(
         val inserterWorkDirectory = Paths.get("jore4-hasura/test/hasura").toAbsolutePath().toString()
 
         // Note: this performs DB truncation internally.
-        val command = "yarn --silent timetables-data-inserter:cli insert hsl ${buildDatabaseArguments()}"
+        val command = "yarn timetables-data-inserter:cli insert hsl ${buildDatabaseArguments()}"
 
         val process =
             ProcessBuilder(*command.split(" ").toTypedArray())
@@ -36,7 +36,13 @@ class TimetablesDataInserterRunner(
             throw RuntimeException("Running timetables-data-inserter timed out.")
         }
 
-        return process.inputStream.bufferedReader().use(Reader::readText)
+        val exitValue = process.exitValue()
+        val output = process.inputStream.bufferedReader().use(Reader::readText)
+        if (exitValue != 0) {
+            throw RuntimeException("Running timetables-data-inserter failed with exit code $exitValue. Process output:\n$output")
+        }
+
+        return output
     }
 
     private fun buildDatabaseArguments(): String = databaseProperties.run { buildDatabaseArguments(url, username, password) }

@@ -12,7 +12,6 @@ class DateTimeScalarConverter : ScalarConverter<OffsetDateTime> {
     override fun toScalar(rawValue: Any): OffsetDateTime =
         when (rawValue) {
             is String -> OffsetDateTime.parse(rawValue, dateTimeFormatterForDeserialising)
-
             else -> throw IllegalArgumentException("Error parsing $rawValue as OffsetDateTime")
         }
 

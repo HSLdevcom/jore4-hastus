@@ -63,10 +63,11 @@ class ExportController(
     @ExceptionHandler
     fun handleExportException(ex: Exception): ResponseEntity<ExportRoutesErrorResponse> =
         when (ex) {
-            is ResponseStatusException ->
+            is ResponseStatusException -> {
                 ResponseEntity
                     .status(ex.statusCode)
                     .body(ExportRoutesErrorResponse(HastusApiErrorType.from(ex), ex.reason))
+            }
 
             else -> {
                 LOGGER.error { "Exception during export request:$ex" }

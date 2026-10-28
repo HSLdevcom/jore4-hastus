@@ -39,14 +39,22 @@ enum class JoreRouteDirection {
             when (routeDirection) {
                 // the most common first
                 route_direction_enum.INBOUND -> INBOUND
+
                 route_direction_enum.OUTBOUND -> OUTBOUND
+
                 // the rest
                 route_direction_enum.ANTICLOCKWISE -> ANTICLOCKWISE
+
                 route_direction_enum.CLOCKWISE -> CLOCKWISE
+
                 route_direction_enum.EASTBOUND -> EASTBOUND
+
                 route_direction_enum.NORTHBOUND -> NORTHBOUND
+
                 route_direction_enum.SOUTHBOUND -> SOUTHBOUND
+
                 route_direction_enum.WESTBOUND -> WESTBOUND
+
                 else -> throw IllegalStateException("Unsupported route direction: $routeDirection")
             }
 
@@ -55,14 +63,22 @@ enum class JoreRouteDirection {
             when (routeDirection) {
                 // the most common first
                 timetables_route_direction_enum.INBOUND -> INBOUND
+
                 timetables_route_direction_enum.OUTBOUND -> OUTBOUND
+
                 // the rest
                 timetables_route_direction_enum.ANTICLOCKWISE -> ANTICLOCKWISE
+
                 timetables_route_direction_enum.CLOCKWISE -> CLOCKWISE
+
                 timetables_route_direction_enum.EASTBOUND -> EASTBOUND
+
                 timetables_route_direction_enum.NORTHBOUND -> NORTHBOUND
+
                 timetables_route_direction_enum.SOUTHBOUND -> SOUTHBOUND
+
                 timetables_route_direction_enum.WESTBOUND -> WESTBOUND
+
                 else -> throw IllegalStateException("Unsupported route direction: $routeDirection")
             }
     }
