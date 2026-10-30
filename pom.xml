@@ -26,7 +26,7 @@
 
         <!-- Maven build plugins and their dependencies -->
         <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
-        <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
+        <maven-enforcer-plugin.version>3.7.0</maven-enforcer-plugin.version>
         <build-helper-plugin.version>3.6.2</build-helper-plugin.version>
         <build-properties-plugin.version>1.3.1</build-properties-plugin.version>
         <surefire-plugin.version>3.6.1</surefire-plugin.version>
@@ -36,7 +36,7 @@
         <kotlin-logging-jvm.version>8.0.4</kotlin-logging-jvm.version>
         <quicktheories.version>0.26</quicktheories.version>
         <graphql-kotlin.version>11.0.0</graphql-kotlin.version>
-        <ktor.version>3.4.1</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
+        <ktor.version>3.6.1</ktor.version> <!-- must be in sync with graphql-kotlin.version -->
         <mockk.version>1.14.11</mockk.version>
         <springmockk.version>5.0.1</springmockk.version>
 
