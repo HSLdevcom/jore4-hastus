@@ -2,6 +2,6 @@ package fi.hsl.jore4.hastus.data.format
 
 enum class JoreJourneyType {
     STANDARD,
-    DRY_RUN,
+    DEAD_RUN,
     SERVICE_JOURNEY
 }

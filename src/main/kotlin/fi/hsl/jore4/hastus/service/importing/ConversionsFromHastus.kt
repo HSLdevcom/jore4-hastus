@@ -237,7 +237,7 @@ object ConversionsFromHastus {
     private fun mapJourneyType(type: Int) =
         when (type) {
             1, 2 -> JoreJourneyType.SERVICE_JOURNEY
-            3 -> JoreJourneyType.DRY_RUN
+            3 -> JoreJourneyType.DEAD_RUN
             else -> JoreJourneyType.STANDARD
         }
 
