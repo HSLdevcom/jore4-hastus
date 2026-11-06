@@ -7996,7 +7996,7 @@ type timetables_vehicle_journey_vehicle_journey {
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref!
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid!
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String!
   "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
   layover_time: interval
@@ -8058,7 +8058,7 @@ type timetables_vehicle_journey_vehicle_journey_max_fields {
   end_time: String
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_start_time\""
   start_time: String
@@ -8077,7 +8077,7 @@ type timetables_vehicle_journey_vehicle_journey_min_fields {
   end_time: String
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String
   "A computed field, executes function \"vehicle_journey.vehicle_journey_start_time\""
   start_time: String
@@ -15030,7 +15030,7 @@ input timetables_vehicle_journey_vehicle_journey_insert_input {
   journey_pattern_ref: timetables_journey_pattern_journey_pattern_ref_obj_rel_insert_input
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String
   "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
   layover_time: interval
@@ -15050,7 +15050,7 @@ input timetables_vehicle_journey_vehicle_journey_max_order_by {
   displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: order_by
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: order_by
   vehicle_journey_id: order_by
 }
@@ -15065,7 +15065,7 @@ input timetables_vehicle_journey_vehicle_journey_min_order_by {
   displayed_name: order_by
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: order_by
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: order_by
   vehicle_journey_id: order_by
 }
@@ -15134,7 +15134,7 @@ input timetables_vehicle_journey_vehicle_journey_set_input {
   journey_name_i18n: jsonb
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String
   "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
   layover_time: interval
@@ -15169,7 +15169,7 @@ input timetables_vehicle_journey_vehicle_journey_stream_cursor_value_input {
   journey_name_i18n: jsonb
   "The JOURNEY PATTERN on which the VEHICLE JOURNEY travels"
   journey_pattern_ref_id: uuid
-  "STANDARD | DRY_RUN | SERVICE_JOURNEY"
+  "STANDARD | DEAD_RUN | SERVICE_JOURNEY"
   journey_type: String
   "LAYOVER TIMEs describe a certain time allowance that may be given at the end of each VEHICLE JOURNEY, before starting the next one, to compensate delays or for other purposes (e.g. rest time for the driver). This “layover time” can be regarded as a buffer time, which may or may not be actually consumed in real time operation."
   layover_time: interval
