@@ -34,7 +34,8 @@ COPY --chmod=755 ./applicationinsights.json /usr/src/jore4-hastus/applicationins
 COPY --from=builder /build/target/*.jar /usr/src/jore4-hastus/jore4-hastus.jar
 
 # read Docker secrets into environment variables and run application
-CMD ["/bin/bash", "-c", "source /tmp/read-secrets.sh && java -javaagent:/usr/src/jore4-hastus/applicationinsights-agent.jar -jar /usr/src/jore4-hastus/jore4-hastus.jar"]
+# remove -XX:-UseBASE64Intrinsics once java4shell has been patched
+CMD ["/bin/bash", "-c", "source /tmp/read-secrets.sh && java -XX:-UseBASE64Intrinsics -javaagent:/usr/src/jore4-hastus/applicationinsights-agent.jar -jar /usr/src/jore4-hastus/jore4-hastus.jar"]
 
 HEALTHCHECK --interval=1m --timeout=5s \
   CMD curl --fail http://localhost:8080/actuator/health
